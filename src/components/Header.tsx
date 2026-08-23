@@ -126,7 +126,7 @@ let chatTurnCounter = 0;
 const nextChatId = () => `t${chatTurnCounter++}`;
 
 const CHAT_GREETING =
-  "Hi, I'm the LuminarGuide Pillar Guide 👋 Tell me which class your child is in, and I'll walk you through what we focus on and why it matters at that age.";
+  "Hi, I'm the LuminarGuide Pillar Guide. Tell me which class your child is in, and I'll walk you through what we focus on and why it matters at that age.";
 
 function PillarGuideChat() {
   const [open, setOpen] = useState(false);

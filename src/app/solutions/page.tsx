@@ -1,14 +1,18 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { RoleSolutionTile } from '@/components/Header';
+import { RoleSolutionTile, StakeholderIcon } from '@/components/Header';
 
 export const metadata: Metadata = { title: 'Solutions — LuminarGuide' };
 
-const roles = [
+const roles: {
+  role: 'Mentors' | 'Parents' | 'Schools' | 'Counselors';
+  headline: string;
+  points: string[];
+  theory: { name: string; description: string };
+}[] = [
   {
     role: 'Mentors',
-    icon: '🧑‍🏫',
     headline: 'Know exactly where to focus your next conversation.',
     points: [
       'Spend less time reconstructing where a student left off, and more time on the conversation that actually moves them forward',
@@ -24,7 +28,6 @@ const roles = [
   },
   {
     role: 'Parents',
-    icon: '👨‍👩‍👧',
     headline: "Stay meaningfully connected to your child's growth.",
     points: [
       "Stay genuinely close to your child's growth without needing to ask, and without hovering",
@@ -41,8 +44,7 @@ const roles = [
   },
   {
     role: 'Schools',
-    icon: '🏫',
-    headline: 'A unified, administrator-level view of student well-being.',
+    headline:'A unified, administrator-level view of student well-being.',
     points: [
       'See patterns across your whole student body that no single classroom or counselor could catch alone',
       "A consistent, structured approach to student well-being — not scattered efforts that vary teacher to teacher",
@@ -58,7 +60,6 @@ const roles = [
   },
   {
     role: 'Counselors',
-    icon: '💬',
     headline: 'Spot students who may need support earlier.',
     points: [
       "Catch a student trending toward difficulty earlier — while there's still room to help before a crisis point",
@@ -92,7 +93,9 @@ export default function SolutionsPage() {
         <section key={r.role} className={`py-16 ${i % 2 === 0 ? 'bg-muted' : 'bg-background'}`}>
           <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-10">
             <div className="flex flex-col gap-4 self-start">
-              <span className="text-3xl">{r.icon}</span>
+              <span style={{ color: 'var(--primary)' }}>
+                <StakeholderIcon role={r.role} size={30} />
+              </span>
               <h2 className="text-section-heading text-foreground">{r.headline}</h2>
               <p className="text-sm font-600 text-primary uppercase tracking-wide">{r.role}</p>
             </div>
