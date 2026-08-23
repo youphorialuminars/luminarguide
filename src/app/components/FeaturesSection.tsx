@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { gradeBands, type GradeBand } from '@/lib/siteConfig';
+import { ScenarioIcon } from '@/components/Header';
 
 interface FeatureCard {
   title: string;
@@ -132,7 +133,9 @@ export default function FeaturesSection() {
           }`}
         >
           <div className="[grid-area:1/1] [backface-visibility:hidden] flex flex-col items-center justify-center gap-2 text-center p-4 rounded-xl border border-border bg-card min-h-[160px]">
-            <span className="text-2xl">{pillar.icon}</span>
+            <span style={{ color: 'var(--primary)' }}>
+              <ScenarioIcon pillarId={pillar.id} size={26} />
+            </span>
             <span className="text-sm font-600 text-foreground leading-tight" style={{ fontWeight: 600 }}>
               {pillar.name}
             </span>
@@ -193,7 +196,10 @@ export default function FeaturesSection() {
               Five pillars. Three stages. One student, followed the whole way.
             </h2>
             <p className="text-base leading-relaxed text-muted-foreground">
-              What a student is working on changes with age — so the program does too. Pick a grade band below to see its five pillars, backed by trained mentors, experienced counselors, and peer group work at every stage.
+              A Tuesday session that's just a mentor and a student talking, no textbook involved. A Thursday task
+              worked through with four classmates over video call. A parent and a counselor comparing notes by the
+              weekend. None of it looks like homework — all of it is the program. Pick a grade band below to see
+              which five pillars a session like this is actually built around.
             </p>
           </div>
           <a href="#contact" className="flex items-center gap-2 text-sm font-600 text-primary hover:text-secondary-foreground transition-colors group whitespace-nowrap" style={{ fontWeight: 600 }}>

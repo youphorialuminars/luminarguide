@@ -1,17 +1,19 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { programStages, gradeBands, stakeholders, stakeholderDetails } from '@/lib/siteConfig';
+import { programStages, stakeholderDetails } from '@/lib/siteConfig';
+import { GradeBandDeepDive, StakeholderIcon } from '@/components/Header';
 
 export const metadata: Metadata = { title: 'About — LuminarGuide' };
 
 function RoleCard({ role }: { role: 'Mentors' | 'Parents' | 'Schools' | 'Counselors' }) {
-  const icon = stakeholders.find((s) => s.label === role)?.icon ?? '';
   const detail = stakeholderDetails.find((s) => s.role === role);
   return (
     <div className="bg-card border border-border rounded-2xl p-5 flex flex-col gap-2 h-full">
       <div className="flex items-center gap-2">
-        <span className="text-lg">{icon}</span>
+        <span style={{ color: 'var(--primary)' }}>
+          <StakeholderIcon role={role} size={18} />
+        </span>
         <p className="text-sm font-700 text-foreground" style={{ fontWeight: 700 }}>{role}</p>
       </div>
       <p className="text-xs leading-relaxed text-muted-foreground">{detail?.description}</p>
@@ -25,7 +27,9 @@ function StudentHub() {
       className="rounded-2xl p-7 text-center flex flex-col items-center justify-center gap-2 h-full"
       style={{ backgroundColor: 'var(--primary)' }}
     >
-      <span className="text-3xl">🎒</span>
+      <span style={{ color: 'var(--primary-foreground)' }}>
+        <StakeholderIcon role="Students" size={30} />
+      </span>
       <p className="text-sm font-700 uppercase tracking-wide" style={{ fontWeight: 700, color: 'var(--primary-foreground)' }}>
         The Student
       </p>
@@ -119,45 +123,9 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Grade band deep dives */}
-      {gradeBands.map((band, bandIndex) => (
-        <section key={band.id} className={`py-20 ${bandIndex % 2 === 0 ? 'bg-muted' : 'bg-background'}`}>
-          <div className="max-w-6xl mx-auto px-6">
-            <div className="flex flex-wrap items-center gap-3 mb-3">
-              <p className="text-xs font-600 text-primary uppercase tracking-widest">{band.gradesLabel} · {band.bandLabel}</p>
-              <span
-                className="text-[10px] font-600 uppercase tracking-wide px-2 py-0.5 rounded-full"
-                style={{
-                  backgroundColor: band.status === 'live' ? 'var(--primary)' : 'var(--card)',
-                  color: band.status === 'live' ? 'var(--primary-foreground)' : 'var(--muted-foreground)',
-                  border: band.status === 'live' ? 'none' : '1px solid var(--border)',
-                }}
-              >
-                {band.statusLabel}
-              </span>
-            </div>
-            <h2
-              className="font-700 text-foreground mb-5 max-w-3xl leading-snug"
-              style={{ fontWeight: 700, fontSize: 'clamp(1.375rem, 2.2vw, 1.75rem)', letterSpacing: '-0.015em' }}
-            >
-              {band.ageContext}
-            </h2>
-
-            <div className="flex flex-wrap gap-3">
-              {band.challenges.map((c) => (
-                <div
-                  key={c}
-                  className="flex items-center gap-2.5 bg-card border-2 border-border rounded-full px-4 py-2.5 text-base font-800 shadow-sm"
-                  style={{ fontWeight: 800, color: 'var(--foreground)' }}
-                >
-                  <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: 'var(--accent)' }} />
-                  {c}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      ))}
+      {/* Grade band deep dives — one tabbed section instead of three
+          stacked ones, see GradeBandDeepDive in Header.tsx for why. */}
+      <GradeBandDeepDive />
 
       <section className="py-16 bg-muted">
         <div className="max-w-6xl mx-auto px-6">
