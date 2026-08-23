@@ -502,50 +502,168 @@ function CheckBadgeIcon({ size = 36 }: { size?: number }) {
   );
 }
 
-function ScenarioIcon({ pillarId, size = 22 }: { pillarId: string; size?: number }) {
+// Full custom line-icon set for all 15 pillars across the three grade bands
+// (was previously just 4 explicit icons + a fallback, since only the middle
+// band had icons drawn). Exported so FeaturesSection and the About pages can
+// use the same set instead of the raw pillar emoji. Falls back to the
+// self-identity mark for any unrecognized id, same as before.
+export function ScenarioIcon({ pillarId, size = 22 }: { pillarId: string; size?: number }) {
   const common = { width: size, height: size, viewBox: '0 0 24 24', fill: 'none' as const };
-  if (pillarId === 'digital-wisdom') {
-    return (
-      <svg {...common}>
+  const paths: Record<string, React.ReactNode> = {
+    'digital-wisdom': (
+      <>
         <rect x="3.5" y="5.5" width="17" height="11" rx="2.5" stroke="currentColor" strokeWidth="1.5" />
         <path d="M8.5 19.5h7M12 16.5v3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
         <circle cx="9" cy="11" r="1" fill="currentColor" />
         <circle cx="15" cy="11" r="1" fill="currentColor" />
-      </svg>
-    );
-  }
-  if (pillarId === 'inner-strength') {
-    return (
-      <svg {...common}>
+      </>
+    ),
+    'inner-strength': (
+      <>
         <path d="M7 3.5h6.5l4 4V20a1 1 0 01-1 1H7a1 1 0 01-1-1V4.5a1 1 0 011-1z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
         <path d="M13.5 3.5V8h4" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
         <path d="M8.5 13.2l2 2 4-4.4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    );
-  }
-  if (pillarId === 'personal-safety') {
-    return (
-      <svg {...common}>
+      </>
+    ),
+    'personal-safety': (
+      <>
         <path d="M12 3.2l6.5 2.8v4.8c0 4.1-2.8 7.5-6.5 8.6-3.7-1.1-6.5-4.5-6.5-8.6V6l6.5-2.8z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
         <path d="M9 12l2 2 4-4.4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    );
-  }
-  if (pillarId === 'leadership') {
-    return (
-      <svg {...common}>
+      </>
+    ),
+    leadership: (
+      <>
         <circle cx="9" cy="9" r="3" stroke="currentColor" strokeWidth="1.5" />
         <circle cx="16.5" cy="10.5" r="2.4" stroke="currentColor" strokeWidth="1.5" />
         <path d="M4 19c.5-3 2.5-4.7 5-4.7s4.5 1.7 5 4.7M14.8 19c.4-2.2 1.7-3.7 3.5-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-      </svg>
-    );
-  }
-  return (
-    <svg {...common}>
-      <path d="M12 21c4-3.2 7-6.6 7-10.7A7 7 0 005 10.3C5 14.4 8 17.8 12 21z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
-      <circle cx="12" cy="10.2" r="2.3" stroke="currentColor" strokeWidth="1.5" />
-    </svg>
-  );
+      </>
+    ),
+    'self-identity': (
+      <>
+        <path d="M12 21c4-3.2 7-6.6 7-10.7A7 7 0 005 10.3C5 14.4 8 17.8 12 21z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+        <circle cx="12" cy="10.2" r="2.3" stroke="currentColor" strokeWidth="1.5" />
+      </>
+    ),
+    'exam-resilience': (
+      <>
+        <rect x="4.5" y="3.5" width="15" height="17" rx="1.5" stroke="currentColor" strokeWidth="1.5" />
+        <path d="M7.5 7.5h9M7.5 10.5h5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+        <path d="M8.3 16.8l2 2 5-6" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+      </>
+    ),
+    'stream-discovery': (
+      <>
+        <circle cx="12" cy="12" r="8.3" stroke="currentColor" strokeWidth="1.5" />
+        <path d="M15.2 8.8l-2 4.7-4.7 2 2-4.7 4.7-2z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
+      </>
+    ),
+    'peer-navigation': (
+      <>
+        <circle cx="7" cy="8.5" r="2.3" stroke="currentColor" strokeWidth="1.5" />
+        <circle cx="17" cy="8.5" r="2.3" stroke="currentColor" strokeWidth="1.5" />
+        <circle cx="12" cy="16.5" r="2.3" stroke="currentColor" strokeWidth="1.5" />
+        <path d="M8.7 10.1l2.4 4.3M15.3 10.1l-2.4 4.3M9.3 8.5h5.4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+      </>
+    ),
+    'digital-self-discovery': (
+      <>
+        <path d="M8.3 11.3a4 4 0 118 0c0 2.6-1.8 3.6-1.8 5.7H10c0-2.1-1.7-3.1-1.7-5.7z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+        <path d="M9.8 19.5h4.4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        <path d="M4 6.5l1.6 1.3M20 6.5l-1.6 1.3M12 3v2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+      </>
+    ),
+    'generation-gap': (
+      <>
+        <path d="M3 6.3A1.4 1.4 0 014.4 4.9h6.4a1.4 1.4 0 011.4 1.4v4.6a1.4 1.4 0 01-1.4 1.4H7.6L5 14.5v-2.2H4.4A1.4 1.4 0 013 10.9V6.3z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
+        <path d="M12.2 9.9h6.4A1.4 1.4 0 0120 11.3v4.6a1.4 1.4 0 01-1.4 1.4h-.6v2.2l-2.6-2.2h-3.2a1.4 1.4 0 01-1.4-1.4V13" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
+      </>
+    ),
+    'performance-pressure': (
+      <>
+        <circle cx="12" cy="12" r="8.3" stroke="currentColor" strokeWidth="1.5" />
+        <circle cx="12" cy="12" r="4.6" stroke="currentColor" strokeWidth="1.4" />
+        <circle cx="12" cy="12" r="1.1" fill="currentColor" />
+      </>
+    ),
+    'interpersonal-bonds': (
+      <>
+        <circle cx="9" cy="12" r="5.2" stroke="currentColor" strokeWidth="1.5" />
+        <circle cx="15" cy="12" r="5.2" stroke="currentColor" strokeWidth="1.5" />
+      </>
+    ),
+    independence: (
+      <>
+        <path d="M13.5 3.5H6a1 1 0 00-1 1v15a1 1 0 001 1h7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M12 12.2h8.5M17.3 8.7l3.4 3.5-3.4 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <circle cx="9.7" cy="12.2" r="0.9" fill="currentColor" />
+      </>
+    ),
+    'peer-pressure-manipulation': (
+      <>
+        <circle cx="12" cy="12" r="8.3" stroke="currentColor" strokeWidth="1.5" />
+        <path d="M8.6 8.6l6.8 6.8M15.4 8.6l-6.8 6.8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      </>
+    ),
+    'resilience-rejection': (
+      <>
+        <path d="M4.5 12a7.5 7.5 0 0112.6-5.5M19.5 12a7.5 7.5 0 01-12.6 5.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        <path d="M17.1 3.8v3.2h-3.2M6.9 20.2V17h3.2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      </>
+    ),
+  };
+  return <svg {...common}>{paths[pillarId] ?? paths['self-identity']}</svg>;
+}
+
+// Custom line-icon set for the five stakeholder roles — replaces the emoji
+// (🎒🧑‍🏫👨‍👩‍👧🏫💬) used for these everywhere on the site. Exported so
+// AboutSection, the /about page, and the Work-With-Us role cards on
+// /get-started all draw from the same set.
+export function StakeholderIcon({
+  role,
+  size = 20,
+}: {
+  role: 'Students' | 'Mentors' | 'Parents' | 'Schools' | 'Counselors';
+  size?: number;
+}) {
+  const common = { width: size, height: size, viewBox: '0 0 24 24', fill: 'none' as const };
+  const paths: Record<string, React.ReactNode> = {
+    Students: (
+      <>
+        <path d="M7 8.5V6.7a5 5 0 0110 0V8.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        <rect x="4.5" y="8.5" width="15" height="11.5" rx="2.5" stroke="currentColor" strokeWidth="1.5" />
+        <path d="M9.5 12.5v3M14.5 12.5v3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      </>
+    ),
+    Mentors: (
+      <>
+        <circle cx="12" cy="7.3" r="3.3" stroke="currentColor" strokeWidth="1.5" />
+        <path d="M5 20c.6-4.2 3.4-6.5 7-6.5s6.4 2.3 7 6.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        <path d="M16.5 8.2l2.2-1.4M18.7 6.8l.3 2.2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+      </>
+    ),
+    Parents: (
+      <>
+        <circle cx="9" cy="7.5" r="3" stroke="currentColor" strokeWidth="1.5" />
+        <circle cx="16.5" cy="10" r="2.1" stroke="currentColor" strokeWidth="1.5" />
+        <path d="M3.3 19.5c.5-3.6 2.7-5.6 5.7-5.6s5.2 2 5.7 5.6M14.3 19.5c.3-2.4 1.6-4 3.7-4.4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      </>
+    ),
+    Schools: (
+      <>
+        <path d="M12 3.5l9 4.3-9 4.3-9-4.3 9-4.3z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+        <path d="M6.5 10.4v4.6c0 1.5 2.5 3 5.5 3s5.5-1.5 5.5-3v-4.6" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+        <path d="M20 8v5.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      </>
+    ),
+    Counselors: (
+      <>
+        <path d="M4.5 6.3A1.8 1.8 0 016.3 4.5h11.4a1.8 1.8 0 011.8 1.8v8.4a1.8 1.8 0 01-1.8 1.8H11l-4.5 3.5v-3.5H6.3a1.8 1.8 0 01-1.8-1.8V6.3z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+        <path d="M8.5 9.8a1.9 1.9 0 013.4-1.2c.6.5 1.1.8 1.1 1.7 0 1-1.1 1.2-1.1 2.2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+        <circle cx="11.8" cy="15" r="0.9" fill="currentColor" />
+      </>
+    ),
+  };
+  return <svg {...common}>{paths[role]}</svg>;
 }
 
 function ArchetypeIcon({ archetype, size = 22 }: { archetype: ApproachKey; size?: number }) {
