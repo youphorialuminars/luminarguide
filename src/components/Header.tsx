@@ -336,7 +336,9 @@ function ChatTurn({
             className="flex items-center gap-2.5 bg-card border border-border rounded-xl px-3 py-2.5 text-left text-xs font-600 text-foreground hover:border-primary transition-colors"
             style={{ fontWeight: 600 }}
           >
-            <span className="flex-shrink-0 text-sm">{pillar.icon}</span>
+            <span className="flex-shrink-0" style={{ color: 'var(--primary)' }}>
+              <ScenarioIcon pillarId={pillar.id} size={16} />
+            </span>
             {pillar.name}
           </button>
         ))}
@@ -352,10 +354,10 @@ function ChatTurn({
       <div className="max-w-[92%] bg-card border border-border rounded-2xl rounded-tl-sm p-4 shadow-sm flex flex-col gap-2.5">
         <div className="flex items-center gap-2">
           <span
-            className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 text-sm"
-            style={{ backgroundColor: 'rgba(124,58,237,0.1)' }}
+            className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+            style={{ backgroundColor: 'rgba(22,33,44,0.08)', color: 'var(--primary)' }}
           >
-            {pillar.icon}
+            <ScenarioIcon pillarId={pillar.id} size={16} />
           </span>
           <p className="text-sm font-700 text-foreground" style={{ fontWeight: 700 }}>
             {pillar.name}
@@ -1167,7 +1169,9 @@ export function PillarDiscoveryGame({ variant = 'modal' }: { variant?: 'modal' |
             <div className="flex flex-col gap-3 animate-fade-up">
               <div className="rounded-2xl p-5" style={{ backgroundColor: 'var(--primary)' }}>
                 <div className="flex items-center gap-2.5 mb-2.5">
-                  <span className="text-xl">{pillar.icon}</span>
+                <span style={{ color: 'var(--primary-foreground)' }}>
+                      <ScenarioIcon pillarId={pillar.id} size={20} />
+                    </span>
                   <p className="text-sm font-700" style={{ fontWeight: 700, color: 'var(--primary-foreground)' }}>
                     The sweet spot: {pillar.name}
                   </p>
@@ -1600,6 +1604,88 @@ export function RoleSolutionTile({
         </div>
       </div>
     </div>
+  );
+}
+
+/* ------------------------------------------------------------------------
+ * GradeBandDeepDive
+ * Used on /about. Used to be three full-width sections stacked back to
+ * back — Classes 6-8, then 9-10, then 11-12 — each repeating the exact same
+ * layout (label, status pill, heading, challenge chips), which made the
+ * page a long scroll of near-identical blocks. Collapsed into one section
+ * with the same grade-band tab picker already used in FeaturesSection, so
+ * a visitor sees one band in full at a time instead of scrolling past all
+ * three whether they care about all three ages or not.
+ * ---------------------------------------------------------------------- */
+
+export function GradeBandDeepDive() {
+  const [activeId, setActiveId] = useState<GradeBand['id']>('middle');
+  const band = gradeBands.find((b) => b.id === activeId) ?? gradeBands[0];
+
+  return (
+    <section className="py-20 bg-muted">
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
+          <p className="text-xs font-600 text-primary uppercase tracking-widest" style={{ fontWeight: 600 }}>
+            A Closer Look, Band by Band
+          </p>
+          <div className="flex gap-1.5 bg-card border border-border rounded-full p-1">
+            {gradeBands.map((b) => (
+              <button
+                key={b.id}
+                type="button"
+                onClick={() => setActiveId(b.id)}
+                className="px-4 py-1.5 rounded-full text-xs font-600 transition-colors"
+                style={{
+                  fontWeight: 600,
+                  backgroundColor: activeId === b.id ? 'var(--primary)' : 'transparent',
+                  color: activeId === b.id ? 'var(--primary-foreground)' : 'var(--muted-foreground)',
+                }}
+              >
+                {b.gradesShort}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div key={band.id} className="animate-fade-up">
+          <div className="flex flex-wrap items-center gap-3 mb-3">
+            <p className="text-xs font-600 text-primary uppercase tracking-widest">
+              {band.gradesLabel} · {band.bandLabel}
+            </p>
+            <span
+              className="text-[10px] font-600 uppercase tracking-wide px-2 py-0.5 rounded-full"
+              style={{
+                backgroundColor: band.status === 'live' ? 'var(--primary)' : 'var(--card)',
+                color: band.status === 'live' ? 'var(--primary-foreground)' : 'var(--muted-foreground)',
+                border: band.status === 'live' ? 'none' : '1px solid var(--border)',
+              }}
+            >
+              {band.statusLabel}
+            </span>
+          </div>
+          <h2
+            className="font-700 text-foreground mb-5 max-w-3xl leading-snug"
+            style={{ fontWeight: 700, fontSize: 'clamp(1.375rem, 2.2vw, 1.75rem)', letterSpacing: '-0.015em' }}
+          >
+            {band.ageContext}
+          </h2>
+
+          <div className="flex flex-wrap gap-3">
+            {band.challenges.map((c) => (
+              <div
+                key={c}
+                className="flex items-center gap-2.5 bg-card border-2 border-border rounded-full px-4 py-2.5 text-base font-800 shadow-sm"
+                style={{ fontWeight: 800, color: 'var(--foreground)' }}
+              >
+                <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: 'var(--accent)' }} />
+                {c}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
