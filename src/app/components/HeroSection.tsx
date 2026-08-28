@@ -101,7 +101,7 @@ export default function HeroSection() {
               
               {/* Background image with gradient overlay */}
               <AppImage
-                src="https://img.rocket.new/generatedImages/rocket_gen_img_19f7a5d0b-1776428699759.png"
+                src="/assets/images/hero-classroom.jpg"
                 alt="Students collaborating in a bright modern classroom, teacher guiding small group discussion"
                 fill
                 sizes="(max-width: 1024px) 100vw, 42vw"

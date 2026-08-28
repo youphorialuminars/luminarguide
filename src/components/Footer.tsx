@@ -5,7 +5,6 @@ import { siteConfig } from '@/lib/siteConfig';
 const links = [
   { label: 'About', href: '/about' },
   { label: 'Features', href: '/features' },
-  { label: 'Our Stories', href: '/gamification' },
   { label: 'Solutions', href: '/solutions' },
   { label: 'Pricing', href: '/pricing' },
   { label: 'FAQ', href: '/faq' },

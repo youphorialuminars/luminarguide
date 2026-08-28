@@ -31,8 +31,8 @@ export const metadata: Metadata = {
     "LuminarGuide helps students in grades 6–12 grow beyond the textbook — building self-awareness, resilience, and the skills to face their real challenges, with mentors, parents, schools, and counselors all in the loop.",
   openGraph: {
     title: "LuminarGuide — Development Beyond the Textbook",
-    description: "AI-guided personal development for students in grades 6–12, starting with self-awareness and inner strength.",
-    images: [{ url: '/assets/images/app_logo.png', width: 1200, height: 630 }],
+    description: "Mentor-led personal development for students in grades 6–12, starting with self-awareness and inner strength.",
+    images: [{ url: 'https://ldkwhimqenxkloibhwzt.supabase.co/storage/v1/object/public/Branding/combined_logo%20(2).png', width: 1200, height: 630 }],
   },
 };
 

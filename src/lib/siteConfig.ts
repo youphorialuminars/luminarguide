@@ -46,13 +46,9 @@ export const siteConfig = {
 
   contact: {
     email: 'contact@luminarsguide.app',
-    // TODO: replace with the real phone number, e.g. '+91 98765 43210'
-    phone: '',
-    // TODO: replace with the real LinkedIn page URL
-    linkedinUrl: '',
-    // TODO: replace with the real Instagram page URL
-    instagramUrl: '',
-    responseTime: 'Within 1 business day',
+    phone: '+91 9696402289',
+    linkedinUrl: 'https://www.linkedin.com/company/luminarsguide',
+    responseTime: 'Within 48 business hours',
   },
 
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:4028',
