@@ -98,16 +98,6 @@ export default function HeroSection() {
               className="relative rounded-3xl overflow-hidden shadow-2xl"
               style={{ minHeight: '480px' }}>
               
-              {/* Background image with gradient overlay */}
-              <AppImage
-                src="/assets/images/hero-classroom.jpg"
-                alt="Students collaborating in a bright modern classroom, teacher guiding small group discussion"
-                fill
-                sizes="(max-width: 1024px) 100vw, 42vw"
-                className="object-cover"
-                priority />
-              
-
               {/* Solid brand-gradient panel — replaces the old placeholder photo.
                   Three flat layers, no image request, no loading state:
                   1) the base gradient (theme-aware, so it isn't stuck on violet
@@ -133,7 +123,8 @@ export default function HeroSection() {
 
 
               {/* Content overlay */}
-              <div className="absolute inset-0 p-7 flex flex-col justify-between">                {/* Top badge */}
+              <div className="absolute inset-0 p-7 flex flex-col justify-between">
+                {/* Top badge */}
                 <div className="flex justify-end">
                   <span
                     className="text-xs font-600 text-white px-3 py-1.5 rounded-full border border-white/20 backdrop-blur-sm"
@@ -158,8 +149,8 @@ export default function HeroSection() {
                       </svg>
                     </div>
                     <div>
-                      <p className="text-white text-xs font-600" style={{ fontWeight: 600 }}>Stage 1 · Classes 6–8</p>
-                      <p className="text-white/60 text-xs">What students work on</p>
+                      <p className="text-white text-xs font-600" style={{ fontWeight: 600 }}>Stage 1 · Classes 6–12</p>
+                      <p className="text-white/60 text-xs">A glimpse of what we help students build</p>
                     </div>
                   </div>
 
@@ -198,7 +189,7 @@ export default function HeroSection() {
                   </div>
                   <div className="text-right">
                     <p className="text-white text-xs font-600" style={{ fontWeight: 600 }}>Piloting Now</p>
-                    <p className="text-white/60 text-xs">Classes 6–8 live</p>
+                    <p className="text-white/60 text-xs">Classes 6–12 live</p>
                   </div>
                 </div>
               </div>
