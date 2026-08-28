@@ -35,8 +35,13 @@ export default function Header() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-8 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <AppLogo size={36} className="transition-transform duration-300 group-hover:scale-105" />
+                    <Link href="/" className="flex items-center gap-2.5 group">
+            <span
+              className="flex items-center justify-center rounded-xl p-1.5 transition-transform duration-300 group-hover:scale-105"
+              style={{ backgroundColor: '#FFFFFF' }}
+            >
+              <AppLogo size={40} />
+            </span>
           </Link>
 
           <nav className="hidden lg:flex items-center gap-5">
