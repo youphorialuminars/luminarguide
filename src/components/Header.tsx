@@ -37,9 +37,6 @@ export default function Header() {
         <div className="max-w-7xl mx-auto px-8 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5 group">
             <AppLogo size={36} className="transition-transform duration-300 group-hover:scale-105" />
-            <span className="font-sans font-700 text-base tracking-tight text-foreground hidden sm:block" style={{ fontWeight: 700 }}>
-              {siteConfig.brandName}
-            </span>
           </Link>
 
           <nav className="hidden lg:flex items-center gap-5">
