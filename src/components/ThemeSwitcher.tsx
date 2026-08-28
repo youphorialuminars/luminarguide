@@ -3,9 +3,8 @@
 import React, { useEffect, useState } from 'react';
 
 const THEMES = [
-  { id: 'violet', label: 'Navy & Gold', from: '#16212C', to: '#A67E33' },
-  { id: 'teal', label: 'Teal & Gold', from: '#0D9488', to: '#D4A843' },
-  { id: 'teal-dark', label: 'Dark Teal & Gold', from: '#2DD4BF', to: '#E6C065' },
+  { id: 'violet', label: 'Light', from: '#16212C', to: '#A67E33' },
+  { id: 'teal-dark', label: 'Dark', from: '#2DD4BF', to: '#E6C065' },
 ];
 
 export default function ThemeSwitcher() {

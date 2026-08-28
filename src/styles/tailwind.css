@@ -24,28 +24,6 @@
   color-scheme: light;
 }
 
-[data-theme='teal'] {
-  --background: #F7FAF9;
-  --foreground: #0F1C1A;
-  --primary: #0D9488;
-  --primary-foreground: #FFFFFF;
-  --secondary: #EAF6F4;
-  --secondary-foreground: #0F5C54;
-  --accent: #D4A843;
-  --accent-foreground: #1C1014;
-  --muted: #EAF6F4;
-  --muted-foreground: #4B6B67;
-  --card: #FFFFFF;
-  --card-foreground: #0F1C1A;
-  --border: #DCEEEB;
-  --input: #DCEEEB;
-  --ring: #0D9488;
-  --radius: 1rem;
-  --font-sans: 'Public Sans', sans-serif;
-  --font-serif: 'Lora', serif;
-  color-scheme: light;
-}
-
 [data-theme='teal-dark'] {
   --background: #0B1817;
   --foreground: #EAF3F1;

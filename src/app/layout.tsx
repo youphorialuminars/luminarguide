@@ -42,7 +42,7 @@ export default function RootLayout({ children }) {
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: "try{var t=localStorage.getItem('luminarsguide-theme');document.documentElement.setAttribute('data-theme',['violet','teal','teal-dark'].indexOf(t)>-1?t:'violet');}catch(e){}",
+            __html: "try{var t=localStorage.getItem('luminarsguide-theme');document.documentElement.setAttribute('data-theme',['violet','teal-dark'].indexOf(t)>-1?t:'violet');}catch(e){}",
           }}
         />
 
