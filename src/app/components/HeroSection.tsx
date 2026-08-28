@@ -1,5 +1,4 @@
 import React from 'react';
-import AppImage from '@/components/ui/AppImage';
 
 export default function HeroSection() {
   return (
@@ -109,26 +108,32 @@ export default function HeroSection() {
                 priority />
               
 
-              {/* Scrim overlay — two layers: a theme-tinted color layer (so it isn't
-                  stuck on violet when the teal / teal-dark themes are selected) plus a
-                  dark wash underneath the white text, so contrast stays safe even with
-                  the brighter teal-dark theme's colors */}
+              {/* Solid brand-gradient panel — replaces the old placeholder photo.
+                  Three flat layers, no image request, no loading state:
+                  1) the base gradient (theme-aware, so it isn't stuck on violet
+                     when the teal / teal-dark themes are selected)
+                  2) a soft top-right glow for a little depth
+                  3) a dark wash so the white text/cards on top stay legible
+                     even against the brighter teal-dark theme's gold accent */}
               <div
                 className="absolute inset-0"
                 style={{
                   background: 'linear-gradient(160deg, var(--primary) 0%, var(--accent) 100%)',
-                  opacity: 0.55,
                 }} />
               <div
                 className="absolute inset-0"
                 style={{
-                  background: 'linear-gradient(175deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.62) 100%)',
+                  background: 'radial-gradient(60% 50% at 78% 12%, rgba(255,255,255,0.16) 0%, transparent 60%)',
+                }} />
+              <div
+                className="absolute inset-0"
+                style={{
+                  background: 'linear-gradient(175deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.48) 100%)',
                 }} />
 
 
               {/* Content overlay */}
-              <div className="absolute inset-0 p-7 flex flex-col justify-between">
-                {/* Top badge */}
+              <div className="absolute inset-0 p-7 flex flex-col justify-between">                {/* Top badge */}
                 <div className="flex justify-end">
                   <span
                     className="text-xs font-600 text-white px-3 py-1.5 rounded-full border border-white/20 backdrop-blur-sm"
