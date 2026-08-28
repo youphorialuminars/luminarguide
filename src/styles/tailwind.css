@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Logo swap: two logo files exist — one tuned for the light theme, one
+   tuned for the dark theme (the light version's dark-navy text is too low
+   contrast on a near-black background). Only one is ever shown, picked by
+   the current data-theme on <html>. See AppLogo usage in Header.tsx. */
+.logo-light { display: block; }
+.logo-dark { display: none; }
+[data-theme='teal-dark'] .logo-light { display: none; }
+[data-theme='teal-dark'] .logo-dark { display: block; }
+
 :root, [data-theme='violet'] {
   --background: #EEF0F0;
   --foreground: #16212C;

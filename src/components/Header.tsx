@@ -35,13 +35,16 @@ export default function Header() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-8 h-16 flex items-center justify-between">
-                    <Link href="/" className="flex items-center gap-2.5 group">
-            <span
-              className="flex items-center justify-center rounded-xl p-1.5 transition-transform duration-300 group-hover:scale-105"
-              style={{ backgroundColor: '#FFFFFF' }}
-            >
-              <AppLogo size={40} />
-            </span>
+                              <Link href="/" className="flex items-center gap-2.5 group">
+            <AppLogo
+              size={44}
+              className="logo-light transition-transform duration-300 group-hover:scale-105"
+            />
+            <AppLogo
+              size={44}
+              className="logo-dark transition-transform duration-300 group-hover:scale-105"
+              src="https://ldkwhimqenxkloibhwzt.supabase.co/storage/v1/object/public/Branding/combined_logo_dark.png"
+            />
           </Link>
 
           <nav className="hidden lg:flex items-center gap-5">
