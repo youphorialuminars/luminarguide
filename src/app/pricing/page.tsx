@@ -12,10 +12,10 @@ export default function PricingPage() {
         <p className="text-xs font-600 text-primary uppercase tracking-widest mb-4" style={{ fontWeight: 600 }}>
           Pricing
         </p>
-        <h1 className="text-section-heading text-foreground mb-4">Simple, honest pricing</h1>
+        <h1 className="text-section-heading text-foreground mb-4">Plans built around your child's growth</h1>
         <p className="text-base text-muted-foreground">
-          One nationwide price today — shown monthly, billed once a year. No hidden fees, and
-          easy EMI options are available at signup for any plan.
+          Three plans, each priced monthly and billed once a year. EMI options are available at
+          signup for any plan.
         </p>
       </div>
 
@@ -75,8 +75,7 @@ export default function PricingPage() {
       </div>
 
       <p className="text-center text-sm text-muted-foreground mt-12">
-        Have questions about which plan fits your child, need a quote for a school or group, or
-        want to ask about EMI options?{' '}
+        Not sure which plan fits your child, or need a quote for a school or group?{' '}
         <Link href="/contact" className="text-primary underline underline-offset-2" style={{ fontWeight: 600 }}>
           Contact us
         </Link>
