@@ -394,8 +394,9 @@ export const pricingPlans: PricingPlan[] = [
     tagline: 'Start building the fundamentals',
     price: { monthly: 1800, quarterly: 1650, annual: 1500 },
     features: [
-      "Full access to the pillars for your child's grade band",
-      'Structured small-group mentoring sessions',
+      "Full curriculum access for your child's grade band",
+      'Weekly group classes, both offline and online',
+      'A Certificate of Growth on completing each stage',
       'Regular parent progress summaries',
       'Email support, within 1 business day',
     ],
@@ -408,9 +409,13 @@ export const pricingPlans: PricingPlan[] = [
     highlight: true,
     features: [
       'Everything in Foundation',
-      '1:1 mentor sessions, not just group sessions',
-      'More frequent check-ins and progress reviews',
-      'Direct mentor coordination with parents and school',
+      'Every-two-weeks 1:1 mentor review calls',
+      "Priority counselor sessions, arranged whenever the mentor recommends it",
+      "Personalized tasks and sessions built around your child",
+      "A Mentor's Letter — a personal, written reflection from their mentor",
+      'Regional and national LuminarGuide meets, not just their own city',
+      'A Growth & Wellbeing Report — plain-language updates on what\'s going well, patterns worth watching, and specific next steps',
+      'A Pillar Showcase Workshop after completing each pillar',
     ],
   },
   {
@@ -420,12 +425,48 @@ export const pricingPlans: PricingPlan[] = [
     price: { monthly: 7199, quarterly: 6599, annual: 5999 },
     features: [
       'Everything in Ascend',
-      'Priority mentor access and more sessions per month',
-      "A personalized development plan for your child",
-      'Direct counselor involvement when needed',
+      'Weekly 1:1 mentor reviews and coaching',
+      'Dedicated counselor support, with regular monthly check-ins',
+      "Parallel sessions for parents, alongside your child's own",
+      'About 2–2.5 months of dedicated depth on each pillar',
     ],
   },
 ];
+
+/**
+ * SINGLE PILLAR TRACK
+ * A standalone add-on, not part of the Foundation/Ascend/Immersive ladder
+ * above — a bounded, one-time enrollment rather than a subscription, so it
+ * gets a flat price instead of a monthly/quarterly/annual cadence. Pitched
+ * at a family that wants focused help on one specific pillar (a rough
+ * patch with confidence, a specific social skill) without a year-round
+ * commitment — summer break is the obvious moment for this.
+ *
+ * Deliberately priced at Ascend-level depth (1:1 mentor + counselor access),
+ * just narrowed to one pillar instead of five: 2 months of full Ascend is
+ * ₹9,598, so this sits at roughly half that — about ₹2,500 per pillar per
+ * month, well above Ascend's own ~₹960-per-pillar rate. That's the point:
+ * it should always cost MORE per pillar than committing to a full tier, so
+ * it reads as a premium, no-commitment option rather than a cheap way to
+ * get Ascend's attention piecemeal. Keep that relationship if this number
+ * changes. The Mentor's Letter, Growth & Wellbeing Report, regional meets,
+ * and Pillar Showcase Workshop stay exclusive to Ascend/Immersive on
+ * purpose — those are rewards for the longer relationship, not something
+ * a 2-month track should also come with.
+ */
+export const pillarTrackAddOn = {
+  name: 'Single Pillar Track',
+  tagline: 'Ascend-level mentor and counselor access, focused on one pillar for 2 months',
+  /** INR. Flat price for the full 2-month enrollment — not a per-month rate. */
+  price: 4999,
+  billingNote: 'One-time enrollment, 2 months',
+  features: [
+    'Two months of focused 1:1 mentor sessions on one pillar of your choice',
+    'Every-two-weeks mentor review calls',
+    'Priority counselor sessions, arranged whenever the mentor recommends it',
+    'A Certificate of Growth on completion',
+  ],
+};
 
 /**
  * PURPOSE

@@ -18,8 +18,8 @@ const features = [
   {
     title: 'Beyond the Screen',
     description:
-      "Group tasks, mentor calls, offline classes and activities, and learning that stays fun and interactive — not a student alone with an app. Intra-school and inter-school events let students see their growth shared and complemented by others, too.",
-    detail: 'Group work, mentor calls, school events',
+      "Group tasks, mentor calls, offline classes and activities, and learning that stays fun and interactive — not a student alone with an app. Regional and national LuminarGuide meets let students see their growth shared and complemented by peers from far beyond their own city, too.",
+    detail: 'Group work, mentor calls, regional meets',
   },
   {
     title: 'A Record That Grows With the Student',

@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { pricingPlans } from '@/lib/siteConfig';
+import { pricingPlans, pillarTrackAddOn } from '@/lib/siteConfig';
 
 export const metadata: Metadata = { title: 'Pricing — LuminarGuide' };
 
@@ -107,6 +107,41 @@ export default function PricingPage() {
             </Link>
           </div>
         ))}
+      </div>
+
+      {/* Single Pillar Track — a standalone, flat-price add-on, not part of
+          the Monthly/Quarterly/Annual ladder above (it's a one-time 2-month
+          enrollment, not a subscription), so it gets its own simple card
+          rather than a fourth column in the toggle grid. */}
+      <div className="mt-10 bento-card flex flex-col md:flex-row md:items-center gap-6 md:gap-10">
+        <div className="flex-1">
+          <p className="text-xs font-600 uppercase tracking-widest mb-2" style={{ fontWeight: 600, color: 'var(--accent)' }}>
+            Standalone Add-On
+          </p>
+          <h2 className="text-card-heading text-foreground mb-2">{pillarTrackAddOn.name}</h2>
+          <p className="text-sm text-muted-foreground mb-4">{pillarTrackAddOn.tagline}</p>
+          <ul className="flex flex-col gap-2">
+            {pillarTrackAddOn.features.map((feature) => (
+              <li key={feature} className="flex items-start gap-2.5 text-sm text-foreground">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="mt-1 flex-shrink-0">
+                  <path d="M2.5 7.5l3 3 6-6.5" stroke="var(--accent)" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <span>{feature}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="flex flex-col items-start md:items-end gap-3 md:min-w-[200px]">
+          <div>
+            <span className="text-3xl text-foreground tracking-tight" style={{ fontWeight: 700 }}>
+              ₹{pillarTrackAddOn.price.toLocaleString('en-IN')}
+            </span>
+            <p className="text-xs text-muted-foreground mt-1">{pillarTrackAddOn.billingNote}</p>
+          </div>
+          <Link href="/get-started" className="btn-secondary" style={{ justifyContent: 'center' }}>
+            Get Started
+          </Link>
+        </div>
       </div>
 
       <p className="text-center text-sm text-muted-foreground mt-12">
