@@ -343,10 +343,20 @@ export const gradeBands: GradeBand[] = [
 
 /**
  * PRICING
- * Three nationwide tiers, priced monthly but billed once a year (a
- * standard SaaS/course pattern — the monthly figure is what's advertised,
- * `billedAnnually` is what's actually charged, and billedAnnually is always
- * monthlyPrice * 12, no hidden discount or markup baked in).
+ * Three nationwide tiers, each available at three billing cadences —
+ * monthly, quarterly, annual. All three numbers below are per-month
+ * figures; the actual amount charged at signup is:
+ *   monthly:   price.monthly charged every month
+ *   quarterly: price.quarterly * 3 charged every 3 months
+ *   annual:    price.annual * 12 charged once a year
+ *
+ * The spread between them is deliberate, not arbitrary: quarterly is ~8%
+ * cheaper than monthly (standard "step up your commitment" reward),
+ * annual is ~17% cheaper than monthly — which works out to almost exactly
+ * "2 months free" (annual * 12 ≈ monthly * 10) across all three plans, a
+ * clean, sayable number rather than an odd percentage. Keep that ~2-month
+ * relationship if these numbers ever change — it's what makes the annual
+ * discount easy to explain to a parent in one sentence.
  *
  * Location-based pricing (e.g. a different rate per city) is planned but
  * NOT live yet — these are single nationwide prices. When city pricing is
@@ -358,14 +368,19 @@ export const gradeBands: GradeBand[] = [
  * `features` below is a first-draft placeholder (session counts, cadence,
  * etc. aren't finalized) — replace with the real inclusions before launch.
  */
+export type BillingCycle = 'monthly' | 'quarterly' | 'annual';
+
 export interface PricingPlan {
   id: string;
   name: string;
   tagline: string;
-  /** INR. Advertised monthly figure. */
-  monthlyPrice: number;
-  /** INR. What's actually charged once a year: always monthlyPrice * 12. */
-  billedAnnually: number;
+  /** INR, per month, at each billing cadence. See note above for how the
+   * actual charged amount is derived from each of these. */
+  price: {
+    monthly: number;
+    quarterly: number;
+    annual: number;
+  };
   /** Shows a "Most Popular" badge — put this on the plan you want most
    * visitors to pick (the classic three-tier pricing pattern). */
   highlight?: boolean;
@@ -377,8 +392,7 @@ export const pricingPlans: PricingPlan[] = [
     id: 'foundation',
     name: 'Foundation',
     tagline: 'Start building the fundamentals',
-    monthlyPrice: 1500,
-    billedAnnually: 18000,
+    price: { monthly: 1800, quarterly: 1650, annual: 1500 },
     features: [
       "Full access to the pillars for your child's grade band",
       'Structured small-group mentoring sessions',
@@ -390,8 +404,7 @@ export const pricingPlans: PricingPlan[] = [
     id: 'ascend',
     name: 'Ascend',
     tagline: 'The most popular starting point',
-    monthlyPrice: 3999,
-    billedAnnually: 47988,
+    price: { monthly: 4799, quarterly: 4399, annual: 3999 },
     highlight: true,
     features: [
       'Everything in Foundation',
@@ -404,8 +417,7 @@ export const pricingPlans: PricingPlan[] = [
     id: 'immersive',
     name: 'Immersive',
     tagline: 'The deepest level of support',
-    monthlyPrice: 5999,
-    billedAnnually: 71988,
+    price: { monthly: 7199, quarterly: 6599, annual: 5999 },
     features: [
       'Everything in Ascend',
       'Priority mentor access and more sessions per month',
