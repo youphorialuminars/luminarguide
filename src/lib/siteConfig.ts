@@ -341,6 +341,107 @@ export const gradeBands: GradeBand[] = [
   },
 ];
 
+/**
+ * PRICING
+ * Three nationwide tiers, priced monthly but billed once a year (a
+ * standard SaaS/course pattern — the monthly figure is what's advertised,
+ * `billedAnnually` is what's actually charged, and billedAnnually is always
+ * monthlyPrice * 12, no hidden discount or markup baked in).
+ *
+ * Location-based pricing (e.g. a different rate per city) is planned but
+ * NOT live yet — these are single nationwide prices. When city pricing is
+ * ready, add a separate `cityOverrides`-style structure rather than
+ * duplicating these plans, and gate it behind a "where are you located?"
+ * picker on the pricing page — never a public city-by-city comparison
+ * table, which is what makes differential pricing feel unjust to visitors.
+ *
+ * `features` below is a first-draft placeholder (session counts, cadence,
+ * etc. aren't finalized) — replace with the real inclusions before launch.
+ */
+export interface PricingPlan {
+  id: string;
+  name: string;
+  tagline: string;
+  /** INR. Advertised monthly figure. */
+  monthlyPrice: number;
+  /** INR. What's actually charged once a year: always monthlyPrice * 12. */
+  billedAnnually: number;
+  /** Shows a "Most Popular" badge — put this on the plan you want most
+   * visitors to pick (the classic three-tier pricing pattern). */
+  highlight?: boolean;
+  features: string[];
+}
+
+export const pricingPlans: PricingPlan[] = [
+  {
+    id: 'foundation',
+    name: 'Foundation',
+    tagline: 'Start building the fundamentals',
+    monthlyPrice: 1500,
+    billedAnnually: 18000,
+    features: [
+      "Full access to the pillars for your child's grade band",
+      'Structured small-group mentoring sessions',
+      'Regular parent progress summaries',
+      'Email support, within 1 business day',
+    ],
+  },
+  {
+    id: 'ascend',
+    name: 'Ascend',
+    tagline: 'The most popular starting point',
+    monthlyPrice: 3999,
+    billedAnnually: 47988,
+    highlight: true,
+    features: [
+      'Everything in Foundation',
+      '1:1 mentor sessions, not just group sessions',
+      'More frequent check-ins and progress reviews',
+      'Direct mentor coordination with parents and school',
+    ],
+  },
+  {
+    id: 'immersive',
+    name: 'Immersive',
+    tagline: 'The deepest level of support',
+    monthlyPrice: 5999,
+    billedAnnually: 71988,
+    features: [
+      'Everything in Ascend',
+      'Priority mentor access and more sessions per month',
+      "A personalized development plan for your child",
+      'Direct counselor involvement when needed',
+    ],
+  },
+];
+
+/**
+ * PURPOSE
+ * Vision, mission, and the parent-facing positioning statement. Each has a
+ * short `heading` (the one-liner — used as a pull-quote / hero line where
+ * space is tight) and a longer `description` (the full paragraph — used
+ * wherever there's room to actually make the case). Kept in one place so
+ * the same wording stays consistent everywhere it's quoted, instead of
+ * drifting into three slightly-different versions across pages.
+ */
+export const purpose = {
+  vision: {
+    heading: 'A generation of students who grow up knowing themselves — not just their scores.',
+    description:
+      "Every child deserves a childhood that isn't measured only in marks. We want a generation of students who leave school knowing who they are as clearly as they know their subjects.",
+  },
+  mission: {
+    heading: "Mentor-led development, one student at a time, so growing up doesn't have to happen alone.",
+    description:
+      'To give every student, from Class 6 through 12, a mentor who walks alongside them through identity, resilience, and real-world readiness — treated with the same seriousness as academics, in partnership with parents, schools, and counselors.',
+  },
+  messageToParents: {
+    heading: 'For parents who see their child as more than a rank.',
+    description:
+      "Grades will always matter — we're not asking you to forget that. But most programs stop there. We're built for something harder to measure and just as important: helping your child know who they are before the world tells them who to be. If you've ever wished someone paid as much attention to your child's confidence and character as their marksheet, that's exactly where we start.",
+  },
+} as const;
+
 export const stakeholders = [
   { icon: '🎒', label: 'Students' },
   { icon: '🧑‍🏫', label: 'Mentors' },

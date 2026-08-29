@@ -1,4 +1,5 @@
 import React from 'react';
+import { purpose } from '@/lib/siteConfig';
 
 export default function HeroSection() {
   return (
@@ -45,6 +46,17 @@ export default function HeroSection() {
               Meeting children{' '}
               <span className="gradient-text-gold">where growing up gets heavy.</span>
             </h1>
+
+            {/* Parent-facing positioning line — short on purpose, this is the
+                one line every visitor sees without scrolling. The fuller
+                version of this same message lives in the Purpose section
+                just below the hero, for anyone who wants the full case. */}
+            <p
+              className="text-base font-600 animate-fade-up delay-150"
+              style={{ fontWeight: 600, color: 'var(--accent)' }}>
+
+              {purpose.messageToParents.heading}
+            </p>
 
             {/* Subheading */}
             <p className="text-base leading-relaxed text-muted-foreground max-w-xl animate-fade-up delay-200 font-700" style={{ fontSize: '1.0625rem', fontWeight: 700 }}>
