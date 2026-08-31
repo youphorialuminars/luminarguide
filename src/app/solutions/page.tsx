@@ -105,11 +105,6 @@ export default function SolutionsPage() {
             </div>
           </section>
 
-          {/* A Note to Schools — the same emotional/positioning core as the
-              homepage's "A Note to Parents," so it gets the same strongest
-              visual treatment (the gradient panel), placed right after the
-              Schools block rather than at the end so it reads as part of
-              that section's own case, not a generic closing statement. */}
           {r.role === 'Schools' && (
             <section className={`py-16 ${i % 2 === 0 ? 'bg-background' : 'bg-muted'}`}>
               <div className="max-w-6xl mx-auto px-6">
