@@ -74,7 +74,7 @@ export default function GetStartedPage() {
           </h1>
           <p className="text-base leading-relaxed text-muted-foreground mb-8">
             {mode === 'parent'
-              ? "Tell us a bit about your family — we read every message ourselves and follow up within one business day. Sharing this doesn't commit you to anything."
+            ? "Tell us a bit about your family — we read every message ourselves and follow up personally. Sharing this doesn't commit you to anything."
               : "We're always looking to work with mentors, counselors, and schools who want to help students grow beyond the textbook."}
           </p>
 
@@ -131,7 +131,7 @@ export default function GetStartedPage() {
             </button>
             {parentStatus === 'success' && (
               <p className="text-xs text-center" style={{ color: 'var(--primary)' }}>
-                Thanks — we&apos;ve got it and will follow up within one business day.
+              Thanks — we&apos;ve got it and will follow up personally.
               </p>
             )}
             {parentStatus === 'error' && (

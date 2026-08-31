@@ -1491,7 +1491,7 @@ export function CollaboratorInterestForm() {
         </button>
         {ciStatus === 'success' && (
           <p className="text-xs text-center" style={{ color: 'var(--primary)' }}>
-            Thanks — we&apos;ve got your interest and will be in touch within one business day.
+            Thanks — we&apos;ve got your interest and will be in touch.
           </p>
         )}
         {ciStatus === 'error' && (
