@@ -2,7 +2,6 @@ import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { RoleSolutionTile, StakeholderIcon } from '@/components/Header';
-import { purpose } from '@/lib/siteConfig';
 
 export const metadata: Metadata = { title: 'Solutions — LuminarGuide' };
 
@@ -91,46 +90,18 @@ export default function SolutionsPage() {
       </section>
 
       {roles.map((r, i) => (
-        <React.Fragment key={r.role}>
-          <section className={`py-16 ${i % 2 === 0 ? 'bg-muted' : 'bg-background'}`}>
-            <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-10">
-              <div className="flex flex-col gap-4 self-start">
-                <span style={{ color: 'var(--primary)' }}>
-                  <StakeholderIcon role={r.role} size={30} />
-                </span>
-                <h2 className="text-section-heading text-foreground">{r.headline}</h2>
-                <p className="text-sm font-600 text-primary uppercase tracking-wide">{r.role}</p>
-              </div>
-              <RoleSolutionTile points={r.points} theoryName={r.theory.name} theoryDescription={r.theory.description} />
+        <section key={r.role} className={`py-16 ${i % 2 === 0 ? 'bg-muted' : 'bg-background'}`}>
+          <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-10">
+            <div className="flex flex-col gap-4 self-start">
+              <span style={{ color: 'var(--primary)' }}>
+                <StakeholderIcon role={r.role} size={30} />
+              </span>
+              <h2 className="text-section-heading text-foreground">{r.headline}</h2>
+              <p className="text-sm font-600 text-primary uppercase tracking-wide">{r.role}</p>
             </div>
-          </section>
-
-          {r.role === 'Schools' && (
-            <section className={`py-16 ${i % 2 === 0 ? 'bg-background' : 'bg-muted'}`}>
-              <div className="max-w-6xl mx-auto px-6">
-                <div className="relative rounded-3xl overflow-hidden shadow-2xl p-8 md:p-12">
-                  <div
-                    className="absolute inset-0"
-                    style={{ background: 'linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%)' }} />
-                  <div
-                    className="absolute inset-0"
-                    style={{ background: 'radial-gradient(60% 60% at 85% 15%, rgba(255,255,255,0.18) 0%, transparent 60%)' }} />
-                  <div
-                    className="absolute inset-0"
-                    style={{ background: 'linear-gradient(175deg, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.4) 100%)' }} />
-
-                  <div className="relative">
-                    <span
-                      className="block leading-none mb-2"
-                      style={{ fontFamily: 'var(--font-serif)', fontSize: '4.5rem', color: 'rgba(255,255,255,0.35)' }}>
-
-                      &ldquo;
-                    </span>
-                    <p
-                      className="text-xs font-600 uppercase tracking-widest mb-3 -mt-6"
-                      style={{ fontWeight: 600, color: 'rgba(255,255,255,0.85)' }}>
-
-        </React.Fragment>
+            <RoleSolutionTile points={r.points} theoryName={r.theory.name} theoryDescription={r.theory.description} />
+          </div>
+        </section>
       ))}
 
       <section className="py-16 bg-background text-center">
