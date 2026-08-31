@@ -126,6 +126,45 @@ export default function LandingPage() {
             </div>
           </div>
 
+          {/* Message to schools — same treatment as the parents panel just
+              above, stacked directly beneath it so both audiences see their
+              own message in the same place, one after the other. */}
+          <div className="relative rounded-3xl overflow-hidden shadow-2xl p-8 md:p-12 mt-6">
+            <div
+              className="absolute inset-0"
+              style={{ background: 'linear-gradient(135deg, var(--accent) 0%, var(--primary) 100%)' }} />
+            <div
+              className="absolute inset-0"
+              style={{ background: 'radial-gradient(60% 60% at 85% 15%, rgba(255,255,255,0.18) 0%, transparent 60%)' }} />
+            <div
+              className="absolute inset-0"
+              style={{ background: 'linear-gradient(175deg, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.4) 100%)' }} />
+
+            <div className="relative">
+              <span
+                className="block leading-none mb-2"
+                style={{ fontFamily: 'var(--font-serif)', fontSize: '4.5rem', color: 'rgba(255,255,255,0.35)' }}>
+
+                &ldquo;
+              </span>
+              <p
+                className="text-xs font-600 uppercase tracking-widest mb-3 -mt-6"
+                style={{ fontWeight: 600, color: 'rgba(255,255,255,0.85)' }}>
+
+                A Note to Schools
+              </p>
+              <h3
+                className="mb-4"
+                style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.5rem, 2.6vw, 2.25rem)', lineHeight: 1.25, color: '#FFFFFF' }}>
+
+                {purpose.messageToSchools.heading}
+              </h3>
+              <p className="text-base leading-relaxed max-w-2xl" style={{ color: 'rgba(255,255,255,0.92)' }}>
+                {purpose.messageToSchools.description}
+              </p>
+            </div>
+          </div>
+
         </div>
       </section>
 
