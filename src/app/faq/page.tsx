@@ -48,9 +48,9 @@ const faqGroups: FaqGroup[] = [
         question: 'How do I get started as a parent?',
         answer: (
           <>
-            Fill out the short form on the <Link href="/get-started" className="text-primary hover:underline">Get Started</Link> page —
+           Fill out the short form on the <Link href="/get-started" className="text-primary hover:underline">Get Started</Link> page —
             your name, email, and your child's grade is enough to begin. We read every submission ourselves and
-            follow up within 24 hours. Sharing the form doesn't commit you to anything.
+            follow up personally. Sharing the form doesn't commit you to anything.
           </>
         ),
       },
@@ -115,7 +115,7 @@ const faqGroups: FaqGroup[] = [
       },
       {
         question: 'How quickly do you respond to messages?',
-        answer: `We read every message ourselves — no ticketing queue — and reply within 24 hours.`,
+        answer: 'We read every message ourselves — no ticketing queue — and reply personally.',
       },
     ],
   },
