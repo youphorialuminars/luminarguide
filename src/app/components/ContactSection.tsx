@@ -46,6 +46,7 @@ export default function ContactSection() {
     <section id="contact" className="py-20 bg-background scroll-mt-16">
       <div className="max-w-6xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+          {/* Left column: info */}
           <div className="flex flex-col gap-7">
             <div>
               <p className="text-xs font-600 text-primary uppercase tracking-widest mb-3" style={{ fontWeight: 600 }}>
@@ -55,7 +56,7 @@ export default function ContactSection() {
                 Ready to transform how you support students?
               </h2>
               <p className="text-base leading-relaxed text-muted-foreground">
-                                Whether you are a school administrator, educator, or counselor, we would love to show you how LuminarsGuide can work for your students. Send us a message and we will be in touch.
+                Whether you are a school administrator, educator, or counselor, we would love to show you how LuminarsGuide can work for your students. Send us a message and we will be in touch.
               </p>
             </div>
             <div className="flex flex-col gap-3">
@@ -71,7 +72,11 @@ export default function ContactSection() {
                     {siteConfig.contact.email}
                   </a>
                 </div>
+              </div>
+            </div>
           </div>
+
+          {/* Right column: form */}
           <div className="bg-card border border-border rounded-2xl p-7 shadow-sm">
             <div className="flex flex-col gap-5">
               <div className="flex flex-col gap-1.5">
@@ -119,8 +124,7 @@ export default function ContactSection() {
                   style={{ resize: 'vertical', minHeight: '120px' }}
                 />
               </div>
-
-                <button
+              <button
                 type="button"
                 onClick={handleSubmit}
                 disabled={status === 'submitting'}
@@ -145,7 +149,7 @@ export default function ContactSection() {
               )}
               {status === 'idle' && (
                 <p className="text-xs text-muted-foreground text-center">
-                We read every message ourselves and reply personally.
+                  We read every message ourselves and reply personally.
                 </p>
               )}
             </div>

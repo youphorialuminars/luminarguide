@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { siteConfig } from '@/lib/siteConfig';
+
 
 export const metadata: Metadata = { title: 'FAQ — LuminarGuide' };
 
@@ -50,7 +50,7 @@ const faqGroups: FaqGroup[] = [
           <>
             Fill out the short form on the <Link href="/get-started" className="text-primary hover:underline">Get Started</Link> page —
             your name, email, and your child's grade is enough to begin. We read every submission ourselves and
-            follow up within {siteConfig.contact.responseTime.toLowerCase()}. Sharing the form doesn't commit you to anything.
+            follow up within 24 hours. Sharing the form doesn't commit you to anything.
           </>
         ),
       },
@@ -73,8 +73,7 @@ const faqGroups: FaqGroup[] = [
         question: 'How do I apply to work with LuminarGuide as a mentor, counselor, or school?',
         answer: (
           <>
-            Visit <Link href="/get-started" className="text-primary hover:underline">Get Started</Link> and switch to
-            "Work With Us." Mentors and counselors can tell us about their background directly; schools can reach
+            Visit <Link href="/get-started" className="text-primary hover:underline">Get Started</Link> and switch to "Work With Us." Mentors and counselors can tell us about their background directly; schools can reach
             out to bring the Stage 1 pilot to their students.
           </>
         ),
@@ -116,7 +115,7 @@ const faqGroups: FaqGroup[] = [
       },
       {
         question: 'How quickly do you respond to messages?',
-        answer: `We read every message ourselves — no ticketing queue — and reply ${siteConfig.contact.responseTime.toLowerCase()}.`,
+        answer: `We read every message ourselves — no ticketing queue — and reply within 24 hours.`,
       },
     ],
   },
