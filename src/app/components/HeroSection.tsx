@@ -69,8 +69,8 @@ export default function HeroSection() {
 
             {/* CTA Buttons */}
             <div className="flex flex-wrap gap-3 animate-fade-up delay-300">
-              <a href="#contact" className="btn-primary">
-                Get Started
+              <a href="/get-started" className="btn-primary">
+                Ask Us Anything
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                   <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>

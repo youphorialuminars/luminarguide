@@ -55,7 +55,7 @@ export default function ContactSection() {
                 Ready to transform how you support students?
               </h2>
               <p className="text-base leading-relaxed text-muted-foreground">
-                Whether you are a school administrator, educator, or counselor, we would love to show you how LuminarGuide can work for your students. Send us a message and we will be in touch within one business day.
+                                Whether you are a school administrator, educator, or counselor, we would love to show you how LuminarsGuide can work for your students. Send us a message and we will be in touch.
               </p>
             </div>
             <div className="flex flex-col gap-3">
@@ -71,20 +71,6 @@ export default function ContactSection() {
                     {siteConfig.contact.email}
                   </a>
                 </div>
-              </div>
-              <div className="flex items-center gap-4 p-4 bg-card border border-border rounded-xl">
-                <div className="icon-wrapper" style={{ color: 'var(--accent)', backgroundColor: 'rgba(166,126,51,0.12)' }}>
-                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                    <circle cx="9" cy="9" r="7" stroke="currentColor" strokeWidth="1.5" />
-                    <path d="M9 5v4l2.5 2.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground font-500 uppercase tracking-wider mb-0.5" style={{ fontWeight: 500 }}>Response Time</p>
-                  <p className="text-sm font-600 text-foreground" style={{ fontWeight: 600 }}>Within 1 business day</p>
-                </div>
-              </div>
-            </div>
           </div>
           <div className="bg-card border border-border rounded-2xl p-7 shadow-sm">
             <div className="flex flex-col gap-5">
@@ -148,7 +134,7 @@ export default function ContactSection() {
               </button>
               {status === 'success' && (
                 <p className="text-xs text-center" style={{ color: 'var(--primary)' }}>
-                  Thanks — we&apos;ve got your message and will be in touch within one business day.
+                  Thanks — we&apos;ve got your message and will be in touch.
                 </p>
               )}
               {status === 'error' && (
@@ -159,7 +145,7 @@ export default function ContactSection() {
               )}
               {status === 'idle' && (
                 <p className="text-xs text-muted-foreground text-center">
-                  We read every message ourselves and reply within one business day.
+                We read every message ourselves and reply personally.
                 </p>
               )}
             </div>

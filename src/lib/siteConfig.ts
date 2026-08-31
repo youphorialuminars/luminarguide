@@ -48,7 +48,6 @@ export const siteConfig = {
     email: 'contact@luminarsguide.app',
     phone: '+91 9696402289',
     linkedinUrl: 'https://www.linkedin.com/company/luminarsguide',
-    responseTime: 'Within 48 business hours',
   },
 
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:4028',
@@ -398,7 +397,7 @@ export const pricingPlans: PricingPlan[] = [
       'Weekly group classes, both offline and online',
       'A Certificate of Growth on completing each stage',
       'Regular parent progress summaries',
-      'Email support, within 1 business day',
+      'Email support',
     ],
   },
   {
@@ -492,6 +491,11 @@ export const purpose = {
     heading: 'For parents who see their child as more than a rank.',
     description:
       "Grades will always matter — we're not asking you to forget that. But most programs stop there. We're built for something harder to measure and just as important: helping your child know who they are before the world tells them who to be. If you've ever wished someone paid as much attention to your child's confidence and character as their marksheet, that's exactly where we start.",
+  },
+    messageToSchools: {
+    heading: 'For schools that see every student as more than a result.',
+    description:
+      "Results will always matter — we're not asking you to deprioritize them. But a school's responsibility doesn't end at the marksheet. We're built for the part that's harder to measure and just as consequential: knowing which of your students are quietly struggling before it becomes a bigger problem, and having real structure behind your answer when a parent, a board, or your own conscience asks what you're doing about it. If you've ever wished you had as much visibility into your students' wellbeing as you do into their results, that's exactly where we start.",
   },
 } as const;
 

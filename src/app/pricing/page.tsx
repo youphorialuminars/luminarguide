@@ -1,7 +1,6 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { siteConfig } from '@/lib/siteConfig';
 
 export const metadata: Metadata = { title: 'Pricing — LuminarGuide' };
 
@@ -28,8 +27,7 @@ export default function PricingPage() {
         that fits — no commitment either way.
       </p>
       <div className="flex flex-wrap items-center justify-center gap-4">
-        <Link href="/get-started" className="btn-primary">Get Started</Link>
-        <Link href="/contact" className="btn-secondary">Contact Us</Link>
+        <Link href="/get-started" className="btn-primary">Ask Us Anything</Link>
       </div>
     </section>
   );

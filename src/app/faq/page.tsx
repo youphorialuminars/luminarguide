@@ -167,7 +167,7 @@ export default function FaqPage() {
         </div>
 
         <div className="mt-16 text-center">
-          <Link href="/get-started" className="btn-primary">Get Started</Link>
+          <Link href="/get-started" className="btn-primary">Ask Us Anything</Link>
         </div>
       </div>
     </section>

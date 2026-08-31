@@ -58,7 +58,7 @@ export default function Header() {
             <ReadAloudControl />
             <ThemeSwitcher />
             <Link href="/get-started" className="btn-primary text-sm px-5 py-2.5">
-              Get Started
+              Ask Us Anything
             </Link>
           </div>
 
@@ -91,7 +91,7 @@ export default function Header() {
               </Link>
             ))}
             <Link href="/get-started" className="btn-primary justify-center mt-2" onClick={() => setMenuOpen(false)}>
-              Get Started
+              Ask Us Anything
             </Link>
           </div>
         )}
@@ -1213,7 +1213,7 @@ export function PillarDiscoveryGame({ variant = 'modal' }: { variant?: 'modal' |
           )}
           <div className="flex flex-wrap gap-3 justify-center mt-1">
             <Link href="/about" className="btn-secondary">See the full pillar guide</Link>
-            <Link href="/get-started" className="btn-primary">Get Started</Link>
+            <Link href="/get-started" className="btn-primary">Ask Us Anything</Link>
           </div>
           <div className="flex items-center gap-4 mt-1">
             <button type="button" onClick={goBack} className="text-xs font-600 text-muted-foreground hover:text-primary transition-colors" style={{ fontWeight: 600 }}>

@@ -96,7 +96,7 @@ export default function FeaturesPage() {
       </section>
 
       <section className="py-16 bg-background text-center">
-        <Link href="/get-started" className="btn-primary">Get Started</Link>
+                <Link href="/get-started" className="btn-primary">Ask Us Anything</Link>
       </section>
     </>
   );
