@@ -14,11 +14,12 @@ export default function ContactPage() {
         Whether you're a parent, a mentor, a counselor, or a school — mail us directly, or send
         us a note through our contact form and we'll follow up. No commitment either way.
       </p>
-      <div className="flex flex-wrap items-center justify-center gap-4">
+      <div className="flex flex-wrap items-center justify-center gap-3">
         <a href={`mailto:${siteConfig.contact.email}`} className="btn-primary">
           Mail Us at {siteConfig.contact.email}
         </a>
-        <Link href="/get-started" className="btn-secondary">Or Ask Us Anything</Link>
+        <span className="text-sm text-muted-foreground">or</span>
+        <Link href="/get-started" className="btn-primary">Ask Us Anything</Link>
       </div>
     </section>
   );
