@@ -36,15 +36,18 @@ export default function Header() {
         <div className="max-w-7xl mx-auto px-8 h-16 flex items-center justify-between">
                               <Link href="/" className="flex items-center gap-2.5 group">
             <AppLogo
-              size={44}
-              className="logo-light transition-transform duration-300 group-hover:scale-105"
-            />
-            <AppLogo
-              size={44}
-              className="logo-dark transition-transform duration-300 group-hover:scale-105"
-              src="https://ldkwhimqenxkloibhwzt.supabase.co/storage/v1/object/public/Branding/combined_logo_dark.png"
-            />
-          </Link>
+<Link href="/" className="flex items-center group">
+  <img
+    src="https://ldkwhimqenxkloibhwzt.supabase.co/storage/v1/object/public/Branding/logofulllight%20(1).svg"
+    alt="Luminar's Guide"
+    className="logo-light h-9 w-auto transition-transform duration-300 group-hover:scale-105"
+  />
+  <img
+    src="https://ldkwhimqenxkloibhwzt.supabase.co/storage/v1/object/public/Branding/logofulldark.svg"
+    alt="Luminar's Guide"
+    className="logo-dark h-9 w-auto transition-transform duration-300 group-hover:scale-105"
+  />
+</Link>
 
           <nav className="hidden lg:flex items-center gap-5">
             {navLinks.map((link) => (
