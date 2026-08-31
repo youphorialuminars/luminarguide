@@ -35,17 +35,17 @@ export default function Header() {
         
         <div className="max-w-7xl mx-auto px-8 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center group">
-            <img
-              src="https://img.rocket.new/generatedImages/rocket_gen_img_14eedaf8d-1767479978741.png"
-              alt="Luminar's Guide"
-              className="logo-light h-9 w-auto transition-transform duration-300 group-hover:scale-105" />
-            
-            <img
-              src="https://img.rocket.new/generatedImages/rocket_gen_img_14eedaf8d-1767479978741.png"
-              alt="Luminar's Guide"
-              className="logo-dark h-9 w-auto transition-transform duration-300 group-hover:scale-105" />
-            
-          </Link>
+  <img
+    src="https://ldkwhimqenxkloibhwzt.supabase.co/storage/v1/object/public/Branding/logofulllight%20(1).svg"
+    alt="Luminar's Guide"
+    className="logo-light h-9 w-auto transition-transform duration-300 group-hover:scale-105"
+  />
+  <img
+    src="https://ldkwhimqenxkloibhwzt.supabase.co/storage/v1/object/public/Branding/logofulldark.svg"
+    alt="Luminar's Guide"
+    className="logo-dark h-9 w-auto transition-transform duration-300 group-hover:scale-105"
+  />
+</Link>
 
           <nav className="hidden lg:flex items-center gap-5">
             {navLinks.map((link) =>
