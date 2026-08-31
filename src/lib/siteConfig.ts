@@ -488,7 +488,7 @@ export const purpose = {
       'To give every student, from Class 6 through 12, a mentor who walks alongside them through identity, resilience, and real-world readiness — treated with the same seriousness as academics, in partnership with parents, schools, and counselors.',
   },
   messageToParents: {
-    heading: 'For parents who see their child as more than a rank.',
+    heading: 'For parents and schools that view their children as more than mere ranks.',
     description:
       "Grades will always matter — we're not asking you to forget that. But most programs stop there. We're built for something harder to measure and just as important: helping your child know who they are before the world tells them who to be. If you've ever wished someone paid as much attention to your child's confidence and character as their marksheet, that's exactly where we start.",
   },
