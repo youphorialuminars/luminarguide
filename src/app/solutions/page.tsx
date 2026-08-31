@@ -130,22 +130,6 @@ export default function SolutionsPage() {
                       className="text-xs font-600 uppercase tracking-widest mb-3 -mt-6"
                       style={{ fontWeight: 600, color: 'rgba(255,255,255,0.85)' }}>
 
-                      A Note to Schools
-                    </p>
-                    <h3
-                      className="mb-4"
-                      style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.5rem, 2.6vw, 2.25rem)', lineHeight: 1.25, color: '#FFFFFF' }}>
-
-                      {purpose.messageToSchools.heading}
-                    </h3>
-                    <p className="text-base leading-relaxed max-w-2xl" style={{ color: 'rgba(255,255,255,0.92)' }}>
-                      {purpose.messageToSchools.description}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </section>
-          )}
         </React.Fragment>
       ))}
 
