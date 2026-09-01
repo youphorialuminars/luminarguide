@@ -409,30 +409,37 @@ function ChatTurn({
 
 /* ------------------------------------------------------------------------
  * PillarDiscoveryGame
- * An exploratory "Try the Approach" game for the live Classes 6–8 pillars.
- * Players pick their role first — the student themselves, or a Mentor /
- * Parent / School / Counselor — from a game-specific role list (GAME_ROLES,
- * deliberately separate from the sitewide `stakeholders` list used
- * elsewhere, since the game also lets the student play as themselves). The
- * chosen role changes how each scenario is framed (second person for the
- * student, third person otherwise) and can be changed at any point via
- * "Change role" / "Switch role", no page refresh needed. For each scenario,
- * players get three real, legitimate response styles — Step In, Ask & Guide,
- * Step Back — drawn from situational-leadership / coaching-stance research.
- * None of the three is "the wrong answer": each card flips to reveal what
- * that style tends to build and what to watch for, on its own terms. Only
- * after exploring does the game reveal the pillar's sweet spot. Players can
- * mark whichever style feels most like them, purely for a light,
- * non-judgmental recap at the end — never a score. Players can go back and
- * revisit any earlier scenario. Icons throughout are hand-drawn inline SVGs
- * (no emoji, no image assets) to keep the visual language consistent with
- * the rest of the site.
+ * An exploratory "Try the Approach" game covering all three live grade
+ * bands — Classes 6–8, 9–10, and 11–12 (see `gradeBands` in siteConfig).
+ * Players pick a grade band first, then a role — the student themselves,
+ * or a Mentor / Parent / School / Counselor — from a game-specific role
+ * list (GAME_ROLES, deliberately separate from the sitewide `stakeholders`
+ * list used elsewhere, since the game also lets the student play as
+ * themselves). Each (band, role) combination has its own five scenarios,
+ * one per pillar in that band, sourced from BAND_ROLE_SCENARIOS — never the
+ * same situation reworded across roles or bands, each written fresh from
+ * that vantage point. Both the band and the role can be changed at any
+ * point via their tab rows, no page refresh needed, and progress (which
+ * scenario you're on, which have been explored) is tracked independently
+ * per band+role pair via a composite "bandId:roleId" key, so switching
+ * bands or roles never loses your place in another one.
  *
- * variant="modal" is the floating, dismissible popup that shows itself once
- * per browser (via localStorage) and can be reopened any time from its
- * launcher button. variant="inline" is the same game embedded directly in
- * the /gamification page, always visible, no popup chrome. Kept here (not
- * its own file) for the same reason as PillarGuideChat above.
+ * For each scenario, players get three real, legitimate response styles —
+ * Step In, Ask & Guide, Step Back — drawn from situational-leadership /
+ * coaching-stance research. None of the three is "the wrong answer": each
+ * option expands on tap to reveal what that style tends to build and what
+ * to watch for, on its own terms. Only after exploring does the game
+ * reveal the pillar's sweet spot. Players can move between scenarios with
+ * the arrow buttons, a swipe gesture on mobile, or by jumping directly to
+ * a pillar via the pillar strip. Icons throughout are hand-drawn inline
+ * SVGs (no emoji, no image assets) to keep the visual language consistent
+ * with the rest of the site.
+ *
+ * Renders as a full-screen takeover on mobile and a centered floating
+ * panel on larger screens, reopened any time from its launcher button
+ * (bottom-left, icon-only on mobile to avoid colliding with the pillar
+ * chatbot launcher). Kept here (not its own file) for the same reason as
+ * PillarGuideChat above.
  * ---------------------------------------------------------------------- */
 
 function playChime(kind: 'click' | 'success' | 'flip' = 'click') {
@@ -738,279 +745,773 @@ interface GameScenario {
 // pillar ids stay the same across roles (so the pillar strip lines up no
 // matter which role is active), but the moment itself, and what each
 // response style means inside it, is written fresh per role.
-const ROLE_SCENARIOS: Record<GameRoleId, GameScenario[]> = {
-  Students: [
-  {
-    pillarId: 'digital-wisdom',
-    prompt: 'You ask an AI chatbot to write your entire homework assignment overnight.',
-    approaches: [
-    { key: 'stepIn', action: 'Redo it yourself before you submit it.', insight: "Fixes tonight, but skips the more useful part — actually practicing the skill." },
-    { key: 'askGuide', action: 'Ask yourself what made finishing it honestly feel so hard.', insight: "That honest answer is usually more useful than the assignment itself." },
-    { key: 'stepBack', action: 'Turn it in as-is and see what the feedback says.', insight: "You'll learn something either way — but only if you actually read the feedback." }]
+// Every grade band has its own five pillars (see `gradeBands` in siteConfig),
+// and every role sees five real moments written from its own vantage point
+// within that band — not the same situations reworded. Nested as
+// [band id][role id] so switching either the grade band or the role just
+// swaps which five-scenario list is showing.
+const BAND_ROLE_SCENARIOS: Record<GradeBand['id'], Record<GameRoleId, GameScenario[]>> = {
+  middle: {
+    Students: [
+    {
+      pillarId: 'digital-wisdom',
+      prompt: 'You ask an AI chatbot to write your entire homework assignment overnight.',
+      approaches: [
+      { key: 'stepIn', action: 'Redo it yourself before you submit it.', insight: "Fixes tonight, but skips the more useful part — actually practicing the skill." },
+      { key: 'askGuide', action: 'Ask yourself what made finishing it honestly feel so hard.', insight: "That honest answer is usually more useful than the assignment itself." },
+      { key: 'stepBack', action: 'Turn it in as-is and see what the feedback says.', insight: "You'll learn something either way — but only if you actually read the feedback." }]
+
+    },
+    {
+      pillarId: 'inner-strength',
+      prompt: "You get a poor grade on a test you studied hard for, and don't feel like talking about it.",
+      approaches: [
+      { key: 'stepIn', action: 'Go through the test and find exactly what went wrong.', insight: "Useful eventually — just notice if you're skipping past the disappointment to get there." },
+      { key: 'askGuide', action: 'Name how you actually feel before you try to fix anything.', insight: "Sitting with disappointment on purpose is a real skill, not a delay tactic." },
+      { key: 'stepBack', action: 'Take today off from thinking about it, on purpose.', insight: "Fine once — as long as you actually come back to it instead of just avoiding it." }]
+
+    },
+    {
+      pillarId: 'personal-safety',
+      prompt: "You mention an online friend you've never met who wants to video call.",
+      approaches: [
+      { key: 'stepIn', action: 'Loop someone else in before the first call.', insight: "Costs you nothing, and it's exactly what genuinely careful people do." },
+      { key: 'askGuide', action: 'Ask yourself what you actually know about this person.', insight: "If you can't answer that clearly, that's usually the answer." },
+      { key: 'stepBack', action: 'Trust your gut and just go for it.', insight: "Your gut is a good start — a second opinion is still worth thirty seconds." }]
+
+    },
+    {
+      pillarId: 'leadership',
+      prompt: "During a group project, you'd rather do the whole thing alone than work with classmates.",
+      approaches: [
+      { key: 'stepIn', action: 'Ask for one specific, defined role in the group.', insight: "Makes it feel manageable — a good first step, not a permanent workaround." },
+      { key: 'askGuide', action: 'Ask yourself what about teamwork actually feels unreliable.', insight: "Usually it's not the group — it's trust, or not knowing how to delegate yet." },
+      { key: 'stepBack', action: 'Go solo this once, but plan to try again next time.', insight: "One project alone is fine — just don't let it become the permanent plan." }]
+
+    },
+    {
+      pillarId: 'self-identity',
+      prompt: 'You feel like you don’t know what you’re "good at," compared to your friends.',
+      approaches: [
+      { key: 'stepIn', action: 'Ask someone close to you what they see in you.', insight: "A good start — the goal is eventually seeing it yourself too." },
+      { key: 'askGuide', action: 'Ask yourself what you enjoy, skill aside.', insight: "Enjoyment tends to come before skill — that's actually where to start." },
+      { key: 'stepBack', action: 'Let the comparison go, just this once.', insight: "Fine once — if it keeps coming back, it's worth actually sitting with." }]
+
+    }],
+
+    Mentors: [
+    {
+      pillarId: 'digital-wisdom',
+      prompt: 'A mentee shows you an assignment they say an AI chatbot "helped a lot" with — and something about how smoothly it reads doesn’t sit right.',
+      approaches: [
+      { key: 'stepIn', action: 'Sit down and rebuild the assignment together from scratch.', insight: "Rebuilds the skill fast — just make sure it's their hand doing the work, not yours." },
+      { key: 'askGuide', action: 'Ask them to explain their own reasoning behind a few lines, out loud.', insight: "If they can't explain it, that's the real diagnostic — not the polish of the writing." },
+      { key: 'stepBack', action: 'Let it go this once and watch how the next unprompted assignment reads.', insight: "Buys you real information — but only if you actually follow up on what you see next time." }]
+
+    },
+    {
+      pillarId: 'inner-strength',
+      prompt: "A mentee who's usually open goes quiet halfway through a session, right after a hard topic comes up.",
+      approaches: [
+      { key: 'stepIn', action: 'Gently name what you noticed and ask if you should keep going.', insight: "Shows you're paying attention — just be ready to actually stop if they say so." },
+      { key: 'askGuide', action: 'Sit in the quiet for a moment before saying anything at all.', insight: "The silence itself is often where the real work happens, not around it." },
+      { key: 'stepBack', action: 'Move to something lighter and return to it next session instead.', insight: "Respects their pace — as long as you don't quietly let it drop for good." }]
+
+    },
+    {
+      pillarId: 'personal-safety',
+      prompt: "A mentee mentions, almost in passing, that they've been messaging an adult they met in an online gaming group.",
+      approaches: [
+      { key: 'stepIn', action: 'Ask directly who this person is and how the messaging started.', insight: "Direct is right here — a mentor's job includes noticing this out loud." },
+      { key: 'askGuide', action: 'Ask what makes this relationship feel different from their other friendships.', insight: "Helps them build the judgment to spot this themselves next time, not just this once." },
+      { key: 'stepBack', action: 'Make a mental note and see if it comes up again unprompted.', insight: "Risky as a first move — this is usually worth surfacing sooner, not waiting on." }]
+
+    },
+    {
+      pillarId: 'leadership',
+      prompt: 'In a session meant to build their confidence, a mentee keeps deferring every decision back to you instead of making the call themselves.',
+      approaches: [
+      { key: 'stepIn', action: 'Make the call for them this once, then talk about why.', insight: "Keeps momentum today, but watch that it doesn't become the pattern." },
+      { key: 'askGuide', action: "Ask what they'd choose if you weren't in the room at all.", insight: "Separates what they actually think from what they assume you want to hear." },
+      { key: 'stepBack', action: 'Let the decision sit unmade until they fill the silence.', insight: "Uncomfortable, but discomfort is often what finally prompts them to decide." }]
+
+    },
+    {
+      pillarId: 'self-identity',
+      prompt: 'A mentee tells you they only really feel good about themselves when they’re achieving something — never just as they are.',
+      approaches: [
+      { key: 'stepIn', action: 'Point out something you value in them that has nothing to do with achievement.', insight: "A generous, useful start — though it lands more if they eventually notice it themselves." },
+      { key: 'askGuide', action: "Ask what they'd still be proud of if no one else ever found out.", insight: "Gets underneath performance to something that's actually theirs." },
+      { key: 'stepBack', action: "Let the comment pass and watch whether it's a pattern or a one-off.", insight: "Reasonable once — repeated, it's worth naming directly rather than tracking quietly." }]
+
+    }],
+
+    Parents: [
+    {
+      pillarId: 'digital-wisdom',
+      prompt: 'Your child asks an AI chatbot for advice about a friendship problem instead of coming to you.',
+      approaches: [
+      { key: 'stepIn', action: 'Bring it up directly and offer your own take on the situation.', insight: "Shows you're available — just watch that it doesn't read as taking over the problem." },
+      { key: 'askGuide', action: 'Ask what the chatbot said, and what they thought of its advice.', insight: "Keeps you in the loop without making them feel caught for not asking you first." },
+      { key: 'stepBack', action: 'Let them work through it their way, and stay quietly available.', insight: "Respects their independence — as long as 'available' is genuinely felt, not just assumed." }]
+
+    },
+    {
+      pillarId: 'inner-strength',
+      prompt: 'Your child comes home with a poor grade they studied hard for, and shuts the conversation down before it starts.',
+      approaches: [
+      { key: 'stepIn', action: 'Sit with them and go through the test together, right then.', insight: "Well-intentioned, but pushing before they're ready can shut the door further." },
+      { key: 'askGuide', action: 'Ask how they are feeling before asking anything about the test itself.', insight: "Naming the feeling first is usually what actually opens the conversation back up." },
+      { key: 'stepBack', action: 'Give it the evening, and check in again once things have settled.', insight: "Often exactly right — just make sure the check-in actually happens." }]
+
+    },
+    {
+      pillarId: 'personal-safety',
+      prompt: "You notice your child has been video-calling someone from an online game you'd never heard them mention before.",
+      approaches: [
+      { key: 'stepIn', action: 'Ask directly who this is and sit in on the next call together.', insight: "Removes today's uncertainty — the goal is understanding, not confiscation." },
+      { key: 'askGuide', action: 'Ask what they know about this person and how the friendship started.', insight: "Builds the judgment they'll need for the times you're not in the room." },
+      { key: 'stepBack', action: 'Say nothing for now and see if they mention it themselves.', insight: "Most online friendships are harmless, but this is exactly the kind of moment worth not letting slide." }]
+
+    },
+    {
+      pillarId: 'leadership',
+      prompt: "Your child says they'd rather do a group project entirely alone than deal with classmates.",
+      approaches: [
+      { key: 'stepIn', action: 'Call the teacher and ask for them to be reassigned individually.', insight: "Solves this project — but skips the harder, more useful conversation underneath." },
+      { key: 'askGuide', action: 'Ask what about working with these classmates feels unreliable.', insight: "Usually surfaces a trust or delegation issue that's worth knowing about either way." },
+      { key: 'stepBack', action: 'Let them handle it their way and see how the project goes.', insight: "A reasonable stretch of independence — just worth a real debrief once it's done." }]
+
+    },
+    {
+      pillarId: 'self-identity',
+      prompt: 'Your child keeps comparing themselves to a friend who "has it all figured out," and it’s starting to sound less like a phase.',
+      approaches: [
+      { key: 'stepIn', action: 'Tell them directly what you see in them that this friend does not have.', insight: "Comes from love, but a strength they discover tends to land deeper than one they're handed." },
+      { key: 'askGuide', action: 'Ask what specifically about this friend feels like "figured out" to them.', insight: "Often the real issue is one specific thing, not a wholesale gap between them." },
+      { key: 'stepBack', action: 'Let the comment go this time without addressing it directly.', insight: "Fine as a one-off — if it becomes a pattern, it's worth naming rather than tracking silently." }]
+
+    }],
+
+    Schools: [
+    {
+      pillarId: 'digital-wisdom',
+      prompt: "Several teachers separately flag a rise in AI-written homework this term, and your school doesn't have a shared stance on it yet.",
+      approaches: [
+      { key: 'stepIn', action: 'Draft a clear school-wide AI use policy and roll it out this term.', insight: "Solves the ambiguity fast — just be sure teachers and students both understand the reasoning, not just the rule." },
+      { key: 'askGuide', action: 'Bring teachers together first to compare what they are actually seeing.', insight: "A shared policy built from real classroom patterns tends to hold up better than one written in the abstract." },
+      { key: 'stepBack', action: 'Let individual teachers keep handling it case by case for now.', insight: "Reasonable short-term, but the inconsistency itself becomes the problem the longer it continues." }]
+
+    },
+    {
+      pillarId: 'inner-strength',
+      prompt: "A teacher notices a normally engaged student has gone quiet in class for two weeks straight, and isn't sure whether it's worth involving the counselor yet.",
+      approaches: [
+      { key: 'stepIn', action: 'Loop the counselor in now, before it becomes a bigger concern.', insight: "Costs little and catches things early — the downside risk here is genuinely small." },
+      { key: 'askGuide', action: 'Have the teacher check in directly with the student first.', insight: "Often surfaces enough context to know whether escalation is actually needed." },
+      { key: 'stepBack', action: 'Keep watching for now and revisit if the pattern continues.', insight: "Fine briefly — just set an actual date to revisit, not an open-ended 'keep an eye on it.'" }]
+
+    },
+    {
+      pillarId: 'personal-safety',
+      prompt: "A parent calls, concerned their child has been contacted by a stranger online, and asks what your school's actual policy is.",
+      approaches: [
+      { key: 'stepIn', action: 'Walk the parent through your existing policy and safeguards directly.', insight: "Reassures this parent today — just make sure the policy you're describing is actually solid, not improvised." },
+      { key: 'askGuide', action: 'Ask the parent what specifically happened before responding with policy.', insight: "The details often change what the right response actually is." },
+      { key: 'stepBack', action: 'Point them to the general handbook section and move on.', insight: "Feels efficient, but a concerned parent usually needs a real conversation, not a document link." }]
+
+    },
+    {
+      pillarId: 'leadership',
+      prompt: 'Group projects across a grade keep splitting into "the kid who does everything" and the kids who coast, and a teacher raises it at a staff meeting.',
+      approaches: [
+      { key: 'stepIn', action: 'Set a school-wide rubric that grades individual contribution, not just group output.', insight: "Addresses it structurally — just make sure teachers have the support to actually implement it." },
+      { key: 'askGuide', action: 'Ask a few teachers what is actually driving the pattern in their classrooms.', insight: "The cause is often different by classroom — worth knowing before applying one fix everywhere." },
+      { key: 'stepBack', action: "Leave it to individual teachers' discretion for now.", insight: "Fine if it's genuinely rare — worth revisiting once it's clearly a pattern, not an exception." }]
+
+    },
+    {
+      pillarId: 'self-identity',
+      prompt: "Exam results week reliably brings a spike in counselor visits, and you're deciding whether that's worth getting ahead of structurally.",
+      approaches: [
+      { key: 'stepIn', action: 'Add extra counselor availability during exam weeks going forward.', insight: "Directly addresses the spike — just make sure it's paired with why the spike happens, not only the symptom." },
+      { key: 'askGuide', action: 'Ask the counseling team what students actually raise most during that week.', insight: "Tells you whether this is about the exams themselves or something exam week just surfaces." },
+      { key: 'stepBack', action: 'Treat it as a normal seasonal pattern and leave it as-is.', insight: "Understandable if resources are tight — but a predictable spike is usually worth planning for on purpose." }]
+
+    }],
+
+    Counselors: [
+    {
+      pillarId: 'digital-wisdom',
+      prompt: 'A student mentions using an AI chatbot "to vent" most nights — more than they talk to any person about how they are feeling.',
+      approaches: [
+      { key: 'stepIn', action: 'Ask directly what they get from the chatbot that they do not from people.', insight: "Gets at the real gap without making the chatbot itself the enemy." },
+      { key: 'askGuide', action: 'Ask what it would take for a person to feel as safe to talk to as the chatbot does.', insight: "Turns the observation into something they can actually work toward." },
+      { key: 'stepBack', action: 'Note it for now and see if it comes up again in future sessions.', insight: "Worth returning to soon — this kind of substitution rarely resolves on its own." }]
+
+    },
+    {
+      pillarId: 'inner-strength',
+      prompt: 'A student waves off a genuinely difficult situation at home with "it’s fine, it’s not a big deal," in a tone that doesn’t quite match the words.',
+      approaches: [
+      { key: 'stepIn', action: 'Gently name the mismatch between their words and their tone.', insight: "Direct, but said with care — this is often exactly the door someone's waiting for." },
+      { key: 'askGuide', action: "Ask what 'fine' actually means to them in this situation.", insight: "Gives them a way to say more without having to abandon 'fine' outright." },
+      { key: 'stepBack', action: 'Let it stand for now and leave the door open for later.', insight: "Reasonable once — just make sure they know the door is genuinely still open." }]
+
+    },
+    {
+      pillarId: 'personal-safety',
+      prompt: "A student discloses an online relationship with someone they've never met, and asks you not to tell their parents.",
+      approaches: [
+      { key: 'stepIn', action: 'Explain clearly, now, what you can and cannot keep confidential here.', insight: "Uncomfortable in the moment, but trust holds up better when the limits are honest upfront." },
+      { key: 'askGuide', action: 'Ask what they are most afraid will happen if their parents find out.', insight: "Often reveals the real issue is the fear, not necessarily the relationship itself." },
+      { key: 'stepBack', action: 'Agree to hold it for now while you learn more about the situation.', insight: "Risky as a standing position — this is usually a case where the limits need to be named, not deferred." }]
+
+    },
+    {
+      pillarId: 'leadership',
+      prompt: 'A student says they have stopped raising their hand in group settings entirely, "so no one expects anything from me."',
+      approaches: [
+      { key: 'stepIn', action: "Ask them directly what 'nothing expected of me' feels like right now.", insight: "Names the real fear underneath the behavior instead of just the behavior itself." },
+      { key: 'askGuide', action: 'Ask when they last felt like expectations were fair rather than too much.', insight: "Helps locate whether this is about fear of failure or fear of being seen at all." },
+      { key: 'stepBack', action: 'Let them stay quiet in groups for now without pushing it.', insight: "Fine short-term — but withdrawal like this tends to deepen the longer it goes unaddressed." }]
+
+    },
+    {
+      pillarId: 'self-identity',
+      prompt: 'A student describes themselves almost entirely in terms of grades and rank, with nothing else volunteered when you ask what else matters to them.',
+      approaches: [
+      { key: 'stepIn', action: 'Ask them directly to describe themselves without mentioning school at all.', insight: "Puts the gap right in front of them — some students find this genuinely hard to do." },
+      { key: 'askGuide', action: 'Ask what they think their friends would say about them, unprompted.', insight: "Borrowing someone else's view of them can be an easier way in than asking directly." },
+      { key: 'stepBack', action: 'Let the answer stand for now and revisit the question another time.', insight: "Fine as a single data point — worth returning to if it's still the only answer next time." }]
+
+    }]
 
   },
-  {
-    pillarId: 'inner-strength',
-    prompt: "You get a poor grade on a test you studied hard for, and don't feel like talking about it.",
-    approaches: [
-    { key: 'stepIn', action: 'Go through the test and find exactly what went wrong.', insight: "Useful eventually — just notice if you're skipping past the disappointment to get there." },
-    { key: 'askGuide', action: 'Name how you actually feel before you try to fix anything.', insight: "Sitting with disappointment on purpose is a real skill, not a delay tactic." },
-    { key: 'stepBack', action: 'Take today off from thinking about it, on purpose.', insight: "Fine once — as long as you actually come back to it instead of just avoiding it." }]
+
+  board: {
+    Students: [
+    {
+      pillarId: 'exam-resilience',
+      prompt: 'You get back a board-exam mock test score far below what you expected, and it feels like it says something about who you are.',
+      approaches: [
+      { key: 'stepIn', action: 'Go through the paper right away and mark every mistake.', insight: "Useful information — just notice if you're skipping the sting to get straight to the fixing." },
+      { key: 'askGuide', action: 'Ask yourself whether this score is a fact about your effort or a verdict on your worth.', insight: "That distinction is exactly what this pillar is built around." },
+      { key: 'stepBack', action: 'Put the paper away for a day before looking at it again.', insight: "Fine once — just make sure you actually come back to it with a clear head, not avoidance." }]
+
+    },
+    {
+      pillarId: 'stream-discovery',
+      prompt: "You're picking a stream mostly because your best friend is picking it too.",
+      approaches: [
+      { key: 'stepIn', action: 'List what you are actually good at and enjoy, separate from anyone else.', insight: "A solid first pass — the harder part is trusting the list once it's in front of you." },
+      { key: 'askGuide', action: "Ask yourself what you'd choose if no one else's choice existed at all.", insight: "Removing the comparison is usually the fastest way to hear your own answer." },
+      { key: 'stepBack', action: 'Go with the friend-group choice for now and see how it feels.', insight: "Risky here — a stream choice is one of the harder ones to casually reverse later." }]
+
+    },
+    {
+      pillarId: 'peer-navigation',
+      prompt: 'A friend keeps putting you down in front of others and calling it a joke.',
+      approaches: [
+      { key: 'stepIn', action: "Tell them directly, next time it happens, that it's not landing as a joke.", insight: "Direct and reasonable — just expect some pushback the first time you say it." },
+      { key: 'askGuide', action: 'Ask yourself what you actually want from this friendship going forward.', insight: "Knowing that first makes the harder conversation much clearer when you have it." },
+      { key: 'stepBack', action: 'Let it go and hope it stops on its own.', insight: "Rarely works on its own — 'jokes' like this usually need to be named to actually stop." }]
+
+    },
+    {
+      pillarId: 'digital-self-discovery',
+      prompt: 'You catch yourself editing a photo for the fifth time before posting it, and it starts to feel less like fun and more like pressure.',
+      approaches: [
+      { key: 'stepIn', action: 'Post the unedited version instead, just to see how it feels.', insight: "A small, real experiment — worth noticing what actually happens versus what you feared." },
+      { key: 'askGuide', action: "Ask yourself who you're actually trying to look good for right now.", insight: "Usually reveals whether this is about you or about someone specific watching." },
+      { key: 'stepBack', action: "Keep editing as usual — it's not hurting anyone.", insight: "True in the short term — worth revisiting if the time spent keeps creeping up." }]
+
+    },
+    {
+      pillarId: 'generation-gap',
+      prompt: "You've stopped telling your parents what's actually going on at school because it feels pointless to explain.",
+      approaches: [
+      { key: 'stepIn', action: 'Sit down and try to explain one real thing to them this week.', insight: "Braver than it sounds — the first attempt is usually the hardest one." },
+      { key: 'askGuide', action: 'Ask yourself what specifically makes it feel pointless to tell them.', insight: "Often it's not that they wouldn't care — it's that you doubt they'd understand, which is a different problem." },
+      { key: 'stepBack', action: 'Keep things surface-level with them for now.', insight: "Understandable short-term — just know the distance tends to grow the longer it's the default." }]
+
+    }],
+
+    Mentors: [
+    {
+      pillarId: 'exam-resilience',
+      prompt: 'A student you mentor gets a mock exam score far below what they hoped for, right before the real thing.',
+      approaches: [
+      { key: 'stepIn', action: 'Go through the paper with them and build a plan for the gaps.', insight: "Useful and concrete — just make room for how they're feeling before diving into the plan." },
+      { key: 'askGuide', action: 'Ask them what this score feels like it says about them, before talking strategy.', insight: "Separating the feeling from the fixing is exactly the skill this pillar is about." },
+      { key: 'stepBack', action: 'Give them space today and revisit the paper tomorrow.', insight: "Reasonable — just don't let 'tomorrow' quietly become 'never.'" }]
+
+    },
+    {
+      pillarId: 'stream-discovery',
+      prompt: "A student tells you they're choosing a stream mainly because their parents expect it, not because they want it.",
+      approaches: [
+      { key: 'stepIn', action: "Help them build a case for what they'd choose instead, to bring to their parents.", insight: "Useful groundwork — just make sure it's genuinely their case, not one you've built for them." },
+      { key: 'askGuide', action: "Ask what they'd choose if their parents' opinion didn't exist at all.", insight: "Gets at their real answer before the family conversation even happens." },
+      { key: 'stepBack', action: 'Let them make the family-pleasing choice and revisit it later.', insight: "Sometimes the reality — just make sure 'later' is a real conversation, not just a hope." }]
+
+    },
+    {
+      pillarId: 'peer-navigation',
+      prompt: 'A student mentions, almost as a throwaway line, that a friend group has started leaving them out.',
+      approaches: [
+      { key: 'stepIn', action: 'Ask directly how long this has been going on and how they are doing with it.', insight: "Shows you noticed — just be ready for them to not want to say much at first." },
+      { key: 'askGuide', action: 'Ask what they think is actually going on with the group.', insight: "Their own read on it often matters more than yours here." },
+      { key: 'stepBack', action: "Let them bring it up again if it's still bothering them.", insight: "Risky — social exclusion at this age rarely resolves by waiting it out." }]
+
+    },
+    {
+      pillarId: 'digital-self-discovery',
+      prompt: "A student mentions spending hours getting a single photo 'right' before posting it.",
+      approaches: [
+      { key: 'stepIn', action: 'Point out directly how much time that actually adds up to.', insight: "Can land as judgment — worth pairing with genuine curiosity, not just a fact." },
+      { key: 'askGuide', action: 'Ask what they think would happen if they posted something unedited.', insight: "Their answer usually reveals the actual fear driving the habit." },
+      { key: 'stepBack', action: "Let it go — it's a pretty normal habit at this age.", insight: "True to a point — worth a second look if it starts crowding out other things." }]
+
+    },
+    {
+      pillarId: 'generation-gap',
+      prompt: "A student tells you they've basically stopped talking to their parents about anything real.",
+      approaches: [
+      { key: 'stepIn', action: "Offer to help them plan out what they'd actually want to say.", insight: "Useful scaffolding — the goal is still them having the conversation, not you having it." },
+      { key: 'askGuide', action: 'Ask what they think would happen if they tried telling their parents the truth.', insight: "Usually surfaces a specific fear worth naming directly, not just a vague sense of distance." },
+      { key: 'stepBack', action: "Leave it alone — it's normal for teenagers to pull back a bit.", insight: "Some distance is normal — total silence on real things is usually worth a gentle nudge." }]
+
+    }],
+
+    Parents: [
+    {
+      pillarId: 'exam-resilience',
+      prompt: 'Your child comes home devastated after a mock exam score far below what they expected.',
+      approaches: [
+      { key: 'stepIn', action: 'Sit down immediately and start planning how to improve the score.', insight: "Well-meaning, but jumping straight to a plan can skip past how upset they actually are." },
+      { key: 'askGuide', action: 'Ask how they are feeling about it before talking about the number itself.', insight: "Naming the feeling first is what actually helps them separate the score from their worth." },
+      { key: 'stepBack', action: 'Give them the evening before bringing it up again.', insight: "Often right — just make sure you do circle back, rather than letting it quietly drop." }]
+
+    },
+    {
+      pillarId: 'stream-discovery',
+      prompt: 'Your child seems to be choosing a stream mainly to match what you and your spouse expect.',
+      approaches: [
+      { key: 'stepIn', action: 'Tell them directly that you want them to choose based on what they want.', insight: "A generous and important thing to say — just watch that it doesn't feel like pressure in the other direction." },
+      { key: 'askGuide', action: "Ask what they'd choose if you had no opinion on it at all.", insight: "Removes your influence from the equation long enough to hear their real answer." },
+      { key: 'stepBack', action: 'Let them go with the expected choice without raising it.', insight: "Risky — a stream choice made purely to please you is a hard thing to quietly reverse later." }]
+
+    },
+    {
+      pillarId: 'peer-navigation',
+      prompt: 'You notice your child has gone quiet about a friend group they used to talk about constantly.',
+      approaches: [
+      { key: 'stepIn', action: 'Ask directly what happened with that friend group.', insight: "Direct is fine here — just be ready for a short answer at first, and don't push past it." },
+      { key: 'askGuide', action: 'Ask how they are feeling about their friendships generally right now.', insight: "A wider, softer question often gets further than asking about one specific group." },
+      { key: 'stepBack', action: 'Wait for them to bring it up on their own.', insight: "Understandable, but this kind of quiet often needs an opening, not just patience." }]
+
+    },
+    {
+      pillarId: 'digital-self-discovery',
+      prompt: 'You notice your child spends a long time perfecting a photo before posting it, more than seems relaxed or fun.',
+      approaches: [
+      { key: 'stepIn', action: "Bring it up directly and ask what's behind the amount of time it takes.", insight: "Direct and reasonable — just frame it as curiosity, not criticism, so they don't just shut down." },
+      { key: 'askGuide', action: "Ask what they think people are actually judging when they look at their posts.", insight: "Gets at the belief driving the behavior, not just the behavior itself." },
+      { key: 'stepBack', action: "Say nothing — it's a common habit at this age.", insight: "Mostly true — worth revisiting if it starts to visibly affect their mood or time." }]
+
+    },
+    {
+      pillarId: 'generation-gap',
+      prompt: 'Your child has clearly stopped telling you what is actually going on, and conversations stay surface-level.',
+      approaches: [
+      { key: 'stepIn', action: "Ask them directly why they've stopped sharing more with you.", insight: "Honest, but can land as pressure — be ready for a defensive first answer." },
+      { key: 'askGuide', action: 'Ask what would make it feel worth telling you things again.', insight: "Puts the fix in their hands, which tends to get a more honest answer." },
+      { key: 'stepBack', action: 'Let the distance be normal teenage behavior and not push it.', insight: "Some distance is developmentally normal — total silence on real things is worth gently naming." }]
+
+    }],
+
+    Schools: [
+    {
+      pillarId: 'exam-resilience',
+      prompt: 'Mock exam results come out, and the counseling team notices a sharp jump in anxiety-related visits right after.',
+      approaches: [
+      { key: 'stepIn', action: 'Add structured post-result support sessions for the whole grade immediately.', insight: "Addresses this cycle directly — just make sure it's not framed as remedial, which can stigmatize it." },
+      { key: 'askGuide', action: 'Ask the counseling team what students are actually saying drives the anxiety.', insight: "Tells you whether it's the result itself or how results are handled and discussed at school." },
+      { key: 'stepBack', action: 'Treat it as a normal, expected reaction to board pressure.', insight: "Understandable, but a predictable spike like this is usually worth planning for on purpose." }]
+
+    },
+    {
+      pillarId: 'stream-discovery',
+      prompt: 'Multiple students report choosing a stream under heavy pressure from family, with little real guidance from school first.',
+      approaches: [
+      { key: 'stepIn', action: 'Roll out mandatory stream-counseling sessions before the choice is finalized.', insight: "Directly closes the gap — just make sure it's substantive, not a single rushed session." },
+      { key: 'askGuide', action: 'Ask a sample of students what would have actually helped them decide.', insight: "Their answer often points to something more specific than 'more counseling.'" },
+      { key: 'stepBack', action: 'Leave stream choice entirely to families, as has been done before.', insight: "Reasonable if resources are tight — but this is exactly where foreclosure risk is highest without support." }]
+
+    },
+    {
+      pillarId: 'peer-navigation',
+      prompt: 'Teachers report a rise in subtle social exclusion — group chats, seating, and group work quietly leaving certain students out.',
+      approaches: [
+      { key: 'stepIn', action: 'Set a clear school policy on inclusive group formation for all group work.', insight: "A real structural fix — just make sure teachers have the training to actually apply it well." },
+      { key: 'askGuide', action: 'Ask homeroom teachers which students they are most concerned about, and why.', insight: "Often surfaces the real pattern faster than a policy written from the top down." },
+      { key: 'stepBack', action: 'Leave it to individual teachers to manage as they see it.', insight: "Fine if it's rare — worth a structural look once several teachers flag the same pattern." }]
+
+    },
+    {
+      pillarId: 'digital-self-discovery',
+      prompt: 'A parent raises a concern that students seem increasingly anxious about their social media image, and asks if the school addresses this.',
+      approaches: [
+      { key: 'stepIn', action: 'Add media literacy and digital self-image sessions to the curriculum this term.', insight: "Directly responsive — just make sure it doesn't read as another lecture students tune out." },
+      { key: 'askGuide', action: 'Ask students directly, through the counseling team, what is actually driving that anxiety.', insight: "Their answer shapes what kind of session would actually land, rather than guessing." },
+      { key: 'stepBack', action: "Note the concern but leave it outside the school's current scope.", insight: "Understandable given competing priorities — but this is a pattern likely to keep surfacing." }]
+
+    },
+    {
+      pillarId: 'generation-gap',
+      prompt: 'Several parents mention, separately, that their teenagers have stopped telling them much of anything real.',
+      approaches: [
+      { key: 'stepIn', action: 'Offer a parent workshop on communicating with teenagers this term.', insight: "A concrete, useful step — just be sure it's framed as a two-way skill, not a parenting deficiency." },
+      { key: 'askGuide', action: 'Ask the counseling team what students say makes it hard to talk to their parents.', insight: "Gives you the student side of the gap, not just the parent side, before designing anything." },
+      { key: 'stepBack', action: "Treat it as a normal part of adolescence outside the school's role.", insight: "Partly true — but the school is often well placed to open this channel where a family alone can't." }]
+
+    }],
+
+    Counselors: [
+    {
+      pillarId: 'exam-resilience',
+      prompt: 'A student breaks down over a mock exam score and says they feel like a failure.',
+      approaches: [
+      { key: 'stepIn', action: 'Help them build a concrete study plan for the next attempt right away.', insight: "Useful eventually — just make room for the feeling first, or the plan won't really land." },
+      { key: 'askGuide', action: "Ask what 'failure' means to them in this specific moment.", insight: "Usually reveals the belief underneath the score, which is the real thing worth addressing." },
+      { key: 'stepBack', action: 'Let them sit with the disappointment before addressing it directly.', insight: "Reasonable briefly — just make sure you do return to it, not leave it unaddressed." }]
+
+    },
+    {
+      pillarId: 'stream-discovery',
+      prompt: "A student says they're choosing a stream 'because it's what's expected,' with visible resignation.",
+      approaches: [
+      { key: 'stepIn', action: 'Walk them through the other options directly, right in the session.', insight: "Useful information — just don't let it turn into you deciding for them either." },
+      { key: 'askGuide', action: "Ask what they'd choose if expectations weren't part of the equation.", insight: "Gets underneath the resignation to what they might actually want." },
+      { key: 'stepBack', action: 'Let the decision stand and revisit it after it is finalized.', insight: "Risky — this is close to the last real window before the choice becomes hard to undo." }]
+
+    },
+    {
+      pillarId: 'peer-navigation',
+      prompt: "A student describes being excluded by a friend group but insists it's 'not a big deal.'",
+      approaches: [
+      { key: 'stepIn', action: 'Name directly that exclusion like this usually does matter, whatever they are saying.', insight: "Validates what they might not feel able to say themselves — worth doing gently." },
+      { key: 'askGuide', action: "Ask what 'not a big deal' would look like if it were actually true for them.", insight: "Often reveals the gap between what they're saying and what they're feeling." },
+      { key: 'stepBack', action: 'Take them at their word and move on for now.', insight: "Risky — 'not a big deal' at this age is often exactly the opposite." }]
+
+    },
+    {
+      pillarId: 'digital-self-discovery',
+      prompt: 'A student describes real anxiety about how they look in photos before posting, more than they show about anything else.',
+      approaches: [
+      { key: 'stepIn', action: 'Address the anxiety directly as its own topic worth focused attention.', insight: "Reasonable — just make sure it doesn't feel like their concern is being treated as trivial by contrast." },
+      { key: 'askGuide', action: "Ask what they imagine happens if a photo doesn't get the response they hoped for.", insight: "Usually surfaces the belief about worth that's actually driving the anxiety." },
+      { key: 'stepBack', action: 'Note it and see if it comes up again unprompted.', insight: "Worth returning to soon — this kind of image-anxiety rarely resolves quietly on its own." }]
+
+    },
+    {
+      pillarId: 'generation-gap',
+      prompt: 'A student says there is no point talking to their parents because they would not understand anyway.',
+      approaches: [
+      { key: 'stepIn', action: 'Help them plan one specific thing to try telling their parents this week.', insight: "Concrete and useful — just keep it their plan, not a script you hand them." },
+      { key: 'askGuide', action: "Ask what makes them so sure their parents wouldn't understand.", insight: "Often reveals an assumption worth testing, not necessarily a settled fact." },
+      { key: 'stepBack', action: "Leave the family relationship outside the session's focus for now.", insight: "Fine short-term — but this gap is often exactly where the most protective support lives." }]
+
+    }]
 
   },
-  {
-    pillarId: 'personal-safety',
-    prompt: "You mention an online friend you've never met who wants to video call.",
-    approaches: [
-    { key: 'stepIn', action: 'Loop someone else in before the first call.', insight: "Costs you nothing, and it's exactly what genuinely careful people do." },
-    { key: 'askGuide', action: 'Ask yourself what you actually know about this person.', insight: "If you can't answer that clearly, that's usually the answer." },
-    { key: 'stepBack', action: 'Trust your gut and just go for it.', insight: "Your gut is a good start — a second opinion is still worth thirty seconds." }]
 
-  },
-  {
-    pillarId: 'leadership',
-    prompt: "During a group project, you'd rather do the whole thing alone than work with classmates.",
-    approaches: [
-    { key: 'stepIn', action: 'Ask for one specific, defined role in the group.', insight: "Makes it feel manageable — a good first step, not a permanent workaround." },
-    { key: 'askGuide', action: 'Ask yourself what about teamwork actually feels unreliable.', insight: "Usually it's not the group — it's trust, or not knowing how to delegate yet." },
-    { key: 'stepBack', action: 'Go solo this once, but plan to try again next time.', insight: "One project alone is fine — just don't let it become the permanent plan." }]
+  senior: {
+    Students: [
+    {
+      pillarId: 'performance-pressure',
+      prompt: "You're a week from a major entrance exam, and the fear of not qualifying is all you can think about.",
+      approaches: [
+      { key: 'stepIn', action: 'Cram every remaining hour on practice papers.', insight: "Feels productive, but exhaustion this close to the exam can cost you more than it gains." },
+      { key: 'askGuide', action: "Ask yourself what you'd still be if this exam didn't go the way you want.", insight: "Getting a real answer to that is what actually protects you from the pressure, not more studying." },
+      { key: 'stepBack', action: 'Take a full day off to reset before the final stretch.', insight: "Can genuinely help — just make sure it's rest, not avoidance dressed up as rest." }]
 
-  },
-  {
-    pillarId: 'self-identity',
-    prompt: 'You feel like you don’t know what you’re "good at," compared to your friends.',
-    approaches: [
-    { key: 'stepIn', action: 'Ask someone close to you what they see in you.', insight: "A good start — the goal is eventually seeing it yourself too." },
-    { key: 'askGuide', action: 'Ask yourself what you enjoy, skill aside.', insight: "Enjoyment tends to come before skill — that's actually where to start." },
-    { key: 'stepBack', action: 'Let the comparison go, just this once.', insight: "Fine once — if it keeps coming back, it's worth actually sitting with." }]
+    },
+    {
+      pillarId: 'interpersonal-bonds',
+      prompt: 'You are in your first serious relationship, and you notice your mood now depends heavily on how it is going.',
+      approaches: [
+      { key: 'stepIn', action: 'Talk to your partner directly about how much this is affecting you.', insight: "A real step toward a healthier dynamic — just make sure it's a conversation, not an accusation." },
+      { key: 'askGuide', action: 'Ask yourself what you liked about yourself before this relationship started.', insight: "Reconnecting with that is usually the actual fix, more than anything about the relationship itself." },
+      { key: 'stepBack', action: "Let it be for now — it's normal to feel intensely at this age.", insight: "Partly true — worth watching if your sense of self keeps shrinking around it." }]
 
-  }],
+    },
+    {
+      pillarId: 'independence',
+      prompt: "You're heading to college soon and realize you don't actually know how to manage your own money or time without someone reminding you.",
+      approaches: [
+      { key: 'stepIn', action: 'Ask a parent to walk you through a real budget and schedule right now.', insight: "A solid, concrete start — the goal from here is doing it yourself sooner rather than later." },
+      { key: 'askGuide', action: 'Ask yourself which specific skill worries you most, and why.', insight: "Naming the actual gap is more useful than a vague sense of being unready." },
+      { key: 'stepBack', action: "Figure it out once you're actually there.", insight: "Some things you will — just know the learning curve is steeper alone than it needs to be." }]
 
-  Mentors: [
-  {
-    pillarId: 'digital-wisdom',
-    prompt: 'A mentee shows you an assignment they say an AI chatbot "helped a lot" with — and something about how smoothly it reads doesn’t sit right.',
-    approaches: [
-    { key: 'stepIn', action: 'Sit down and rebuild the assignment together from scratch.', insight: "Rebuilds the skill fast — just make sure it's their hand doing the work, not yours." },
-    { key: 'askGuide', action: 'Ask them to explain their own reasoning behind a few lines, out loud.', insight: "If they can't explain it, that's the real diagnostic — not the polish of the writing." },
-    { key: 'stepBack', action: 'Let it go this once and watch how the next unprompted assignment reads.', insight: "Buys you real information — but only if you actually follow up on what you see next time." }]
+    },
+    {
+      pillarId: 'peer-pressure-manipulation',
+      prompt: "At a party, a friend keeps pushing you to try something you're not comfortable with, framing it as 'everyone does this.'",
+      approaches: [
+      { key: 'stepIn', action: 'Say no directly and leave if they keep pushing.', insight: "Clear and safe — the discomfort of saying it is smaller than it feels in the moment." },
+      { key: 'askGuide', action: "Ask yourself whether 'everyone does this' is even true, or just what it feels like right now.", insight: "That line rarely holds up once you actually look at it." },
+      { key: 'stepBack', action: 'Go along with it this once to avoid the tension.', insight: "This is exactly the kind of moment worth not going along with, even once." }]
 
-  },
-  {
-    pillarId: 'inner-strength',
-    prompt: "A mentee who's usually open goes quiet halfway through a session, right after a hard topic comes up.",
-    approaches: [
-    { key: 'stepIn', action: 'Gently name what you noticed and ask if you should keep going.', insight: "Shows you're paying attention — just be ready to actually stop if they say so." },
-    { key: 'askGuide', action: 'Sit in the quiet for a moment before saying anything at all.', insight: "The silence itself is often where the real work happens, not around it." },
-    { key: 'stepBack', action: 'Move to something lighter and return to it next session instead.', insight: "Respects their pace — as long as you don't quietly let it drop for good." }]
+    },
+    {
+      pillarId: 'resilience-rejection',
+      prompt: "You don't get into the college you'd built your whole plan around.",
+      approaches: [
+      { key: 'stepIn', action: 'Immediately start researching every backup option available.', insight: "Useful eventually — just notice if you're using it to avoid feeling the disappointment first." },
+      { key: 'askGuide', action: 'Ask yourself what this rejection does and does not actually say about you.', insight: "Separating the two is the real work of getting through this well." },
+      { key: 'stepBack', action: 'Take real time before deciding anything about what is next.', insight: "Reasonable — just set a point where you do come back and start deciding again." }]
 
-  },
-  {
-    pillarId: 'personal-safety',
-    prompt: "A mentee mentions, almost in passing, that they've been messaging an adult they met in an online gaming group.",
-    approaches: [
-    { key: 'stepIn', action: 'Ask directly who this person is and how the messaging started.', insight: "Direct is right here — a mentor's job includes noticing this out loud." },
-    { key: 'askGuide', action: 'Ask what makes this relationship feel different from their other friendships.', insight: "Helps them build the judgment to spot this themselves next time, not just this once." },
-    { key: 'stepBack', action: 'Make a mental note and see if it comes up again unprompted.', insight: "Risky as a first move — this is usually worth surfacing sooner, not waiting on." }]
+    }],
 
-  },
-  {
-    pillarId: 'leadership',
-    prompt: 'In a session meant to build their confidence, a mentee keeps deferring every decision back to you instead of making the call themselves.',
-    approaches: [
-    { key: 'stepIn', action: 'Make the call for them this once, then talk about why.', insight: "Keeps momentum today, but watch that it doesn't become the pattern." },
-    { key: 'askGuide', action: "Ask what they'd choose if you weren't in the room at all.", insight: "Separates what they actually think from what they assume you want to hear." },
-    { key: 'stepBack', action: 'Let the decision sit unmade until they fill the silence.', insight: "Uncomfortable, but discomfort is often what finally prompts them to decide." }]
+    Mentors: [
+    {
+      pillarId: 'performance-pressure',
+      prompt: "A mentee tells you they can't think about anything except qualifying their entrance exam.",
+      approaches: [
+      { key: 'stepIn', action: 'Help them build a structured plan for the remaining time.', insight: "Useful — just make room for the fear itself before jumping to logistics." },
+      { key: 'askGuide', action: "Ask what they're afraid it would mean about them if they didn't qualify.", insight: "That fear is usually the real thing to work with, not the exam itself." },
+      { key: 'stepBack', action: 'Let them work through it on their own for now.', insight: "Risky at this intensity — this is usually a moment that benefits from you staying close." }]
 
-  },
-  {
-    pillarId: 'self-identity',
-    prompt: 'A mentee tells you they only really feel good about themselves when they’re achieving something — never just as they are.',
-    approaches: [
-    { key: 'stepIn', action: 'Point out something you value in them that has nothing to do with achievement.', insight: "A generous, useful start — though it lands more if they eventually notice it themselves." },
-    { key: 'askGuide', action: "Ask what they'd still be proud of if no one else ever found out.", insight: "Gets underneath performance to something that's actually theirs." },
-    { key: 'stepBack', action: "Let the comment pass and watch whether it's a pattern or a one-off.", insight: "Reasonable once — repeated, it's worth naming directly rather than tracking quietly." }]
+    },
+    {
+      pillarId: 'interpersonal-bonds',
+      prompt: "A mentee's mood has started tracking almost exactly with how their relationship is going that week.",
+      approaches: [
+      { key: 'stepIn', action: "Name directly what you've noticed about the pattern.", insight: "Can land well if said with care — risky if it feels like judgment of the relationship itself." },
+      { key: 'askGuide', action: 'Ask what they liked about themselves before this relationship began.', insight: "Helps them find footing that doesn't depend on someone else's mood." },
+      { key: 'stepBack', action: "Let it play out — it's a normal part of a first serious relationship.", insight: "Partly true — worth revisiting if their sense of self keeps shrinking around it." }]
 
-  }],
+    },
+    {
+      pillarId: 'independence',
+      prompt: "A mentee heading to college admits they've never managed their own time or money without a parent stepping in.",
+      approaches: [
+      { key: 'stepIn', action: 'Walk them through a real budget and weekly schedule together.', insight: "Concrete and useful — the goal is them running it themselves soon after." },
+      { key: 'askGuide', action: 'Ask which part of independence worries them most, specifically.', insight: "A specific fear is much easier to actually prepare for than a general one." },
+      { key: 'stepBack', action: "Trust they'll figure it out once they're there.", insight: "Some of it they will — just know the first months are harder without any groundwork at all." }]
 
-  Parents: [
-  {
-    pillarId: 'digital-wisdom',
-    prompt: 'Your child asks an AI chatbot for advice about a friendship problem instead of coming to you.',
-    approaches: [
-    { key: 'stepIn', action: 'Bring it up directly and offer your own take on the situation.', insight: "Shows you're available — just watch that it doesn't read as taking over the problem." },
-    { key: 'askGuide', action: 'Ask what the chatbot said, and what they thought of its advice.', insight: "Keeps you in the loop without making them feel caught for not asking you first." },
-    { key: 'stepBack', action: 'Let them work through it their way, and stay quietly available.', insight: "Respects their independence — as long as 'available' is genuinely felt, not just assumed." }]
+    },
+    {
+      pillarId: 'peer-pressure-manipulation',
+      prompt: 'A mentee mentions, casually, being pressured at parties to try things they are not comfortable with.',
+      approaches: [
+      { key: 'stepIn', action: 'Talk through exactly what to say and do in that moment, concretely.', insight: "Practical and useful — rehearsing the actual words tends to help more than general advice." },
+      { key: 'askGuide', action: 'Ask what makes it hard to say no in that specific group.', insight: "Usually reveals whether this is about the substance or about belonging — different problems." },
+      { key: 'stepBack', action: 'Trust their judgment and not bring it up again.', insight: "Risky to leave unaddressed — this is exactly the kind of pressure worth naming directly." }]
 
-  },
-  {
-    pillarId: 'inner-strength',
-    prompt: 'Your child comes home with a poor grade they studied hard for, and shuts the conversation down before it starts.',
-    approaches: [
-    { key: 'stepIn', action: 'Sit with them and go through the test together, right then.', insight: "Well-intentioned, but pushing before they're ready can shut the door further." },
-    { key: 'askGuide', action: 'Ask how they are feeling before asking anything about the test itself.', insight: "Naming the feeling first is usually what actually opens the conversation back up." },
-    { key: 'stepBack', action: 'Give it the evening, and check in again once things have settled.', insight: "Often exactly right — just make sure the check-in actually happens." }]
+    },
+    {
+      pillarId: 'resilience-rejection',
+      prompt: "A mentee doesn't get into the college they'd built their entire plan around, and seems to be spiraling.",
+      approaches: [
+      { key: 'stepIn', action: 'Help them map out every backup option immediately.', insight: "Useful eventually — just don't let it skip past actually acknowledging how much this hurts." },
+      { key: 'askGuide', action: 'Ask what this rejection feels like it says about them.', insight: "Getting that belief out in the open is the real work here, more than the logistics." },
+      { key: 'stepBack', action: 'Give them space and check in again in a few days.', insight: "Reasonable — just make sure the check-in is a firm plan, not a vague intention." }]
 
-  },
-  {
-    pillarId: 'personal-safety',
-    prompt: "You notice your child has been video-calling someone from an online game you'd never heard them mention before.",
-    approaches: [
-    { key: 'stepIn', action: 'Ask directly who this is and sit in on the next call together.', insight: "Removes today's uncertainty — the goal is understanding, not confiscation." },
-    { key: 'askGuide', action: 'Ask what they know about this person and how the friendship started.', insight: "Builds the judgment they'll need for the times you're not in the room." },
-    { key: 'stepBack', action: 'Say nothing for now and see if they mention it themselves.', insight: "Most online friendships are harmless, but this is exactly the kind of moment worth not letting slide." }]
+    }],
 
-  },
-  {
-    pillarId: 'leadership',
-    prompt: "Your child says they'd rather do a group project entirely alone than deal with classmates.",
-    approaches: [
-    { key: 'stepIn', action: 'Call the teacher and ask for them to be reassigned individually.', insight: "Solves this project — but skips the harder, more useful conversation underneath." },
-    { key: 'askGuide', action: 'Ask what about working with these classmates feels unreliable.', insight: "Usually surfaces a trust or delegation issue that's worth knowing about either way." },
-    { key: 'stepBack', action: 'Let them handle it their way and see how the project goes.', insight: "A reasonable stretch of independence — just worth a real debrief once it's done." }]
+    Parents: [
+    {
+      pillarId: 'performance-pressure',
+      prompt: 'Your child is a week from a major entrance exam and seems consumed by fear of not qualifying.',
+      approaches: [
+      { key: 'stepIn', action: 'Take over managing their schedule to maximize remaining study time.', insight: "Comes from care, but taking over can add pressure instead of relieving it." },
+      { key: 'askGuide', action: "Ask them what they're most afraid this exam will mean about them.", insight: "Naming that fear out loud often does more than any amount of extra studying." },
+      { key: 'stepBack', action: 'Step back and let them manage this final stretch themselves.', insight: "Can be right — just stay genuinely available rather than fully hands-off." }]
 
-  },
-  {
-    pillarId: 'self-identity',
-    prompt: 'Your child keeps comparing themselves to a friend who "has it all figured out," and it’s starting to sound less like a phase.',
-    approaches: [
-    { key: 'stepIn', action: 'Tell them directly what you see in them that this friend does not have.', insight: "Comes from love, but a strength they discover tends to land deeper than one they're handed." },
-    { key: 'askGuide', action: 'Ask what specifically about this friend feels like "figured out" to them.', insight: "Often the real issue is one specific thing, not a wholesale gap between them." },
-    { key: 'stepBack', action: 'Let the comment go this time without addressing it directly.', insight: "Fine as a one-off — if it becomes a pattern, it's worth naming rather than tracking silently." }]
+    },
+    {
+      pillarId: 'interpersonal-bonds',
+      prompt: "Your child's mood seems to rise and fall almost entirely with how their relationship is going.",
+      approaches: [
+      { key: 'stepIn', action: "Tell them directly you're worried about how much this relationship affects their mood.", insight: "Comes from love — just expect it to land better as concern than as criticism." },
+      { key: 'askGuide', action: 'Ask what they liked about themselves before this relationship started.', insight: "Helps them reconnect with a sense of self that isn't tied to someone else's mood." },
+      { key: 'stepBack', action: "Say nothing — it's a normal part of first relationships.", insight: "Partly true — worth a gentle word if it doesn't seem to level out over time." }]
 
-  }],
+    },
+    {
+      pillarId: 'independence',
+      prompt: 'Your child is about to leave for college and clearly does not know how to manage money or time without you reminding them.',
+      approaches: [
+      { key: 'stepIn', action: 'Sit down and teach them a real budget and schedule before they go.', insight: "A genuinely useful gift — just leave room for them to run it themselves once they're there." },
+      { key: 'askGuide', action: 'Ask them which part of being on their own worries them most.', insight: "A specific worry is much easier to actually prepare for together." },
+      { key: 'stepBack', action: "Let them learn it the hard way once they're there.", insight: "Some lessons do stick better that way — just know the first stretch will be harder without any groundwork." }]
 
-  Schools: [
-  {
-    pillarId: 'digital-wisdom',
-    prompt: "Several teachers separately flag a rise in AI-written homework this term, and your school doesn't have a shared stance on it yet.",
-    approaches: [
-    { key: 'stepIn', action: 'Draft a clear school-wide AI use policy and roll it out this term.', insight: "Solves the ambiguity fast — just be sure teachers and students both understand the reasoning, not just the rule." },
-    { key: 'askGuide', action: 'Bring teachers together first to compare what they are actually seeing.', insight: "A shared policy built from real classroom patterns tends to hold up better than one written in the abstract." },
-    { key: 'stepBack', action: 'Let individual teachers keep handling it case by case for now.', insight: "Reasonable short-term, but the inconsistency itself becomes the problem the longer it continues." }]
+    },
+    {
+      pillarId: 'peer-pressure-manipulation',
+      prompt: 'You overhear that your child has been pressured at parties to try things they were not comfortable with.',
+      approaches: [
+      { key: 'stepIn', action: 'Sit them down and have a direct conversation about it tonight.', insight: "Reasonable — just aim for a conversation, not an interrogation, or they may shut down." },
+      { key: 'askGuide', action: 'Ask them how they actually handled it in the moment.', insight: "Lets you find out what they already know how to do, not just what you assume they don't." },
+      { key: 'stepBack', action: 'Say nothing and trust they can handle it.', insight: "Risky to leave fully unaddressed — this is exactly the kind of moment worth checking in on directly." }]
 
-  },
-  {
-    pillarId: 'inner-strength',
-    prompt: "A teacher notices a normally engaged student has gone quiet in class for two weeks straight, and isn't sure whether it's worth involving the counselor yet.",
-    approaches: [
-    { key: 'stepIn', action: 'Loop the counselor in now, before it becomes a bigger concern.', insight: "Costs little and catches things early — the downside risk here is genuinely small." },
-    { key: 'askGuide', action: 'Have the teacher check in directly with the student first.', insight: "Often surfaces enough context to know whether escalation is actually needed." },
-    { key: 'stepBack', action: 'Keep watching for now and revisit if the pattern continues.', insight: "Fine briefly — just set an actual date to revisit, not an open-ended 'keep an eye on it.'" }]
+    },
+    {
+      pillarId: 'resilience-rejection',
+      prompt: "Your child doesn't get into the college they'd built their whole plan around, and seems to be taking it very hard.",
+      approaches: [
+      { key: 'stepIn', action: 'Start researching backup options with them immediately.', insight: "Useful eventually — just don't let it skip past letting them actually feel the disappointment first." },
+      { key: 'askGuide', action: 'Ask them what this rejection feels like it says about them.', insight: "Getting that belief into the open matters more right now than the next plan." },
+      { key: 'stepBack', action: 'Give them space and let them come to you when ready.', insight: "Reasonable — just make sure you do check back in, rather than waiting indefinitely." }]
 
-  },
-  {
-    pillarId: 'personal-safety',
-    prompt: "A parent calls, concerned their child has been contacted by a stranger online, and asks what your school's actual policy is.",
-    approaches: [
-    { key: 'stepIn', action: 'Walk the parent through your existing policy and safeguards directly.', insight: "Reassures this parent today — just make sure the policy you're describing is actually solid, not improvised." },
-    { key: 'askGuide', action: 'Ask the parent what specifically happened before responding with policy.', insight: "The details often change what the right response actually is." },
-    { key: 'stepBack', action: 'Point them to the general handbook section and move on.', insight: "Feels efficient, but a concerned parent usually needs a real conversation, not a document link." }]
+    }],
 
-  },
-  {
-    pillarId: 'leadership',
-    prompt: 'Group projects across a grade keep splitting into "the kid who does everything" and the kids who coast, and a teacher raises it at a staff meeting.',
-    approaches: [
-    { key: 'stepIn', action: 'Set a school-wide rubric that grades individual contribution, not just group output.', insight: "Addresses it structurally — just make sure teachers have the support to actually implement it." },
-    { key: 'askGuide', action: 'Ask a few teachers what is actually driving the pattern in their classrooms.', insight: "The cause is often different by classroom — worth knowing before applying one fix everywhere." },
-    { key: 'stepBack', action: "Leave it to individual teachers' discretion for now.", insight: "Fine if it's genuinely rare — worth revisiting once it's clearly a pattern, not an exception." }]
+    Schools: [
+    {
+      pillarId: 'performance-pressure',
+      prompt: 'As entrance exams approach, the counseling team reports a sharp rise in acute anxiety cases among senior students.',
+      approaches: [
+      { key: 'stepIn', action: 'Deploy additional counseling support immediately for the exam period.', insight: "Addresses the immediate need — just make sure it continues past the exam date itself." },
+      { key: 'askGuide', action: "Ask the counseling team what's driving the anxiety this year specifically.", insight: "Tells you whether it's the exams themselves or something about how this year's pressure is being handled." },
+      { key: 'stepBack', action: 'Treat it as an expected, temporary spike tied to exam season.', insight: "Understandable, but a predictable spike like this is usually worth planning for on purpose." }]
 
-  },
-  {
-    pillarId: 'self-identity',
-    prompt: "Exam results week reliably brings a spike in counselor visits, and you're deciding whether that's worth getting ahead of structurally.",
-    approaches: [
-    { key: 'stepIn', action: 'Add extra counselor availability during exam weeks going forward.', insight: "Directly addresses the spike — just make sure it's paired with why the spike happens, not only the symptom." },
-    { key: 'askGuide', action: 'Ask the counseling team what students actually raise most during that week.', insight: "Tells you whether this is about the exams themselves or something exam week just surfaces." },
-    { key: 'stepBack', action: 'Treat it as a normal seasonal pattern and leave it as-is.', insight: "Understandable if resources are tight — but a predictable spike is usually worth planning for on purpose." }]
+    },
+    {
+      pillarId: 'interpersonal-bonds',
+      prompt: 'Teachers report several senior students visibly distracted or distressed over relationship issues during a high-stakes term.',
+      approaches: [
+      { key: 'stepIn', action: 'Offer a workshop on healthy relationships as part of the senior program.', insight: "A real, useful step — just make sure it's framed with respect, not lecture." },
+      { key: 'askGuide', action: 'Ask the counseling team what patterns they are actually seeing in these cases.', insight: "Shapes what kind of support would genuinely help, rather than a generic session." },
+      { key: 'stepBack', action: "Treat it as a personal matter outside the school's role.", insight: "Understandable, but when it's visibly affecting several students' term, it's arguably already the school's business." }]
 
-  }],
+    },
+    {
+      pillarId: 'independence',
+      prompt: 'Alumni feedback suggests many students arrive at college academically strong but struggling with basic independence.',
+      approaches: [
+      { key: 'stepIn', action: 'Add a practical life-skills unit to the senior year curriculum.', insight: "Directly closes the gap — just make sure it's practical time, not another lecture." },
+      { key: 'askGuide', action: "Ask recent alumni specifically what they wish they'd been taught before leaving.", insight: "Gets you a concrete list instead of a general impression of the gap." },
+      { key: 'stepBack', action: 'Leave it as a family responsibility, as has been assumed before.', insight: "Reasonable if resources are tight — but this is a gap the school is well placed to help close." }]
 
-  Counselors: [
-  {
-    pillarId: 'digital-wisdom',
-    prompt: 'A student mentions using an AI chatbot "to vent" most nights — more than they talk to any person about how they are feeling.',
-    approaches: [
-    { key: 'stepIn', action: 'Ask directly what they get from the chatbot that they do not from people.', insight: "Gets at the real gap without making the chatbot itself the enemy." },
-    { key: 'askGuide', action: 'Ask what it would take for a person to feel as safe to talk to as the chatbot does.', insight: "Turns the observation into something they can actually work toward." },
-    { key: 'stepBack', action: 'Note it for now and see if it comes up again in future sessions.', insight: "Worth returning to soon — this kind of substitution rarely resolves on its own." }]
+    },
+    {
+      pillarId: 'peer-pressure-manipulation',
+      prompt: 'A parent raises a concern about peer pressure around substances at school-adjacent social events.',
+      approaches: [
+      { key: 'stepIn', action: 'Address it directly in an assembly this term.', insight: "Direct and visible — just make sure the tone respects students rather than lecturing down at them." },
+      { key: 'askGuide', action: 'Ask students, through the counseling team, what these situations actually look like for them.', insight: "Gets you the real picture before designing a response that might miss it." },
+      { key: 'stepBack', action: "Note the concern but leave it outside the school's scope, since it happens off-campus.", insight: "Understandable boundary — but the pressure itself often follows students back onto campus regardless." }]
 
-  },
-  {
-    pillarId: 'inner-strength',
-    prompt: 'A student waves off a genuinely difficult situation at home with "it’s fine, it’s not a big deal," in a tone that doesn’t quite match the words.',
-    approaches: [
-    { key: 'stepIn', action: 'Gently name the mismatch between their words and their tone.', insight: "Direct, but said with care — this is often exactly the door someone's waiting for." },
-    { key: 'askGuide', action: "Ask what 'fine' actually means to them in this situation.", insight: "Gives them a way to say more without having to abandon 'fine' outright." },
-    { key: 'stepBack', action: 'Let it stand for now and leave the door open for later.', insight: "Reasonable once — just make sure they know the door is genuinely still open." }]
+    },
+    {
+      pillarId: 'resilience-rejection',
+      prompt: 'College rejection season brings a predictable wave of distress among senior students each year.',
+      approaches: [
+      { key: 'stepIn', action: 'Set up dedicated support sessions during the weeks results are expected.', insight: "Directly useful — just make sure it's proactive, available before results land, not only after." },
+      { key: 'askGuide', action: 'Ask the counseling team what actually helped students get through it in past years.', insight: "Builds on what's already been learned instead of starting from scratch each year." },
+      { key: 'stepBack', action: 'Continue handling it case by case as it comes up.', insight: "Fine if it's manageable — worth a structural look given how predictable this wave actually is." }]
 
-  },
-  {
-    pillarId: 'personal-safety',
-    prompt: "A student discloses an online relationship with someone they've never met, and asks you not to tell their parents.",
-    approaches: [
-    { key: 'stepIn', action: 'Explain clearly, now, what you can and cannot keep confidential here.', insight: "Uncomfortable in the moment, but trust holds up better when the limits are honest upfront." },
-    { key: 'askGuide', action: 'Ask what they are most afraid will happen if their parents find out.', insight: "Often reveals the real issue is the fear, not necessarily the relationship itself." },
-    { key: 'stepBack', action: 'Agree to hold it for now while you learn more about the situation.', insight: "Risky as a standing position — this is usually a case where the limits need to be named, not deferred." }]
+    }],
 
-  },
-  {
-    pillarId: 'leadership',
-    prompt: 'A student says they have stopped raising their hand in group settings entirely, "so no one expects anything from me."',
-    approaches: [
-    { key: 'stepIn', action: "Ask them directly what 'nothing expected of me' feels like right now.", insight: "Names the real fear underneath the behavior instead of just the behavior itself." },
-    { key: 'askGuide', action: 'Ask when they last felt like expectations were fair rather than too much.', insight: "Helps locate whether this is about fear of failure or fear of being seen at all." },
-    { key: 'stepBack', action: 'Let them stay quiet in groups for now without pushing it.', insight: "Fine short-term — but withdrawal like this tends to deepen the longer it goes unaddressed." }]
+    Counselors: [
+    {
+      pillarId: 'performance-pressure',
+      prompt: "A student describes entrance-exam pressure as feeling like their entire identity is on the line.",
+      approaches: [
+      { key: 'stepIn', action: 'Help them build a concrete pressure-management plan for exam week.', insight: "Useful — just make sure the identity piece gets addressed too, not only the logistics." },
+      { key: 'askGuide', action: "Ask what they'd still be if the exam didn't go the way they hope.", insight: "Getting a real answer to that is the actual protective work here." },
+      { key: 'stepBack', action: 'Let them process it in their own way for now.', insight: "Risky at this intensity — this is usually a moment worth staying closely involved in." }]
 
-  },
-  {
-    pillarId: 'self-identity',
-    prompt: 'A student describes themselves almost entirely in terms of grades and rank, with nothing else volunteered when you ask what else matters to them.',
-    approaches: [
-    { key: 'stepIn', action: 'Ask them directly to describe themselves without mentioning school at all.', insight: "Puts the gap right in front of them — some students find this genuinely hard to do." },
-    { key: 'askGuide', action: 'Ask what they think their friends would say about them, unprompted.', insight: "Borrowing someone else's view of them can be an easier way in than asking directly." },
-    { key: 'stepBack', action: 'Let the answer stand for now and revisit the question another time.', insight: "Fine as a single data point — worth returning to if it's still the only answer next time." }]
+    },
+    {
+      pillarId: 'interpersonal-bonds',
+      prompt: "A student's sense of self-worth seems to rise and fall entirely with their relationship status.",
+      approaches: [
+      { key: 'stepIn', action: "Name the pattern directly and ask if they've noticed it too.", insight: "Direct, but often exactly what helps someone see a pattern they're inside of." },
+      { key: 'askGuide', action: 'Ask what they valued about themselves before this relationship began.', insight: "Reconnecting with that is the real anchor, more than anything about the relationship." },
+      { key: 'stepBack', action: "Let it be — it's common at this age.", insight: "Partly true — worth returning to if their self-worth keeps tracking the relationship this closely." }]
 
-  }]
+    },
+    {
+      pillarId: 'independence',
+      prompt: 'A student admits real anxiety about managing life alone after graduation, beyond just academics.',
+      approaches: [
+      { key: 'stepIn', action: 'Walk through concrete independence skills together in session.', insight: "Useful and practical — just leave room to name the anxiety itself, not only the skills gap." },
+      { key: 'askGuide', action: 'Ask which part of being on their own worries them most.', insight: "A specific worry is far more workable than a vague sense of being unready." },
+      { key: 'stepBack', action: "Reassure them it'll come naturally once they're there.", insight: "Well-intentioned, but this usually needs more than reassurance to actually feel resolved." }]
 
+    },
+    {
+      pillarId: 'peer-pressure-manipulation',
+      prompt: "A student describes repeated pressure to go along with things at parties that don't sit right with them.",
+      approaches: [
+      { key: 'stepIn', action: 'Practice concrete responses they could use in the moment, right in session.', insight: "Practical and genuinely useful — rehearsing real words tends to help more than general advice." },
+      { key: 'askGuide', action: 'Ask what makes it hardest to say no in that specific group.', insight: "Usually reveals whether it's about the substance or about belonging — different problems to solve." },
+      { key: 'stepBack', action: 'Trust they will navigate it and leave it be.', insight: "Risky to leave unaddressed — this is exactly the kind of pattern worth actively working through." }]
+
+    },
+    {
+      pillarId: 'resilience-rejection',
+      prompt: 'A student is struggling to move past a college rejection weeks after it happened.',
+      approaches: [
+      { key: 'stepIn', action: 'Help them build a concrete plan for what comes next.', insight: "Useful eventually — just make sure the grief of the rejection has genuinely been acknowledged first." },
+      { key: 'askGuide', action: 'Ask what this rejection feels like it says about them, specifically.', insight: "Getting that belief into the open is the real work, more than the next steps." },
+      { key: 'stepBack', action: 'Give it more time before addressing it directly.', insight: "Reasonable briefly — but weeks in, it's probably time to actively engage with it." }]
+
+    }]
+
+  }
 };
+
+// Composite "bandId:roleId" keys (15 total — 3 grade bands × 5 roles) so
+// progress through one band/role combination never bleeds into another,
+// without needing a nested-Record shape for what's otherwise flat state.
+const progressKey = (bandId: GradeBand['id'], roleId: GameRoleId) => `${bandId}:${roleId}`;
+
+const INITIAL_INDEX_BY_KEY: Record<string, number> = {};
+const INITIAL_EXPLORED_BY_KEY: Record<string, boolean[]> = {};
+gradeBands.forEach((b) => {
+  GAME_ROLES.forEach((r) => {
+    const k = progressKey(b.id, r.id);
+    INITIAL_INDEX_BY_KEY[k] = 0;
+    INITIAL_EXPLORED_BY_KEY[k] = [false, false, false, false, false];
+  });
+});
 
 export function PillarDiscoveryGame() {
   const [open, setOpen] = useState(false);
+  const [bandId, setBandId] = useState<GradeBand['id']>('middle');
   const [roleId, setRoleId] = useState<GameRoleId>('Students');
-  const [indexByRole, setIndexByRole] = useState<Record<GameRoleId, number>>({
-    Students: 0,
-    Mentors: 0,
-    Parents: 0,
-    Schools: 0,
-    Counselors: 0
-  });
-  const [exploredByRole, setExploredByRole] = useState<Record<GameRoleId, boolean[]>>({
-    Students: [false, false, false, false, false],
-    Mentors: [false, false, false, false, false],
-    Parents: [false, false, false, false, false],
-    Schools: [false, false, false, false, false],
-    Counselors: [false, false, false, false, false]
-  });
+  const [indexByKey, setIndexByKey] = useState<Record<string, number>>(INITIAL_INDEX_BY_KEY);
+  const [exploredByKey, setExploredByKey] = useState<Record<string, boolean[]>>(INITIAL_EXPLORED_BY_KEY);
   const [tappedKeys, setTappedKeys] = useState<ApproachKey[]>([]);
   const touchStartX = useRef<number | null>(null);
 
-  const middleBand = gradeBands.find((b) => b.id === 'middle');
-  const pillarLabel = (pillarId: string) => middleBand?.pillars.find((p) => p.id === pillarId)?.name ?? pillarId;
+  const band = gradeBands.find((b) => b.id === bandId);
+  const pillarLabel = (pillarId: string) => band?.pillars.find((p) => p.id === pillarId)?.name ?? pillarId;
 
-  const scenarios = ROLE_SCENARIOS[roleId];
-  const index = indexByRole[roleId];
+  const key = progressKey(bandId, roleId);
+  const scenarios = BAND_ROLE_SCENARIOS[bandId][roleId];
+  const index = indexByKey[key] ?? 0;
   const scenario = scenarios[index];
-  const isExplored = exploredByRole[roleId][index];
-  const pillar = middleBand?.pillars.find((p) => p.id === scenario.pillarId);
+  const isExplored = exploredByKey[key]?.[index] ?? false;
+  const pillar = band?.pillars.find((p) => p.id === scenario.pillarId);
 
   const goTo = (newIndex: number) => {
     const len = scenarios.length;
     const wrapped = (newIndex % len + len) % len;
-    setIndexByRole((prev) => ({ ...prev, [roleId]: wrapped }));
+    setIndexByKey((prev) => ({ ...prev, [key]: wrapped }));
     setTappedKeys([]);
     playChime('flip');
+  };
+
+  const selectBand = (id: GradeBand['id']) => {
+    setBandId(id);
+    setTappedKeys([]);
+    playChime('click');
   };
 
   const selectRole = (id: GameRoleId) => {
@@ -1020,7 +1521,7 @@ export function PillarDiscoveryGame() {
   };
 
   const jumpToPillar = (i: number) => {
-    setIndexByRole((prev) => ({ ...prev, [roleId]: i }));
+    setIndexByKey((prev) => ({ ...prev, [key]: i }));
     setTappedKeys([]);
     playChime('click');
   };
@@ -1031,9 +1532,9 @@ export function PillarDiscoveryGame() {
   };
 
   const reveal = () => {
-    setExploredByRole((prev) => {
-      const next = { ...prev, [roleId]: [...prev[roleId]] };
-      next[roleId][index] = true;
+    setExploredByKey((prev) => {
+      const next = { ...prev, [key]: [...(prev[key] ?? [false, false, false, false, false])] };
+      next[key][index] = true;
       return next;
     });
     playChime('success');
@@ -1082,7 +1583,7 @@ export function PillarDiscoveryGame() {
                 Try the Approach
               </p>
               <p className="text-[11px] text-muted-foreground truncate">
-                {GAME_ROLES.find((r) => r.id === roleId)?.label} &middot; {pillarLabel(scenario.pillarId)}
+                {band?.gradesLabel} &middot; {GAME_ROLES.find((r) => r.id === roleId)?.label} &middot; {pillarLabel(scenario.pillarId)}
               </p>
             </div>
           </div>
@@ -1100,6 +1601,28 @@ export function PillarDiscoveryGame() {
 
         <div
           className="flex gap-1.5 px-5 pt-3 overflow-x-auto flex-shrink-0 sm:justify-center [&::-webkit-scrollbar]:hidden"
+          style={{ scrollbarWidth: 'none' }}>
+
+          {gradeBands.map((b) =>
+          <button
+            key={b.id}
+            type="button"
+            onClick={() => selectBand(b.id)}
+            className="flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-600 whitespace-nowrap transition-colors"
+            style={{
+              fontWeight: 600,
+              backgroundColor: bandId === b.id ? 'var(--accent)' : 'var(--card)',
+              color: bandId === b.id ? 'var(--accent-foreground)' : 'var(--muted-foreground)',
+              border: `1px solid ${bandId === b.id ? 'var(--accent)' : 'var(--border)'}`
+            }}>
+
+              {b.gradesLabel}
+            </button>
+          )}
+        </div>
+
+        <div
+          className="flex gap-1.5 px-5 pt-2 overflow-x-auto flex-shrink-0 sm:justify-center [&::-webkit-scrollbar]:hidden"
           style={{ scrollbarWidth: 'none' }}>
 
           {GAME_ROLES.map((r) =>
@@ -1268,7 +1791,7 @@ export function PillarDiscoveryGame() {
 
                   <ScenarioIcon pillarId={s.pillarId} size={12} />
                   {pillarLabel(s.pillarId)}
-                  {exploredByRole[roleId][i] && i !== index &&
+                  {exploredByKey[key]?.[i] && i !== index &&
                 <span className="w-1 h-1 rounded-full flex-shrink-0" style={{ backgroundColor: 'var(--accent)' }} />
                 }
                 </button>
