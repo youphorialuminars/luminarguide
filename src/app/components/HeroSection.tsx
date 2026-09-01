@@ -112,11 +112,11 @@ export default function HeroSection() {
               
               {/* Solid brand-gradient panel — replaces the old placeholder photo.
                   Three flat layers, no image request, no loading state:
-                  1) the base gradient (theme-aware, so it isn't stuck on violet
-                     when the teal / teal-dark themes are selected)
+                  1) the base gradient (theme-aware, so it isn't stuck on the
+                     light theme's colors when the dark theme is selected)
                   2) a soft top-right glow for a little depth
                   3) a dark wash so the white text/cards on top stay legible
-                     even against the brighter teal-dark theme's gold accent */}
+                     against either theme's gold */}
               <div
                 className="absolute inset-0"
                 style={{
