@@ -745,21 +745,28 @@ export function HoverHintIcon({ size = 13 }: {size?: number;}) {
  * hint icon/caption alone. It loops gently (play, rest a few seconds, play
  * again) rather than showing itself once and vanishing for good — a single
  * quick pass is too easy to miss entirely if the tile isn't on screen yet
- * when it happens to run. It keeps looping only on one representative tile
- * (never on every tile at once — that would be the "several things
- * blinking on screen" problem, not a fix for it), and stops for good the
- * moment a real visitor actually interacts with any tile — at that point
- * they've found it themselves and the demo has done its job.
+ * when it happens to run. It stops for good the moment a real visitor
+ * actually interacts with any tile — at that point they've found it
+ * themselves and the demo has done its job.
  *
- * `useTileDemo(enabled)` owns the timing; each caller renders the cursor
- * itself (via `tileDemoCursorStyle`) only on the one tile it's demonstrating
- * on, and treats the tile as flipped whenever phase is 'pressing' or
- * 'holding'.
+ * One instance demonstrates one tile. A group of near-identical tiles
+ * (like the five pillar tiles) only needs the demo on the first one — once
+ * a visitor has seen that one flip, the other four obviously behave the
+ * same way. A row of tiles that each say something *different* (like the
+ * three "How It Runs" cards, where one card flipping doesn't tell you the
+ * next one does too) instead gets one demo per tile, offset with a
+ * different `initialDelay` so they play in a gentle rolling sequence
+ * rather than all moving in lockstep.
+ *
+ * `useTileDemo(enabled, initialDelay?)` owns the timing; each caller
+ * renders the cursor itself (via `tileDemoCursorStyle`) only on the tile
+ * it's demonstrating, and treats that tile as flipped whenever phase is
+ * 'pressing' or 'holding'.
  * ---------------------------------------------------------------------- */
 
 type TileDemoPhase = 'idle' | 'entering' | 'pressing' | 'holding' | 'leaving' | 'done';
 
-export function useTileDemo(enabled: boolean) {
+export function useTileDemo(enabled: boolean, initialDelay: number = 1100) {
   const [phase, setPhase] = useState<TileDemoPhase>('idle');
   const stoppedRef = useRef(!enabled);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -807,7 +814,7 @@ export function useTileDemo(enabled: boolean) {
 
     timerRef.current = setTimeout(() => {
       if (!stoppedRef.current) runCycle();
-    }, 1100);
+    }, initialDelay);
 
     return () => {
       stoppedRef.current = true;

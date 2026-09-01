@@ -74,21 +74,42 @@ export default function FeaturesSection() {
   const [activeTile, setActiveTile] = useState<string | null>(null);
   const [activeBand, setActiveBand] = useState<GradeBand['id']>('middle');
 
-  // Plays once, automatically, on the very first pillar tile — a small
+  // Plays on a loop, automatically, on the very first pillar tile — a small
   // cursor slides on, "clicks" the tile, holds so the flipped-over
-  // explanation is actually readable, then leaves. Teaches a first-time
-  // visitor what "hover or tap" means by showing it, once, rather than
-  // relying on the static hint text alone. Cancels itself the moment
-  // anyone actually interacts with a tile for real.
+  // explanation is actually readable, then leaves and rests before playing
+  // again. Teaches a first-time visitor what "hover or tap" means by
+  // showing it, rather than relying on the static hint text alone. The
+  // five pillar tiles are near-identical, so one demo on the first is
+  // enough to show the whole set behaves the same way.
   const pillarDemo = useTileDemo(true);
 
-  const toggleTile = (id: string) => {
+  // The three "How It Runs" cards each say something different, so seeing
+  // one flip doesn't tell a visitor the others do too — each gets its own
+  // demo instead of just the first. Staggered start times (1.1s / 2.4s /
+  // 3.7s) so they play as a gentle rolling sequence rather than three
+  // cursors moving in lockstep.
+  const cardDemo0 = useTileDemo(true, 1100);
+  const cardDemo1 = useTileDemo(true, 2400);
+  const cardDemo2 = useTileDemo(true, 3700);
+  const cardDemos = [cardDemo0, cardDemo1, cardDemo2];
+
+  // Once a visitor has actually flipped anything themselves, they've
+  // learned the pattern — stop every demo still running, not just the one
+  // they touched.
+  const cancelAllDemos = () => {
     pillarDemo.cancel();
+    cardDemo0.cancel();
+    cardDemo1.cancel();
+    cardDemo2.cancel();
+  };
+
+  const toggleTile = (id: string) => {
+    cancelAllDemos();
     setActiveTile((prev) => (prev === id ? null : id));
   };
 
-  const flipTransform = (id: string) =>
-    activeTile === id ? '[transform:rotateY(180deg)]' : 'group-hover:[transform:rotateY(180deg)]';
+  const flipTransform = (id: string, forceFlipped?: boolean) =>
+    activeTile === id || forceFlipped ? '[transform:rotateY(180deg)]' : 'group-hover:[transform:rotateY(180deg)]';
 
   const band = gradeBands.find((b) => b.id === activeBand) ?? gradeBands[0];
 
@@ -110,7 +131,7 @@ export default function FeaturesSection() {
           e.stopPropagation();
           toggleTile(id);
         }}
-        onMouseEnter={pillarDemo.cancel}
+        onMouseEnter={cancelAllDemos}
       >
         {isDemoTile && pillarDemo.phase !== 'done' && (
           <div
@@ -147,9 +168,23 @@ export default function FeaturesSection() {
     );
   };
 
-  const renderFeatureCard = (feature: FeatureCard, id: string) => (
-    <div className="group min-h-[280px] [perspective:1200px] cursor-pointer" onClick={() => toggleTile(id)}>
-      <div className={`relative w-full h-full transition-transform duration-500 [transform-style:preserve-3d] ${flipTransform(id)}`}>
+  const renderFeatureCard = (feature: FeatureCard, id: string, demoIndex: number) => {
+    const demo = cardDemos[demoIndex];
+    return (
+    <div
+      className="group min-h-[280px] [perspective:1200px] cursor-pointer relative"
+      onClick={() => toggleTile(id)}
+      onMouseEnter={cancelAllDemos}
+    >
+      {demo.phase !== 'done' && (
+        <div
+          className="pointer-events-none absolute z-20"
+          style={{ right: '6%', bottom: '10%', ...tileDemoCursorStyle(demo.phase) }}
+        >
+          <GuideCursorIcon pressed={demo.phase === 'pressing'} />
+        </div>
+      )}
+      <div className={`relative w-full h-full transition-transform duration-500 [transform-style:preserve-3d] ${flipTransform(id, demo.isFlipped)}`}>
         <div className="absolute inset-0 [backface-visibility:hidden] bento-card flex flex-col gap-5 min-h-[280px]">
           <div className="icon-wrapper" style={{ backgroundColor: feature.accentColor, color: feature.iconColor }}>
             {feature.icon}
@@ -174,7 +209,8 @@ export default function FeaturesSection() {
         </div>
       </div>
     </div>
-  );
+    );
+  };
 
   return (
     <section id="features" className="py-20 bg-muted scroll-mt-16">
@@ -283,9 +319,9 @@ export default function FeaturesSection() {
           How It Runs
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {renderFeatureCard(features[0], 'card-0')}
-          {renderFeatureCard(features[1], 'card-1')}
-          {renderFeatureCard(features[2], 'card-2')}
+          {renderFeatureCard(features[0], 'card-0', 0)}
+          {renderFeatureCard(features[1], 'card-1', 1)}
+          {renderFeatureCard(features[2], 'card-2', 2)}
         </div>
 
       </div>
