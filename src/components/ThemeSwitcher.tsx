@@ -7,6 +7,15 @@ const THEMES = [
   { id: 'teal-dark', label: 'Dark', from: '#141312', to: '#2DD4BF' },
 ];
 
+// Same favicon-per-theme map as the inline script in layout.tsx (which
+// handles the very first paint, before this component has mounted) — this
+// is what keeps the tab icon in sync every time someone actually clicks
+// the toggle, live, without a refresh.
+const FAVICON_BY_THEME: Record<string, string> = {
+  violet: 'https://ldkwhimqenxkloibhwzt.supabase.co/storage/v1/object/public/Branding/faviconlight.png',
+  'teal-dark': 'https://ldkwhimqenxkloibhwzt.supabase.co/storage/v1/object/public/Branding/favicondark.png',
+};
+
 export default function ThemeSwitcher() {
   const [active, setActive] = useState('violet');
 
@@ -20,6 +29,8 @@ export default function ThemeSwitcher() {
   const applyTheme = (id) => {
     document.documentElement.setAttribute('data-theme', id);
     localStorage.setItem('luminarsguide-theme', id);
+    const link = document.getElementById('theme-favicon');
+    if (link) link.setAttribute('href', FAVICON_BY_THEME[id]);
     setActive(id);
   };
 

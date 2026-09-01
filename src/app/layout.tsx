@@ -36,18 +36,30 @@ export const metadata: Metadata = {
   },
 };
 
+/* The favicon is the site's own mark (no colored backing shape, per how
+   the logo already looks) — navy for the light theme, off-white/teal-edged
+   for the dark theme, matching each theme's own logo instead of one fixed
+   icon. A static <link> can't react to the SITE's own light/dark toggle
+   (only to the visitor's OS-level preference), so this is done in two
+   places: the inline script below sets the correct one immediately on
+   load (before paint, using whichever theme was last saved), and
+   ThemeSwitcher.tsx updates it live whenever someone clicks the toggle. */
+const FAVICON_BY_THEME = {
+  violet: 'https://ldkwhimqenxkloibhwzt.supabase.co/storage/v1/object/public/Branding/faviconlight.png',
+  'teal-dark': 'https://ldkwhimqenxkloibhwzt.supabase.co/storage/v1/object/public/Branding/favicondark.png',
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en" data-theme="violet" className={`${publicSans.variable} ${lora.variable}`} suppressHydrationWarning>
       <head>
+        <link rel="icon" id="theme-favicon" href={FAVICON_BY_THEME.violet} />
         <script
           dangerouslySetInnerHTML={{
-            __html: "try{var t=localStorage.getItem('luminarsguide-theme');document.documentElement.setAttribute('data-theme',['violet','teal-dark'].indexOf(t)>-1?t:'violet');}catch(e){}",
+            __html: "try{var t=localStorage.getItem('luminarsguide-theme');t=['violet','teal-dark'].indexOf(t)>-1?t:'violet';document.documentElement.setAttribute('data-theme',t);var l=document.getElementById('theme-favicon');if(l)l.href=" + JSON.stringify(FAVICON_BY_THEME) + "[t];}catch(e){}",
           }}
         />
-
-        <script type="module" async src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fluminargui9141back.builtwithrocket.new&_be=https%3A%2F%2Fappanalytics.rocket.new&_v=0.1.20" />
-        <script type="module" defer src="https://static.rocket.new/rocket-shot.js?v=0.0.2" /></head>
+</head>
       <body className={publicSans.className}>
         <Header />
         <main className="pt-16">{children}</main>
