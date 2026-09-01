@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 
 const THEMES = [
   { id: 'violet', label: 'Light', from: '#16212C', to: '#A67E33' },
-  { id: 'teal-dark', label: 'Dark', from: '#141312', to: '#E6C065' },
+  { id: 'teal-dark', label: 'Dark', from: '#141312', to: '#C9A15B' },
 ];
 
 export default function ThemeSwitcher() {

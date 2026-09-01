@@ -9,7 +9,18 @@
 .logo-light { display: block; }
 .logo-dark { display: none; }
 [data-theme='teal-dark'] .logo-light { display: none; }
-[data-theme='teal-dark'] .logo-dark { display: block; }
+[data-theme='teal-dark'] .logo-dark {
+  display: block;
+  /* The uploaded dark-mode logo file has a teal accent baked into its icon
+     mark (left over from when the dark theme itself was teal). Now that the
+     dark theme has dropped teal entirely, that one icon is the only place
+     it would still show up — and it isn't a file this project can re-export
+     as a new asset. grayscale() removes the teal regardless of its exact
+     shade (no need to know the precise source hex), and brightness() lifts
+     it to sit cleanly next to the wordmark's white, so the mark reads as a
+     clean, neutral logo instead of an orphaned color. */
+  filter: grayscale(1) brightness(1.35);
+}
 
 /* Pricing page — Monthly / Quarterly / Annual billing-cycle toggle.
    CSS-only, same technique as the logo swap above: three hidden radio
@@ -75,22 +86,37 @@
   --font-sans: 'Public Sans', sans-serif;
   --font-serif: 'Lora', serif;
   color-scheme: light;
+
+  /* Dark anchor for the handful of full-bleed "statement" gradient panels
+     (Hero visual, the Parents/Schools notes on the homepage, the pillar
+     game's scenario card) that always carry solid-white text regardless of
+     theme. In light mode this is just --primary (navy) again — same value,
+     no visual change. See the dark-theme block below for why this needs to
+     be its own token instead of reusing --primary there. */
+  --panel-deep: #16212C;
 }
 
 /* The id stays 'teal-dark' (it's an internal string only — saved in
    localStorage and matched in layout.tsx's inline theme script — never
    shown to a visitor, who just sees the "Dark" label and swatch), but the
-   palette itself moved off teal: a true near-black/white base with the
-   same gold the light theme already uses as the one accent color, instead
-   of a teal that only ever existed in dark mode and had no counterpart in
-   light mode. */
+   palette itself moved off teal: a true near-black/white base with gold
+   held back as a single, sparing accent — the same balance the light theme
+   already strikes (--primary there is just the body-text navy reused, and
+   --accent alone carries the gold). --primary here mirrors that: it's set
+   to --foreground, not to gold, so eyebrow labels, links and hover states
+   read as "the text color, doing double duty" rather than a second loud
+   color competing with --accent. Gold stays doing exactly one job: the
+   --accent role — bullets, checkmarks, small badges, the headline
+   gradient — the restrained way it's used on sites like Claude's or
+   Rocket.new's own dark themes, instead of flooding buttons, links and
+   labels site-wide the way an earlier pass here did. */
 [data-theme='teal-dark'] {
   --background: #141312;
   --foreground: #F3F1EC;
-  --primary: #E6C065;
+  --primary: #F3F1EC;
   --primary-foreground: #1C1014;
   --secondary: #211E1A;
-  --secondary-foreground: #D8B978;
+  --secondary-foreground: #F3F1EC;
   --accent: #C9A15B;
   --accent-foreground: #1C1014;
   --muted: #211E1A;
@@ -99,11 +125,19 @@
   --card-foreground: #F3F1EC;
   --border: #2A2724;
   --input: #2A2724;
-  --ring: #E6C065;
+  --ring: #F3F1EC;
   --radius: 1rem;
   --font-sans: 'Public Sans', sans-serif;
   --font-serif: 'Lora', serif;
   color-scheme: dark;
+
+  /* Now that --primary is a neutral (near-white, for readable buttons and
+     links), it can't double as the dark end of the statement-panel
+     gradients below — a near-white anchor there would wash the panel out
+     and swallow the white text sitting on top of it. This keeps those few
+     panels a deep, moody charcoal running into gold, the same character
+     they had before, without dragging --primary itself back to gold. */
+  --panel-deep: #1C1712;
 }
 
 @layer base {

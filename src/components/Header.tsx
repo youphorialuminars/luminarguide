@@ -206,7 +206,7 @@ function PillarGuideChat() {
           {/* Header */}
           <div
           className="flex items-center justify-between px-4 py-3.5 flex-shrink-0"
-          style={{ backgroundColor: 'var(--primary)' }}>
+          style={{ backgroundColor: 'var(--panel-deep)' }}>
           
             <div className="flex items-center gap-2.5">
               <div
@@ -265,7 +265,7 @@ function PillarGuideChat() {
         aria-expanded={open}
         aria-label={open ? 'Close pillar chatbot' : 'Open pillar chatbot'}
         className="relative flex items-center justify-center gap-2.5 shadow-2xl text-white transition-transform hover:scale-105 w-12 h-12 rounded-full sm:w-auto sm:h-auto sm:pl-4 sm:pr-5 sm:py-3.5"
-        style={{ backgroundColor: 'var(--primary)' }}>
+        style={{ backgroundColor: 'var(--panel-deep)' }}>
 
         {!everOpened &&
         <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full animate-pulse" style={{ backgroundColor: 'var(--accent)' }} />
@@ -1818,7 +1818,7 @@ export function PillarDiscoveryGame() {
               onTouchStart={onTouchStart}
               onTouchEnd={onTouchEnd}
               className="rounded-2xl p-6 sm:p-7 relative overflow-hidden animate-fade-scale"
-              style={{ background: 'linear-gradient(150deg, var(--primary) 0%, #2b3b47 100%)' }}>
+              style={{ background: 'linear-gradient(150deg, var(--panel-deep) 0%, #2b3b47 100%)' }}>
 
               <div className="absolute inset-0" style={{ background: 'radial-gradient(60% 45% at 88% 5%, rgba(230,192,101,0.28) 0%, transparent 65%)' }} />
               <div className="relative">

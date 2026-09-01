@@ -1,164 +1,193 @@
 import React from 'react';
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import { programStages, stakeholderDetails } from '@/lib/siteConfig';
-import { GradeBandDeepDive, StakeholderIcon } from '@/components/Header';
+import HeroSection from '@/app/components/HeroSection';
+import AboutSection from '@/app/components/AboutSection';
+import FeaturesSection from '@/app/components/FeaturesSection';
+import ContactSection from '@/app/components/ContactSection';
+import { purpose } from '@/lib/siteConfig';
 
-export const metadata: Metadata = { title: 'About — LuminarGuide' };
+export const metadata: Metadata = {
+  title: "LuminarGuide — Development Beyond the Textbook",
+  description:
+    "LuminarGuide helps students in grades 6–12 grow beyond the textbook — self-awareness, resilience, and practical life skills, guided by trained mentors and a shared view for parents, schools, and counselors.",
+  openGraph: {
+    title: "LuminarGuide — Development Beyond the Textbook",
+    description: "Mentor-guided personal development for students in grades 6–12, starting with self-awareness and inner strength.",
+    images: [{ url: '/assets/images/app_logo.png', width: 1200, height: 630 }],
+  },
+};
 
-function RoleCard({ role }: { role: 'Mentors' | 'Parents' | 'Schools' | 'Counselors' }) {
-  const detail = stakeholderDetails.find((s) => s.role === role);
-  return (
-    <div className="bg-card border border-border rounded-2xl p-5 flex flex-col gap-2 h-full">
-      <div className="flex items-center gap-2">
-        <span style={{ color: 'var(--primary)' }}>
-          <StakeholderIcon role={role} size={18} />
-        </span>
-        <p className="text-sm font-700 text-foreground" style={{ fontWeight: 700 }}>{role}</p>
-      </div>
-      <p className="text-xs leading-relaxed text-muted-foreground">{detail?.description}</p>
-    </div>
-  );
-}
-
-function StudentHub() {
-  return (
-    <div
-      className="rounded-2xl p-7 text-center flex flex-col items-center justify-center gap-2 h-full"
-      style={{ backgroundColor: 'var(--primary)' }}
-    >
-      <span style={{ color: 'var(--primary-foreground)' }}>
-        <StakeholderIcon role="Students" size={30} />
-      </span>
-      <p className="text-sm font-700 uppercase tracking-wide" style={{ fontWeight: 700, color: 'var(--primary-foreground)' }}>
-        The Student
-      </p>
-      <p className="text-xs leading-relaxed max-w-[22ch]" style={{ color: 'var(--primary-foreground)', opacity: 0.85 }}>
-        Every role around them exists to support one shared, honest view of how they're doing.
-      </p>
-    </div>
-  );
-}
-
-export default function AboutPage() {
+export default function LandingPage() {
   return (
     <>
-      <section className="py-20 bg-background">
-        <div className="max-w-4xl mx-auto px-6">
-          <p className="text-xs font-600 text-primary uppercase tracking-widest mb-4">About the Program</p>
-          <h1 className="text-section-heading text-foreground mb-5">Development that happens outside the textbook.</h1>
-          <p className="text-base leading-relaxed text-muted-foreground max-w-2xl">
-            A student who can solve any equation on the board but freezes when asked what they actually want. A group
-            chat that goes silent for two days after a disagreement no one knows how to have out loud. A college
-            application asking "what are your goals?" to someone who's never once been asked that by an adult.
-            LuminarGuide exists for exactly this — the growth a report card never measures — guided by trained
-            mentors and experienced counselors who know each student as a person, not just a set of grades.
+      <HeroSection />
+
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="section-divider" />
+      </div>
+
+      {/* "Why LuminarGuide" — Vision, Mission, and the fuller Message to
+          Parents. Folded directly into this page (no separate component
+          file) since new files/folders can't be created on the Rocket.new
+          side of this project. Sits right after the Hero because this is
+          the "why" — before AboutSection gets into the "what."
+
+          Vision/Mission use the same bento-card + icon-wrapper treatment as
+          the "How It Runs" cards in FeaturesSection, and the Note to Parents
+          panel reuses the Hero's three-layer gradient technique — so this
+          section reads as part of the same design system instead of a
+          plain-text block dropped in on its own. */}
+      <section className="py-20 bg-muted">
+        <div className="max-w-6xl mx-auto px-6">
+
+          <p className="text-xs font-600 text-primary uppercase tracking-widest mb-10 text-center" style={{ fontWeight: 600 }}>
+            Why LuminarGuide
           </p>
-        </div>
-      </section>
 
-      <section className="py-16 bg-muted">
-        <div className="max-w-4xl mx-auto px-6">
-          <div className="bg-card border border-border rounded-2xl p-8">
-            <p className="text-xs font-600 text-primary uppercase tracking-widest mb-4">Our Approach</p>
-            <p className="text-lg leading-relaxed text-foreground mb-4" style={{ fontWeight: 500 }}>
-              We think of becoming a responsible, grounded person as a journey in three stages: first understanding
-              yourself, then learning to relate to others, and finally learning to contribute to society. Classes 6
-              through 12 are where all three stages begin — but the adults who care about a student's growth usually
-              only see a fragment of the picture.
-            </p>
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              LuminarGuide is currently piloting <strong className="text-foreground">Stage 1: Intrinsic Development</strong> in
-              schools. Stages 2 and 3 build directly on top of it and are actively in development.
-            </p>
-          </div>
-        </div>
-      </section>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+            <div className="bento-card flex flex-col gap-4">
+              <div className="icon-wrapper" style={{ backgroundColor: 'rgba(22,33,44,0.08)', color: 'var(--primary)' }}>
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                  <path d="M1 11S4.5 5 11 5s10 6 10 6-3.5 6-10 6S1 11 1 11z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <circle cx="11" cy="11" r="3" stroke="currentColor" strokeWidth="1.5" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-xs font-600 text-primary uppercase tracking-widest mb-2" style={{ fontWeight: 600 }}>
+                  Vision
+                </p>
+                <h2 className="text-card-heading text-foreground mb-3">
+                  {purpose.vision.heading}
+                </h2>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  {purpose.vision.description}
+                </p>
+              </div>
+            </div>
 
-      {/* Three-stage roadmap */}
-      <section className="py-20 bg-background">
-        <div className="max-w-6xl mx-auto px-6">
-          <p className="text-xs font-600 text-primary uppercase tracking-widest mb-3">The Roadmap</p>
-          <h2 className="text-section-heading text-foreground mb-10">Three stages toward becoming a responsible person in society.</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {programStages.map((stage) =>
-              stage.status === 'live' ? (
-                <div key={stage.id} className="bento-card flex flex-col gap-3 relative">
-                  <span
-                    className="absolute -top-2 -right-2 w-4 h-4 rounded-full border-2"
-                    style={{ backgroundColor: 'var(--accent)', borderColor: 'var(--background)' }}
-                    aria-hidden="true"
-                  />
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-700 text-muted-foreground tabular-nums">Stage {stage.order}</span>
-                    <span
-                      className="text-[10px] font-600 uppercase tracking-wide px-2 py-0.5 rounded-full"
-                      style={{ backgroundColor: 'var(--primary)', color: 'var(--primary-foreground)', fontWeight: 600 }}
-                    >
-                      {stage.statusLabel}
-                    </span>
-                  </div>
-                  <h3 className="text-card-heading text-foreground">{stage.name}</h3>
-                  <p className="text-xs font-600 text-primary">{stage.tagline}</p>
-                  <p className="text-sm leading-relaxed text-muted-foreground flex-1">{stage.description}</p>
-                </div>
-              ) : (
-                <div key={stage.id} className="flex flex-col gap-3 border border-border p-8" style={{ borderRadius: 'var(--radius)' }}>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-700 text-muted-foreground tabular-nums">Stage {stage.order}</span>
-                    <span
-                      className="text-[10px] font-600 uppercase tracking-wide px-2 py-0.5 rounded-full border border-border"
-                      style={{ color: 'var(--muted-foreground)', fontWeight: 600 }}
-                    >
-                      {stage.statusLabel}
-                    </span>
-                  </div>
-                  <h3 className="text-card-heading text-muted-foreground">{stage.name}</h3>
-                  <p className="text-xs font-600 text-muted-foreground">{stage.tagline}</p>
-                  <p className="text-sm leading-relaxed text-muted-foreground flex-1">{stage.description}</p>
-                </div>
-              )
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* Grade band deep dives — one tabbed section instead of three
-          stacked ones, see GradeBandDeepDive in Header.tsx for why. */}
-      <GradeBandDeepDive />
-
-      <section className="py-16 bg-muted">
-        <div className="max-w-6xl mx-auto px-6">
-          <p className="text-xs font-600 text-primary uppercase tracking-widest mb-3">Who We Work With</p>
-          <h2 className="text-section-heading text-foreground mb-10">Everyone around the student, one shared view.</h2>
-
-          {/* Desktop: a real relationship diagram — the student in the center,
-              the four roles around them — instead of a flat row of labels. */}
-          <div className="hidden md:grid grid-cols-3 gap-5">
-            <div style={{ gridColumn: 1, gridRow: 1 }}><RoleCard role="Mentors" /></div>
-            <div style={{ gridColumn: 2, gridRow: '1 / 3' }}><StudentHub /></div>
-            <div style={{ gridColumn: 3, gridRow: 1 }}><RoleCard role="Parents" /></div>
-            <div style={{ gridColumn: 1, gridRow: 2 }}><RoleCard role="Counselors" /></div>
-            <div style={{ gridColumn: 3, gridRow: 2 }}><RoleCard role="Schools" /></div>
-          </div>
-
-          {/* Mobile: student first, then the four roles in a 2x2 grid below —
-              same hierarchy, just stacked instead of arranged spatially. */}
-          <div className="md:hidden flex flex-col gap-4">
-            <StudentHub />
-            <div className="grid grid-cols-2 gap-3">
-              <RoleCard role="Mentors" />
-              <RoleCard role="Parents" />
-              <RoleCard role="Counselors" />
-              <RoleCard role="Schools" />
+            <div className="bento-card flex flex-col gap-4">
+              <div className="icon-wrapper" style={{ backgroundColor: 'rgba(166,126,51,0.12)', color: 'var(--accent)' }}>
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                  <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="1.5" />
+                  <circle cx="11" cy="11" r="4" stroke="currentColor" strokeWidth="1.5" />
+                  <circle cx="11" cy="11" r="1" fill="currentColor" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-xs font-600 uppercase tracking-widest mb-2" style={{ fontWeight: 600, color: 'var(--accent)' }}>
+                  Mission
+                </p>
+                <h2 className="text-card-heading text-foreground mb-3">
+                  {purpose.mission.heading}
+                </h2>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  {purpose.mission.description}
+                </p>
+              </div>
             </div>
           </div>
+
+          {/* Message to parents — the emotional/positioning core, so it gets
+              the site's strongest visual treatment: the same gradient panel
+              as the Hero's visual, not a flat tinted box. Uses --panel-deep
+              rather than --primary so this stays a dark anchor for the
+              white text on top, even in the dark theme where --primary is
+              now a light neutral (see tailwind.css). */}
+          <div className="relative rounded-3xl overflow-hidden shadow-2xl p-8 md:p-12">
+            <div
+              className="absolute inset-0"
+              style={{ background: 'linear-gradient(135deg, var(--panel-deep) 0%, var(--accent) 100%)' }} />
+            <div
+              className="absolute inset-0"
+              style={{ background: 'radial-gradient(60% 60% at 85% 15%, rgba(255,255,255,0.18) 0%, transparent 60%)' }} />
+            <div
+              className="absolute inset-0"
+              style={{ background: 'linear-gradient(175deg, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.4) 100%)' }} />
+
+            <div className="relative">
+              <span
+                className="block leading-none mb-2"
+                style={{ fontFamily: 'var(--font-serif)', fontSize: '4.5rem', color: 'rgba(255,255,255,0.35)' }}>
+
+                &ldquo;
+              </span>
+              <p
+                className="text-xs font-600 uppercase tracking-widest mb-3 -mt-6"
+                style={{ fontWeight: 600, color: 'rgba(255,255,255,0.85)' }}>
+
+                A Note to Parents
+              </p>
+              <h3
+                className="mb-4"
+                style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.5rem, 2.6vw, 2.25rem)', lineHeight: 1.25, color: '#FFFFFF' }}>
+
+                {purpose.messageToParents.heading}
+              </h3>
+              <p className="text-base leading-relaxed max-w-2xl" style={{ color: 'rgba(255,255,255,0.92)' }}>
+                {purpose.messageToParents.description}
+              </p>
+            </div>
+          </div>
+
+          {/* Message to schools — same treatment as the parents panel just
+              above, stacked directly beneath it so both audiences see their
+              own message in the same place, one after the other. */}
+          <div className="relative rounded-3xl overflow-hidden shadow-2xl p-8 md:p-12 mt-6">
+            <div
+              className="absolute inset-0"
+              style={{ background: 'linear-gradient(135deg, var(--accent) 0%, var(--panel-deep) 100%)' }} />
+            <div
+              className="absolute inset-0"
+              style={{ background: 'radial-gradient(60% 60% at 85% 15%, rgba(255,255,255,0.18) 0%, transparent 60%)' }} />
+            <div
+              className="absolute inset-0"
+              style={{ background: 'linear-gradient(175deg, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.4) 100%)' }} />
+
+            <div className="relative">
+              <span
+                className="block leading-none mb-2"
+                style={{ fontFamily: 'var(--font-serif)', fontSize: '4.5rem', color: 'rgba(255,255,255,0.35)' }}>
+
+                &ldquo;
+              </span>
+              <p
+                className="text-xs font-600 uppercase tracking-widest mb-3 -mt-6"
+                style={{ fontWeight: 600, color: 'rgba(255,255,255,0.85)' }}>
+
+                A Note to Schools
+              </p>
+              <h3
+                className="mb-4"
+                style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.5rem, 2.6vw, 2.25rem)', lineHeight: 1.25, color: '#FFFFFF' }}>
+
+                {purpose.messageToSchools.heading}
+              </h3>
+              <p className="text-base leading-relaxed max-w-2xl" style={{ color: 'rgba(255,255,255,0.92)' }}>
+                {purpose.messageToSchools.description}
+              </p>
+            </div>
+          </div>
+
         </div>
       </section>
 
-      <section className="py-16 bg-background text-center">
-              <Link href="/get-started" className="btn-primary">Ask Us Anything</Link>
-      </section>
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="section-divider" />
+      </div>
+
+      <AboutSection />
+
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="section-divider" />
+      </div>
+
+      <FeaturesSection />
+
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="section-divider" />
+      </div>
+
+      <ContactSection />
     </>
   );
 }
