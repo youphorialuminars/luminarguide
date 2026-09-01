@@ -9,18 +9,12 @@
 .logo-light { display: block; }
 .logo-dark { display: none; }
 [data-theme='teal-dark'] .logo-light { display: none; }
-[data-theme='teal-dark'] .logo-dark {
-  display: block;
-  /* The uploaded dark-mode logo file has a teal accent baked into its icon
-     mark (left over from when the dark theme itself was teal). Now that the
-     dark theme has dropped teal entirely, that one icon is the only place
-     it would still show up — and it isn't a file this project can re-export
-     as a new asset. grayscale() removes the teal regardless of its exact
-     shade (no need to know the precise source hex), and brightness() lifts
-     it to sit cleanly next to the wordmark's white, so the mark reads as a
-     clean, neutral logo instead of an orphaned color. */
-  filter: grayscale(1) brightness(1.35);
-}
+[data-theme='teal-dark'] .logo-dark { display: block; }
+/* No CSS filter here — the dark-mode logo asset itself (logofulldark.svg,
+   in Supabase storage) has been replaced with a version whose icon mark
+   uses the theme's off-white (#F3F1EC) instead of the old teal, matching
+   how the light-mode logo has always kept its icon the same solid color
+   as its wordmark. See the delivered logofulldark.svg. */
 
 /* Pricing page — Monthly / Quarterly / Annual billing-cycle toggle.
    CSS-only, same technique as the logo swap above: three hidden radio
@@ -94,22 +88,26 @@
      no visual change. See the dark-theme block below for why this needs to
      be its own token instead of reusing --primary there. */
   --panel-deep: #16212C;
+
+  /* The gold used specifically inside those same statement panels — kept
+     as its own token, separate from --accent, so it isn't affected by
+     --accent going neutral in the dark theme below. Same value --accent
+     already was, so light mode looks exactly as it did. */
+  --panel-accent: #A67E33;
 }
 
 /* The id stays 'teal-dark' (it's an internal string only — saved in
    localStorage and matched in layout.tsx's inline theme script — never
    shown to a visitor, who just sees the "Dark" label and swatch), but the
-   palette itself moved off teal: a true near-black/white base with gold
-   held back as a single, sparing accent — the same balance the light theme
-   already strikes (--primary there is just the body-text navy reused, and
-   --accent alone carries the gold). --primary here mirrors that: it's set
-   to --foreground, not to gold, so eyebrow labels, links and hover states
-   read as "the text color, doing double duty" rather than a second loud
-   color competing with --accent. Gold stays doing exactly one job: the
-   --accent role — bullets, checkmarks, small badges, the headline
-   gradient — the restrained way it's used on sites like Claude's or
-   Rocket.new's own dark themes, instead of flooding buttons, links and
-   labels site-wide the way an earlier pass here did. */
+   palette itself moved off teal: a genuinely black-and-white base. Gold is
+   held to a small, deliberate set of "statement" moments — the headline
+   gradient text, and the handful of dark-to-gold panels behind the site's
+   biggest headings (Hero, the Parents/Schools notes, the pillar game) —
+   via --panel-accent, not spread through the interface as a general
+   accent color. --accent itself is a neutral here (not gold), so the many
+   small everyday uses of it — bullets, checkmarks, badges, focus rings —
+   render as part of the black-and-white palette instead of adding a second
+   color running through the whole page. */
 [data-theme='teal-dark'] {
   --background: #141312;
   --foreground: #F3F1EC;
@@ -117,7 +115,7 @@
   --primary-foreground: #1C1014;
   --secondary: #211E1A;
   --secondary-foreground: #F3F1EC;
-  --accent: #C9A15B;
+  --accent: #D9D5CC;
   --accent-foreground: #1C1014;
   --muted: #211E1A;
   --muted-foreground: #A8A29B;
@@ -130,6 +128,11 @@
   --font-sans: 'Public Sans', sans-serif;
   --font-serif: 'Lora', serif;
   color-scheme: dark;
+
+  /* The gold reserved for the statement panels (see the comment on the
+     light-theme --panel-accent above) — same gold this theme already had
+     as --accent, just no longer doubling as the general accent color. */
+  --panel-accent: #C9A15B;
 
   /* Now that --primary is a neutral (near-white, for readable buttons and
      links), it can't double as the dark end of the statement-panel

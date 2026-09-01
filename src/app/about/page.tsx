@@ -89,14 +89,15 @@ export default function LandingPage() {
 
           {/* Message to parents — the emotional/positioning core, so it gets
               the site's strongest visual treatment: the same gradient panel
-              as the Hero's visual, not a flat tinted box. Uses --panel-deep
-              rather than --primary so this stays a dark anchor for the
-              white text on top, even in the dark theme where --primary is
-              now a light neutral (see tailwind.css). */}
+              as the Hero's visual, not a flat tinted box. Uses
+              --panel-deep/--panel-accent rather than --primary/--accent —
+              one of the site's few deliberate gold moments, kept separate
+              from the general (now neutral, black-and-white) accent color
+              used everywhere else (see tailwind.css). */}
           <div className="relative rounded-3xl overflow-hidden shadow-2xl p-8 md:p-12">
             <div
               className="absolute inset-0"
-              style={{ background: 'linear-gradient(135deg, var(--panel-deep) 0%, var(--accent) 100%)' }} />
+              style={{ background: 'linear-gradient(135deg, var(--panel-deep) 0%, var(--panel-accent) 100%)' }} />
             <div
               className="absolute inset-0"
               style={{ background: 'radial-gradient(60% 60% at 85% 15%, rgba(255,255,255,0.18) 0%, transparent 60%)' }} />
@@ -135,7 +136,7 @@ export default function LandingPage() {
           <div className="relative rounded-3xl overflow-hidden shadow-2xl p-8 md:p-12 mt-6">
             <div
               className="absolute inset-0"
-              style={{ background: 'linear-gradient(135deg, var(--accent) 0%, var(--panel-deep) 100%)' }} />
+              style={{ background: 'linear-gradient(135deg, var(--panel-accent) 0%, var(--panel-deep) 100%)' }} />
             <div
               className="absolute inset-0"
               style={{ background: 'radial-gradient(60% 60% at 85% 15%, rgba(255,255,255,0.18) 0%, transparent 60%)' }} />

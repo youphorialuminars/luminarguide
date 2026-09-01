@@ -113,17 +113,19 @@ export default function HeroSection() {
               {/* Solid brand-gradient panel — replaces the old placeholder photo.
                   Three flat layers, no image request, no loading state:
                   1) the base gradient, running the deep --panel-deep anchor
-                     into --accent's gold — --panel-deep rather than
-                     --primary specifically because this panel's white text
-                     needs a dark anchor to stay legible, and --primary is a
-                     light neutral in the dark theme (see tailwind.css)
+                     into --panel-accent's gold — --panel-deep/--panel-accent
+                     rather than --primary/--accent specifically because
+                     this is one of the site's few deliberate gold
+                     "statement" moments, kept separate from the general
+                     (now neutral, black-and-white) --primary/--accent pair
+                     used everywhere else (see tailwind.css)
                   2) a soft top-right glow for a little depth
                   3) a dark wash so the white text/cards on top stay legible
                      against either theme's gold */}
               <div
                 className="absolute inset-0"
                 style={{
-                  background: 'linear-gradient(160deg, var(--panel-deep) 0%, var(--accent) 100%)',
+                  background: 'linear-gradient(160deg, var(--panel-deep) 0%, var(--panel-accent) 100%)',
                 }} />
               <div
                 className="absolute inset-0"
