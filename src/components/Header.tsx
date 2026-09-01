@@ -738,15 +738,18 @@ export function HoverHintIcon({ size = 13 }: {size?: number;}) {
 
 /* ------------------------------------------------------------------------
  * TileDemoCursor / useTileDemo
- * A one-time, self-playing demonstration: a small cursor icon slides onto a
- * tile, "clicks" it, holds while the tile's flipped face is visible, then
- * slides off — showing a first-time visitor exactly what "hover or tap"
- * means before they've tried it themselves, instead of relying on the
- * static hint icon/caption alone. Plays once per page load, only on one
- * representative tile (never on every tile at once — that would be the
- * "several things blinking on screen" problem, not a fix for it), and
- * cancels itself the moment a real visitor actually interacts with any
- * tile. Respects prefers-reduced-motion by skipping entirely.
+ * A self-playing demonstration: a small cursor icon slides onto a tile,
+ * "clicks" it, holds while the tile's flipped face is visible, then slides
+ * off — showing a first-time visitor exactly what "hover or tap" means
+ * before they've tried it themselves, instead of relying on the static
+ * hint icon/caption alone. It loops gently (play, rest a few seconds, play
+ * again) rather than showing itself once and vanishing for good — a single
+ * quick pass is too easy to miss entirely if the tile isn't on screen yet
+ * when it happens to run. It keeps looping only on one representative tile
+ * (never on every tile at once — that would be the "several things
+ * blinking on screen" problem, not a fix for it), and stops for good the
+ * moment a real visitor actually interacts with any tile — at that point
+ * they've found it themselves and the demo has done its job.
  *
  * `useTileDemo(enabled)` owns the timing; each caller renders the cursor
  * itself (via `tileDemoCursorStyle`) only on the one tile it's demonstrating
@@ -758,32 +761,58 @@ type TileDemoPhase = 'idle' | 'entering' | 'pressing' | 'holding' | 'leaving' | 
 
 export function useTileDemo(enabled: boolean) {
   const [phase, setPhase] = useState<TileDemoPhase>('idle');
-  const startedRef = useRef(false);
-  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const stoppedRef = useRef(!enabled);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const cancel = () => {
-    timers.current.forEach(clearTimeout);
-    timers.current = [];
-    startedRef.current = true;
+    stoppedRef.current = true;
+    if (timerRef.current) clearTimeout(timerRef.current);
     setPhase('done');
   };
 
   useEffect(() => {
-    if (!enabled || startedRef.current) return;
+    if (!enabled) return;
     if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
-      startedRef.current = true;
+      stoppedRef.current = true;
       return;
     }
-    startedRef.current = true;
-    const schedule = (fn: () => void, ms: number) => {
-      timers.current.push(setTimeout(fn, ms));
+    stoppedRef.current = false;
+
+    // Chains one step into the next via nested timeouts (rather than a
+    // fixed list scheduled all at once) so the whole thing can loop
+    // indefinitely — each step re-checks stoppedRef right before it acts,
+    // so a cancel() mid-sequence reliably stops it, even if a timer was
+    // already in flight when the real visitor clicked.
+    const step = (next: TileDemoPhase, delay: number, after?: () => void) => {
+      timerRef.current = setTimeout(() => {
+        if (stoppedRef.current) return;
+        setPhase(next);
+        after?.();
+      }, delay);
     };
-    schedule(() => setPhase('entering'), 900);
-    schedule(() => setPhase('pressing'), 1400);
-    schedule(() => setPhase('holding'), 1750);
-    schedule(() => setPhase('leaving'), 3250);
-    schedule(() => setPhase('done'), 3850);
-    return () => timers.current.forEach(clearTimeout);
+
+    const runCycle = () => {
+      step('entering', 550, () =>
+      step('pressing', 550, () =>
+      step('holding', 350, () =>
+      step('leaving', 2800, () =>
+      step('idle', 650, () => {
+        // full rest before playing again — long enough that this reads as
+        // a periodic gentle reminder, not a cursor that never stops moving
+        timerRef.current = setTimeout(() => {
+          if (!stoppedRef.current) runCycle();
+        }, 3200);
+      })))));
+    };
+
+    timerRef.current = setTimeout(() => {
+      if (!stoppedRef.current) runCycle();
+    }, 1100);
+
+    return () => {
+      stoppedRef.current = true;
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enabled]);
 
