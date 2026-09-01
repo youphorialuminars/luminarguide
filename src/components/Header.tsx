@@ -736,6 +736,95 @@ export function HoverHintIcon({ size = 13 }: {size?: number;}) {
 
 }
 
+/* ------------------------------------------------------------------------
+ * TileDemoCursor / useTileDemo
+ * A one-time, self-playing demonstration: a small cursor icon slides onto a
+ * tile, "clicks" it, holds while the tile's flipped face is visible, then
+ * slides off — showing a first-time visitor exactly what "hover or tap"
+ * means before they've tried it themselves, instead of relying on the
+ * static hint icon/caption alone. Plays once per page load, only on one
+ * representative tile (never on every tile at once — that would be the
+ * "several things blinking on screen" problem, not a fix for it), and
+ * cancels itself the moment a real visitor actually interacts with any
+ * tile. Respects prefers-reduced-motion by skipping entirely.
+ *
+ * `useTileDemo(enabled)` owns the timing; each caller renders the cursor
+ * itself (via `tileDemoCursorStyle`) only on the one tile it's demonstrating
+ * on, and treats the tile as flipped whenever phase is 'pressing' or
+ * 'holding'.
+ * ---------------------------------------------------------------------- */
+
+type TileDemoPhase = 'idle' | 'entering' | 'pressing' | 'holding' | 'leaving' | 'done';
+
+export function useTileDemo(enabled: boolean) {
+  const [phase, setPhase] = useState<TileDemoPhase>('idle');
+  const startedRef = useRef(false);
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  const cancel = () => {
+    timers.current.forEach(clearTimeout);
+    timers.current = [];
+    startedRef.current = true;
+    setPhase('done');
+  };
+
+  useEffect(() => {
+    if (!enabled || startedRef.current) return;
+    if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+      startedRef.current = true;
+      return;
+    }
+    startedRef.current = true;
+    const schedule = (fn: () => void, ms: number) => {
+      timers.current.push(setTimeout(fn, ms));
+    };
+    schedule(() => setPhase('entering'), 900);
+    schedule(() => setPhase('pressing'), 1400);
+    schedule(() => setPhase('holding'), 1750);
+    schedule(() => setPhase('leaving'), 3250);
+    schedule(() => setPhase('done'), 3850);
+    return () => timers.current.forEach(clearTimeout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enabled]);
+
+  return { phase, cancel, isFlipped: phase === 'pressing' || phase === 'holding' };
+}
+
+export function tileDemoCursorStyle(phase: TileDemoPhase): React.CSSProperties {
+  const base: React.CSSProperties = { transition: 'opacity 480ms ease, transform 480ms cubic-bezier(0.22,0.9,0.32,1)' };
+  if (phase === 'entering' || phase === 'holding') return { ...base, opacity: 1, transform: 'translate(0px,0px) scale(1)' };
+  if (phase === 'pressing') return { ...base, opacity: 1, transform: 'translate(0px,0px) scale(0.8)' };
+  if (phase === 'leaving') return { ...base, opacity: 0, transform: 'translate(16px,12px) scale(0.9)' };
+  return { ...base, opacity: 0, transform: 'translate(34px,28px) scale(0.85)' };
+}
+
+export function GuideCursorIcon({ size = 30, pressed = false }: {size?: number;pressed?: boolean;}) {
+  return (
+    <span className="relative inline-flex" style={{ width: size, height: size }}>
+      {pressed &&
+      <span
+        className="absolute inset-0 rounded-full animate-ping"
+        style={{ backgroundColor: 'var(--accent)', opacity: 0.4 }} />
+      }
+      <svg
+        width={size}
+        height={size}
+        viewBox="0 0 24 24"
+        className="relative"
+        style={{ filter: 'drop-shadow(0 3px 6px rgba(0,0,0,0.35))' }}>
+
+        <path
+          d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"
+          fill="var(--accent)"
+          stroke="rgba(0,0,0,0.4)"
+          strokeWidth="1.2"
+          strokeLinejoin="round" />
+
+      </svg>
+    </span>);
+
+}
+
 type GameRoleId = 'Students' | 'Mentors' | 'Parents' | 'Schools' | 'Counselors';
 
 interface GameRoleInfo {
@@ -2092,33 +2181,50 @@ export function CollaboratorInterestForm() {
 export function RoleSolutionTile({
   points,
   theoryName,
-  theoryDescription
+  theoryDescription,
+  showDemo = false
 
 
 
 
-}: {points: string[];theoryName: string;theoryDescription: string;}) {
+}: {points: string[];theoryName: string;theoryDescription: string;showDemo?: boolean;}) {
   const [flipped, setFlipped] = useState(false);
+  const demo = useTileDemo(showDemo);
+  const isFlipped = flipped || demo.isFlipped;
 
   return (
     <div
-      className="group/tile [perspective:1200px] cursor-pointer"
-      onClick={() => setFlipped((v) => !v)}
+      className="group/tile [perspective:1200px] cursor-pointer relative"
+      onClick={() => {
+        demo.cancel();
+        setFlipped((v) => !v);
+      }}
+      onMouseEnter={demo.cancel}
       role="button"
       tabIndex={0}
       aria-label="Tap or hover to see the psychology behind this role"
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
+          demo.cancel();
           setFlipped((v) => !v);
         }
       }}>
-      
+
+      {showDemo && demo.phase !== 'done' &&
+      <div
+        className="pointer-events-none absolute z-20"
+        style={{ right: '10%', bottom: '14%', ...tileDemoCursorStyle(demo.phase) }}>
+
+        <GuideCursorIcon pressed={demo.phase === 'pressing'} />
+      </div>
+      }
+
       <div
         className={`grid grid-cols-1 transition-transform duration-500 [transform-style:preserve-3d] ${
-        flipped ? '[transform:rotateY(180deg)]' : 'group-hover/tile:[transform:rotateY(180deg)]'}`
+        isFlipped ? '[transform:rotateY(180deg)]' : 'group-hover/tile:[transform:rotateY(180deg)]'}`
         }>
-        
+
         <div className="[grid-area:1/1] [backface-visibility:hidden] bg-card border border-border rounded-2xl p-7 flex flex-col gap-5">
           <ul className="flex flex-col gap-3.5">
             {points.map((point) =>
@@ -2136,7 +2242,7 @@ export function RoleSolutionTile({
         <div
           className="[grid-area:1/1] [backface-visibility:hidden] [transform:rotateY(180deg)] rounded-2xl p-7 flex flex-col gap-3 justify-center"
           style={{ backgroundColor: 'var(--primary)' }}>
-          
+
           <p className="text-[11px] font-700 uppercase tracking-widest" style={{ fontWeight: 700, color: 'var(--primary-foreground)', opacity: 0.8 }}>
             Grounded in developmental psychology
           </p>

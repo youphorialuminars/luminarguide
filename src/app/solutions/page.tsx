@@ -99,7 +99,7 @@ export default function SolutionsPage() {
               <h2 className="text-section-heading text-foreground">{r.headline}</h2>
               <p className="text-sm font-600 text-primary uppercase tracking-wide">{r.role}</p>
             </div>
-            <RoleSolutionTile points={r.points} theoryName={r.theory.name} theoryDescription={r.theory.description} />
+            <RoleSolutionTile points={r.points} theoryName={r.theory.name} theoryDescription={r.theory.description} showDemo={i === 0} />
           </div>
         </section>
       ))}

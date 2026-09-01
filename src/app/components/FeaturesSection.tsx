@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { gradeBands, type GradeBand } from '@/lib/siteConfig';
-import { ScenarioIcon, HoverHintIcon } from '@/components/Header';
+import { ScenarioIcon, HoverHintIcon, useTileDemo, tileDemoCursorStyle, GuideCursorIcon } from '@/components/Header';
 
 interface FeatureCard {
   title: string;
@@ -74,7 +74,16 @@ export default function FeaturesSection() {
   const [activeTile, setActiveTile] = useState<string | null>(null);
   const [activeBand, setActiveBand] = useState<GradeBand['id']>('middle');
 
+  // Plays once, automatically, on the very first pillar tile — a small
+  // cursor slides on, "clicks" the tile, holds so the flipped-over
+  // explanation is actually readable, then leaves. Teaches a first-time
+  // visitor what "hover or tap" means by showing it, once, rather than
+  // relying on the static hint text alone. Cancels itself the moment
+  // anyone actually interacts with a tile for real.
+  const pillarDemo = useTileDemo(true);
+
   const toggleTile = (id: string) => {
+    pillarDemo.cancel();
     setActiveTile((prev) => (prev === id ? null : id));
   };
 
@@ -91,18 +100,29 @@ export default function FeaturesSection() {
   // to hold it instead of truncating.
   const renderPillarTile = (pillar: (typeof band.pillars)[number]) => {
     const id = `pillar-${band.id}-${pillar.id}`;
+    const isDemoTile = pillar.id === band.pillars[0]?.id;
+    const isFlipped = activeTile === id || (isDemoTile && pillarDemo.isFlipped);
     return (
       <div
         key={id}
-        className="group/tile [perspective:1000px] cursor-pointer"
+        className="group/tile [perspective:1000px] cursor-pointer relative"
         onClick={(e) => {
           e.stopPropagation();
           toggleTile(id);
         }}
+        onMouseEnter={pillarDemo.cancel}
       >
+        {isDemoTile && pillarDemo.phase !== 'done' && (
+          <div
+            className="pointer-events-none absolute z-20"
+            style={{ right: '8%', bottom: '10%', ...tileDemoCursorStyle(pillarDemo.phase) }}
+          >
+            <GuideCursorIcon pressed={pillarDemo.phase === 'pressing'} />
+          </div>
+        )}
         <div
           className={`relative w-full grid transition-transform duration-500 [transform-style:preserve-3d] ${
-            activeTile === id ? '[transform:rotateY(180deg)]' : 'group-hover/tile:[transform:rotateY(180deg)]'
+            isFlipped ? '[transform:rotateY(180deg)]' : 'group-hover/tile:[transform:rotateY(180deg)]'
           }`}
         >
           <div className="[grid-area:1/1] [backface-visibility:hidden] flex flex-col items-center justify-center gap-2 text-center p-4 rounded-xl border border-border bg-card min-h-[160px]">
