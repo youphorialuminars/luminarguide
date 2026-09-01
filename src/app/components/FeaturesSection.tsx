@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { gradeBands, type GradeBand } from '@/lib/siteConfig';
-import { ScenarioIcon } from '@/components/Header';
+import { ScenarioIcon, HoverHintIcon } from '@/components/Header';
 
 interface FeatureCard {
   title: string;
@@ -66,36 +66,9 @@ const features: FeatureCard[] = [
   },
 ];
 
-// A small static cursor/pointer icon used anywhere the page hints "hover or
-// tap this" — replaces an animated 👆 emoji that read as childish and, at a
-// glance, was easy to mistake for something else entirely.
-function HoverHintIcon() {
-  return (
-    <span className="relative inline-flex items-center justify-center w-4 h-4 flex-shrink-0">
-      <span
-        className="absolute w-2 h-2 rounded-full animate-tap-ripple"
-        style={{ backgroundColor: 'var(--accent)', bottom: -1, left: 0 }}
-      />
-      <svg
-        width="14"
-        height="14"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="relative z-10 animate-tap-hand"
-      >
-        <rect x="9.3" y="2.5" width="3.2" height="10" rx="1.6" />
-        <rect x="12.3" y="5" width="3" height="7.8" rx="1.5" />
-        <rect x="15.2" y="6.6" width="2.8" height="6.4" rx="1.4" />
-        <rect x="4.9" y="12.6" width="4.4" height="2.8" rx="1.4" transform="rotate(-28 4.9 12.6)" />
-        <path d="M7.3 14.2v1.5c0 3.1 2.5 5.7 5.7 5.7h.5c3 0 5.1-2.2 5.1-5.4v-3.4" />
-      </svg>
-    </span>
-  );
-}
+// HoverHintIcon (the small "there's more here" affordance icon) now lives in
+// Header.tsx and is imported above — see the comment there for why this used
+// to be a locally-duplicated hand icon and isn't anymore.
 
 export default function FeaturesSection() {
   const [activeTile, setActiveTile] = useState<string | null>(null);
