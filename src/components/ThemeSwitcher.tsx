@@ -20,8 +20,18 @@ export default function ThemeSwitcher() {
   const [active, setActive] = useState('violet');
 
   useEffect(() => {
+    // Mirrors the inline script in layout.tsx: a saved on-site choice always
+    // wins; with no saved choice yet, fall back to the visitor's OS/browser
+    // dark-mode setting instead of defaulting to light. Keeps this
+    // component's "which swatch is active" state in sync with whatever the
+    // inline script already put on <html> before this ever mounted.
     const saved = localStorage.getItem('luminarsguide-theme');
-    const theme = saved && THEMES.some((t) => t.id === saved) ? saved : 'violet';
+    const theme =
+      saved && THEMES.some((t) => t.id === saved)
+        ? saved
+        : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'teal-dark'
+        : 'violet';
     document.documentElement.setAttribute('data-theme', theme);
     setActive(theme);
   }, []);
