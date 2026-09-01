@@ -709,6 +709,33 @@ function ArchetypeIcon({ archetype, size = 22 }: {archetype: ApproachKey;size?: 
 
 }
 
+// The one hover/tap affordance icon used everywhere a card or tile flips to
+// reveal more (the homepage feature cards, the pillar tiles, the role tiles
+// on /solutions). Earlier versions of this used an animated hand — first a
+// literal 👆 emoji, then a hand-shaped icon with a squash-and-bounce tap
+// animation — and both read as a game UI, not a serious product. This is a
+// plain "info" glyph in the same thin-line style as every other icon in the
+// file: static by default, no continuous looping animation, with only a
+// quiet color shift on hover so it doesn't compete for attention when
+// several of these are on screen at once. Exported once here and imported
+// wherever a flip hint is needed, so there's exactly one implementation to
+// keep in sync — not a copy that can quietly drift or get regenerated back
+// into an emoji in only one of the two files that used to define it locally.
+export function HoverHintIcon({ size = 13 }: {size?: number;}) {
+  return (
+    <span
+      className="inline-flex items-center justify-center flex-shrink-0 text-muted-foreground/70 transition-colors group-hover:text-accent group-hover/tile:text-accent"
+      style={{ width: size, height: size }}>
+
+      <svg width={size} height={size} viewBox="0 0 16 16" fill="none">
+        <circle cx="8" cy="8" r="6.4" stroke="currentColor" strokeWidth="1.4" />
+        <circle cx="8" cy="5.1" r="0.9" fill="currentColor" />
+        <path d="M8 7.6v3.9" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+      </svg>
+    </span>);
+
+}
+
 type GameRoleId = 'Students' | 'Mentors' | 'Parents' | 'Schools' | 'Counselors';
 
 interface GameRoleInfo {
@@ -2101,30 +2128,8 @@ export function RoleSolutionTile({
               </li>
             )}
           </ul>
-          <p className="text-[11px] text-muted-foreground flex items-center gap-1 pt-3 border-t border-border">
-            <span className="relative inline-flex items-center justify-center w-4 h-4 flex-shrink-0">
-              <span
-                className="absolute w-2 h-2 rounded-full animate-tap-ripple"
-                style={{ backgroundColor: 'var(--accent)', bottom: -1, left: 0 }} />
-              
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="relative z-10 animate-tap-hand">
-                
-                <rect x="9.3" y="2.5" width="3.2" height="10" rx="1.6" />
-                <rect x="12.3" y="5" width="3" height="7.8" rx="1.5" />
-                <rect x="15.2" y="6.6" width="2.8" height="6.4" rx="1.4" />
-                <rect x="4.9" y="12.6" width="4.4" height="2.8" rx="1.4" transform="rotate(-28 4.9 12.6)" />
-                <path d="M7.3 14.2v1.5c0 3.1 2.5 5.7 5.7 5.7h.5c3 0 5.1-2.2 5.1-5.4v-3.4" />
-              </svg>
-            </span>
+          <p className="text-[11px] text-muted-foreground flex items-center gap-1.5 pt-3 border-t border-border">
+            <HoverHintIcon />
             Hover or tap to see the psychology behind this
           </p>
         </div>
