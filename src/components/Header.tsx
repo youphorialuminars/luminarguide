@@ -1820,7 +1820,7 @@ export function PillarDiscoveryGame() {
               className="rounded-2xl p-6 sm:p-7 relative overflow-hidden animate-fade-scale"
               style={{ background: 'linear-gradient(150deg, var(--panel-deep) 0%, #2b3b47 100%)' }}>
 
-              <div className="absolute inset-0" style={{ background: 'radial-gradient(60% 45% at 88% 5%, rgba(230,192,101,0.28) 0%, transparent 65%)' }} />
+              <div className="absolute inset-0" style={{ background: 'radial-gradient(60% 45% at 88% 5%, rgba(var(--panel-accent-rgb), 0.28) 0%, transparent 65%)' }} />
               <div className="relative">
                 <p className="text-[11px] font-700 uppercase tracking-widest mb-2.5" style={{ fontWeight: 700, color: 'var(--accent)' }}>
                   A moment worth pausing on &middot; {index + 1} of {scenarios.length}

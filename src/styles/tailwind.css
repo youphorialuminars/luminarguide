@@ -60,6 +60,14 @@
   color: var(--accent-foreground);
 }
 
+/* Both themes' accent color is now drawn from that theme's OWN logo,
+   instead of a single gold shared across both: the light logo is navy, the
+   dark logo is teal, so each theme's "statement" color (--panel-accent, the
+   headline gradient) and everyday accent color (--accent) come from its own
+   mark rather than a color borrowed from neither. --accent-rgb /
+   --panel-accent-rgb are the same colors again as raw "r, g, b" triplets,
+   for the handful of spots (icon-wrapper tints, glow overlays) that need a
+   translucent rgba() and can't take a var() directly inside one. */
 :root, [data-theme='violet'] {
   --background: #EEF0F0;
   --foreground: #16212C;
@@ -67,8 +75,9 @@
   --primary-foreground: #FFFFFF;
   --secondary: #E3E7E8;
   --secondary-foreground: #16212C;
-  --accent: #A67E33;
-  --accent-foreground: #16212C;
+  --accent: #55738A;
+  --accent-rgb: 85, 115, 138;
+  --accent-foreground: #FFFFFF;
   --muted: #E3E7E8;
   --muted-foreground: #5B6670;
   --card: #FFFFFF;
@@ -89,25 +98,26 @@
      be its own token instead of reusing --primary there. */
   --panel-deep: #16212C;
 
-  /* The gold used specifically inside those same statement panels — kept
-     as its own token, separate from --accent, so it isn't affected by
-     --accent going neutral in the dark theme below. Same value --accent
-     already was, so light mode looks exactly as it did. */
-  --panel-accent: #A67E33;
+  /* The lighter end of those same statement panels — a cool silver-gray,
+     the same family as the light logo's own icon color, so the panel reads
+     as navy fading toward silver rather than toward a color that has
+     nothing to do with this theme's mark. */
+  --panel-accent: #8A97A6;
+  --panel-accent-rgb: 138, 151, 166;
 }
 
 /* The id stays 'teal-dark' (it's an internal string only — saved in
    localStorage and matched in layout.tsx's inline theme script — never
-   shown to a visitor, who just sees the "Dark" label and swatch), but the
-   palette itself moved off teal: a genuinely black-and-white base. Gold is
-   held to a small, deliberate set of "statement" moments — the headline
-   gradient text, and the handful of dark-to-gold panels behind the site's
-   biggest headings (Hero, the Parents/Schools notes, the pillar game) —
-   via --panel-accent, not spread through the interface as a general
-   accent color. --accent itself is a neutral here (not gold), so the many
-   small everyday uses of it — bullets, checkmarks, badges, focus rings —
-   render as part of the black-and-white palette instead of adding a second
-   color running through the whole page. */
+   shown to a visitor, who just sees the "Dark" label and swatch). The base
+   is a near-black/white palette, and both the everyday accent and the
+   "statement" panels (Hero, the Parents/Schools notes, the pillar game,
+   the headline gradient) use the one same teal — the dark logo's own
+   color, #2DD4BF, the exact shade shown in the Dark swatch next to the
+   theme toggle — rather than a muted variant of it or a color with no
+   connection to this theme's mark. --accent and --panel-accent are the
+   same value; kept as two separate tokens only because they're used in
+   different kinds of places (small everyday touches vs. the few bigger
+   statement panels), not because they're different colors. */
 [data-theme='teal-dark'] {
   --background: #141312;
   --foreground: #F3F1EC;
@@ -115,7 +125,8 @@
   --primary-foreground: #1C1014;
   --secondary: #211E1A;
   --secondary-foreground: #F3F1EC;
-  --accent: #D9D5CC;
+  --accent: #2DD4BF;
+  --accent-rgb: 45, 212, 191;
   --accent-foreground: #1C1014;
   --muted: #211E1A;
   --muted-foreground: #A8A29B;
@@ -129,18 +140,20 @@
   --font-serif: 'Lora', serif;
   color-scheme: dark;
 
-  /* The gold reserved for the statement panels (see the comment on the
-     light-theme --panel-accent above) — same gold this theme already had
-     as --accent, just no longer doubling as the general accent color. */
-  --panel-accent: #C9A15B;
+  /* The full, saturated teal reserved for the statement panels — the same
+     teal this project's dark logo mark has always used. */
+  --panel-accent: #2DD4BF;
+  --panel-accent-rgb: 45, 212, 191;
 
   /* Now that --primary is a neutral (near-white, for readable buttons and
      links), it can't double as the dark end of the statement-panel
      gradients below — a near-white anchor there would wash the panel out
-     and swallow the white text sitting on top of it. This keeps those few
-     panels a deep, moody charcoal running into gold, the same character
-     they had before, without dragging --primary itself back to gold. */
-  --panel-deep: #1C1712;
+     and swallow the white text sitting on top of it. This is the same
+     deep teal-black this project's dark theme originally used as its page
+     background, brought back specifically here so the panels stay a
+     moody, unmistakably teal dark, without dragging --primary itself back
+     into color. */
+  --panel-deep: #0B1817;
 }
 
 @layer base {
@@ -192,8 +205,19 @@
     font-weight: 600;
   }
 
+  /* Class name is legacy (kept so every component using it didn't need
+     touching) — this is the one deliberately colorful headline treatment,
+     now navy-to-silver in the light theme and teal in the dark theme (see
+     the override just below) instead of gold in both. */
   .gradient-text-gold {
-    background: linear-gradient(135deg, #A67E33 0%, #C9A356 50%, #8A6526 100%);
+    background: linear-gradient(135deg, #2C3E50 0%, #8A97A6 50%, #16212C 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  [data-theme='teal-dark'] .gradient-text-gold {
+    background: linear-gradient(135deg, #1FBFAC 0%, #2DD4BF 50%, #1FBFAC 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;

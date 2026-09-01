@@ -66,7 +66,7 @@ export default function LandingPage() {
             </div>
 
             <div className="bento-card flex flex-col gap-4">
-              <div className="icon-wrapper" style={{ backgroundColor: 'rgba(166,126,51,0.12)', color: 'var(--accent)' }}>
+              <div className="icon-wrapper" style={{ backgroundColor: 'rgba(var(--accent-rgb), 0.12)', color: 'var(--accent)' }}>
                 <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
                   <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="1.5" />
                   <circle cx="11" cy="11" r="4" stroke="currentColor" strokeWidth="1.5" />

@@ -52,7 +52,7 @@ const features: FeatureCard[] = [
     title: 'Longitudinal Progress Tracking',
     description:
       "Track each student's growth over weeks, months, and years. Spot trends early, celebrate milestones, and build a rich developmental record that travels with the student from Class 6 to Class 12.",
-    accentColor: 'rgba(166,126,51,0.1)',
+    accentColor: 'rgba(var(--accent-rgb), 0.1)',
     iconColor: 'var(--accent)',
     detail: 'Full history from Class 6 onward',
     deepDive:
