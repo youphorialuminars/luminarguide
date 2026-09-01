@@ -103,7 +103,7 @@ export default function Header() {
       <PillarGuideChat />
 
       {/* Floating pillar discovery game — same reasoning, lives here so it's global. */}
-      <PillarDiscoveryGame variant="modal" />
+      <PillarDiscoveryGame />
     </>);
 
 }
@@ -255,22 +255,25 @@ function PillarGuideChat() {
         </div>
       }
 
-      {/* Launcher */}
+      {/* Launcher — icon-only on phones (w-12 h-12, no text) so it doesn't
+          collide with the other floating launcher (Try the Approach) in the
+          opposite corner; from the sm breakpoint up there's room for the
+          full pill with its label. */}
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-label={open ? 'Close pillar chatbot' : 'Open pillar chatbot'}
-        className="relative flex items-center gap-2.5 pl-4 pr-5 py-3.5 rounded-full shadow-2xl text-white transition-transform hover:scale-105"
+        className="relative flex items-center justify-center gap-2.5 shadow-2xl text-white transition-transform hover:scale-105 w-12 h-12 rounded-full sm:w-auto sm:h-auto sm:pl-4 sm:pr-5 sm:py-3.5"
         style={{ backgroundColor: 'var(--primary)' }}>
-        
+
         {!everOpened &&
         <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full animate-pulse" style={{ backgroundColor: 'var(--accent)' }} />
         }
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
           <path d="M2.5 4.5A1.5 1.5 0 014 3h10a1.5 1.5 0 011.5 1.5V11A1.5 1.5 0 0114 12.5H8l-3.5 3V12.5H4A1.5 1.5 0 012.5 11V4.5z" stroke="white" strokeWidth="1.5" strokeLinejoin="round" />
         </svg>
-        <span className="text-sm font-700" style={{ fontWeight: 700 }}>
+        <span className="hidden sm:inline text-sm font-700" style={{ fontWeight: 700 }}>
           {open ? 'Close' : 'Which pillars fit my child?'}
         </span>
       </button>
@@ -699,538 +702,365 @@ function ArchetypeIcon({ archetype, size = 22 }: {archetype: ApproachKey;size?: 
 
 }
 
-interface GameRole {
-  id: string;
+type GameRoleId = 'Students' | 'Mentors' | 'Parents' | 'Schools' | 'Counselors';
+
+interface GameRoleInfo {
+  id: GameRoleId;
   label: string;
-  badge: string;
-  subject: string;
-  isSelf: boolean;
 }
 
-// A game-specific role list, kept separate from the sitewide `stakeholders`
-// list (Mentors/Parents/Schools/Counselors) used elsewhere on the site — the
-// game also lets the student themselves play, which the sitewide list
-// intentionally doesn't include.
-const GAME_ROLES: GameRole[] = [
-{ id: 'Students', label: 'I am the student', badge: 'ST', subject: 'You', isSelf: true },
-{ id: 'Mentors', label: 'Mentor', badge: 'MN', subject: 'A student you mentor', isSelf: false },
-{ id: 'Parents', label: 'Parent', badge: 'PR', subject: 'Your child', isSelf: false },
-{ id: 'Schools', label: 'School', badge: 'SC', subject: 'A student at your school', isSelf: false },
-{ id: 'Counselors', label: 'Counselor', badge: 'CN', subject: "A student you're counseling", isSelf: false }];
+// The same five roles as the sitewide `stakeholders`/`StakeholderIcon` set,
+// so the game can reuse those icons instead of inventing a second visual
+// language. "Students" is the one addition — letting the student play as
+// themselves — which is why this stays a separate list from the sitewide one.
+const GAME_ROLES: GameRoleInfo[] = [
+{ id: 'Students', label: 'Student' },
+{ id: 'Mentors', label: 'Mentors' },
+{ id: 'Parents', label: 'Parents' },
+{ id: 'Schools', label: 'Schools' },
+{ id: 'Counselors', label: 'Counselors' }];
 
 
 interface GameApproach {
   key: ApproachKey;
   action: string;
   insight: string;
-  selfAction: string;
-  selfInsight: string;
 }
 
 interface GameScenario {
   pillarId: string;
-  promptFor: (subject: string, isSelf: boolean) => string;
+  prompt: string;
   approaches: [GameApproach, GameApproach, GameApproach];
 }
 
-const GAME_SCENARIOS: GameScenario[] = [
-{
-  pillarId: 'digital-wisdom',
-  promptFor: (subject, isSelf) =>
-  isSelf ?
-  `${subject} ask an AI chatbot to write your entire homework assignment overnight.` :
-  `${subject} asks an AI chatbot to write their entire homework assignment overnight.`,
-  approaches: [
+// Every role gets five real moments written from its own vantage point —
+// not the same five situations reworded with different pronouns. The five
+// pillar ids stay the same across roles (so the pillar strip lines up no
+// matter which role is active), but the moment itself, and what each
+// response style means inside it, is written fresh per role.
+const ROLE_SCENARIOS: Record<GameRoleId, GameScenario[]> = {
+  Students: [
   {
-    key: 'stepIn',
-    action: 'Redo the assignment together, right now.',
-    insight: "Solves tonight fast — but lean on it too often and the skill never really transfers.",
-    selfAction: 'Redo it yourself before you submit it.',
-    selfInsight: "Fixes tonight, but skips the more useful part — actually practicing the skill."
+    pillarId: 'digital-wisdom',
+    prompt: 'You ask an AI chatbot to write your entire homework assignment overnight.',
+    approaches: [
+    { key: 'stepIn', action: 'Redo it yourself before you submit it.', insight: "Fixes tonight, but skips the more useful part — actually practicing the skill." },
+    { key: 'askGuide', action: 'Ask yourself what made finishing it honestly feel so hard.', insight: "That honest answer is usually more useful than the assignment itself." },
+    { key: 'stepBack', action: 'Turn it in as-is and see what the feedback says.', insight: "You'll learn something either way — but only if you actually read the feedback." }]
+
   },
   {
-    key: 'askGuide',
-    action: 'Ask what made finishing it honestly feel so hard.',
-    insight: "Slower, but it's where real judgment about using the tool well actually gets built.",
-    selfAction: 'Ask yourself what made finishing it honestly feel so hard.',
-    selfInsight: "That honest answer is usually more useful than the assignment itself."
+    pillarId: 'inner-strength',
+    prompt: "You get a poor grade on a test you studied hard for, and don't feel like talking about it.",
+    approaches: [
+    { key: 'stepIn', action: 'Go through the test and find exactly what went wrong.', insight: "Useful eventually — just notice if you're skipping past the disappointment to get there." },
+    { key: 'askGuide', action: 'Name how you actually feel before you try to fix anything.', insight: "Sitting with disappointment on purpose is a real skill, not a delay tactic." },
+    { key: 'stepBack', action: 'Take today off from thinking about it, on purpose.', insight: "Fine once — as long as you actually come back to it instead of just avoiding it." }]
+
   },
   {
-    key: 'stepBack',
-    action: 'Let it go, and see how the feedback lands.',
-    insight: "Natural consequences teach fast — but only with a real follow-up chat after.",
-    selfAction: 'Turn it in as-is and see what the feedback says.',
-    selfInsight: "You'll learn something either way — but only if you actually read the feedback."
+    pillarId: 'personal-safety',
+    prompt: "You mention an online friend you've never met who wants to video call.",
+    approaches: [
+    { key: 'stepIn', action: 'Loop someone else in before the first call.', insight: "Costs you nothing, and it's exactly what genuinely careful people do." },
+    { key: 'askGuide', action: 'Ask yourself what you actually know about this person.', insight: "If you can't answer that clearly, that's usually the answer." },
+    { key: 'stepBack', action: 'Trust your gut and just go for it.', insight: "Your gut is a good start — a second opinion is still worth thirty seconds." }]
+
+  },
+  {
+    pillarId: 'leadership',
+    prompt: "During a group project, you'd rather do the whole thing alone than work with classmates.",
+    approaches: [
+    { key: 'stepIn', action: 'Ask for one specific, defined role in the group.', insight: "Makes it feel manageable — a good first step, not a permanent workaround." },
+    { key: 'askGuide', action: 'Ask yourself what about teamwork actually feels unreliable.', insight: "Usually it's not the group — it's trust, or not knowing how to delegate yet." },
+    { key: 'stepBack', action: 'Go solo this once, but plan to try again next time.', insight: "One project alone is fine — just don't let it become the permanent plan." }]
+
+  },
+  {
+    pillarId: 'self-identity',
+    prompt: 'You feel like you don’t know what you’re "good at," compared to your friends.',
+    approaches: [
+    { key: 'stepIn', action: 'Ask someone close to you what they see in you.', insight: "A good start — the goal is eventually seeing it yourself too." },
+    { key: 'askGuide', action: 'Ask yourself what you enjoy, skill aside.', insight: "Enjoyment tends to come before skill — that's actually where to start." },
+    { key: 'stepBack', action: 'Let the comparison go, just this once.', insight: "Fine once — if it keeps coming back, it's worth actually sitting with." }]
+
+  }],
+
+  Mentors: [
+  {
+    pillarId: 'digital-wisdom',
+    prompt: 'A mentee shows you an assignment they say an AI chatbot "helped a lot" with — and something about how smoothly it reads doesn’t sit right.',
+    approaches: [
+    { key: 'stepIn', action: 'Sit down and rebuild the assignment together from scratch.', insight: "Rebuilds the skill fast — just make sure it's their hand doing the work, not yours." },
+    { key: 'askGuide', action: 'Ask them to explain their own reasoning behind a few lines, out loud.', insight: "If they can't explain it, that's the real diagnostic — not the polish of the writing." },
+    { key: 'stepBack', action: 'Let it go this once and watch how the next unprompted assignment reads.', insight: "Buys you real information — but only if you actually follow up on what you see next time." }]
+
+  },
+  {
+    pillarId: 'inner-strength',
+    prompt: "A mentee who's usually open goes quiet halfway through a session, right after a hard topic comes up.",
+    approaches: [
+    { key: 'stepIn', action: 'Gently name what you noticed and ask if you should keep going.', insight: "Shows you're paying attention — just be ready to actually stop if they say so." },
+    { key: 'askGuide', action: 'Sit in the quiet for a moment before saying anything at all.', insight: "The silence itself is often where the real work happens, not around it." },
+    { key: 'stepBack', action: 'Move to something lighter and return to it next session instead.', insight: "Respects their pace — as long as you don't quietly let it drop for good." }]
+
+  },
+  {
+    pillarId: 'personal-safety',
+    prompt: "A mentee mentions, almost in passing, that they've been messaging an adult they met in an online gaming group.",
+    approaches: [
+    { key: 'stepIn', action: 'Ask directly who this person is and how the messaging started.', insight: "Direct is right here — a mentor's job includes noticing this out loud." },
+    { key: 'askGuide', action: 'Ask what makes this relationship feel different from their other friendships.', insight: "Helps them build the judgment to spot this themselves next time, not just this once." },
+    { key: 'stepBack', action: 'Make a mental note and see if it comes up again unprompted.', insight: "Risky as a first move — this is usually worth surfacing sooner, not waiting on." }]
+
+  },
+  {
+    pillarId: 'leadership',
+    prompt: 'In a session meant to build their confidence, a mentee keeps deferring every decision back to you instead of making the call themselves.',
+    approaches: [
+    { key: 'stepIn', action: 'Make the call for them this once, then talk about why.', insight: "Keeps momentum today, but watch that it doesn't become the pattern." },
+    { key: 'askGuide', action: "Ask what they'd choose if you weren't in the room at all.", insight: "Separates what they actually think from what they assume you want to hear." },
+    { key: 'stepBack', action: 'Let the decision sit unmade until they fill the silence.', insight: "Uncomfortable, but discomfort is often what finally prompts them to decide." }]
+
+  },
+  {
+    pillarId: 'self-identity',
+    prompt: 'A mentee tells you they only really feel good about themselves when they’re achieving something — never just as they are.',
+    approaches: [
+    { key: 'stepIn', action: 'Point out something you value in them that has nothing to do with achievement.', insight: "A generous, useful start — though it lands more if they eventually notice it themselves." },
+    { key: 'askGuide', action: "Ask what they'd still be proud of if no one else ever found out.", insight: "Gets underneath performance to something that's actually theirs." },
+    { key: 'stepBack', action: "Let the comment pass and watch whether it's a pattern or a one-off.", insight: "Reasonable once — repeated, it's worth naming directly rather than tracking quietly." }]
+
+  }],
+
+  Parents: [
+  {
+    pillarId: 'digital-wisdom',
+    prompt: 'Your child asks an AI chatbot for advice about a friendship problem instead of coming to you.',
+    approaches: [
+    { key: 'stepIn', action: 'Bring it up directly and offer your own take on the situation.', insight: "Shows you're available — just watch that it doesn't read as taking over the problem." },
+    { key: 'askGuide', action: 'Ask what the chatbot said, and what they thought of its advice.', insight: "Keeps you in the loop without making them feel caught for not asking you first." },
+    { key: 'stepBack', action: 'Let them work through it their way, and stay quietly available.', insight: "Respects their independence — as long as 'available' is genuinely felt, not just assumed." }]
+
+  },
+  {
+    pillarId: 'inner-strength',
+    prompt: 'Your child comes home with a poor grade they studied hard for, and shuts the conversation down before it starts.',
+    approaches: [
+    { key: 'stepIn', action: 'Sit with them and go through the test together, right then.', insight: "Well-intentioned, but pushing before they're ready can shut the door further." },
+    { key: 'askGuide', action: 'Ask how they are feeling before asking anything about the test itself.', insight: "Naming the feeling first is usually what actually opens the conversation back up." },
+    { key: 'stepBack', action: 'Give it the evening, and check in again once things have settled.', insight: "Often exactly right — just make sure the check-in actually happens." }]
+
+  },
+  {
+    pillarId: 'personal-safety',
+    prompt: "You notice your child has been video-calling someone from an online game you'd never heard them mention before.",
+    approaches: [
+    { key: 'stepIn', action: 'Ask directly who this is and sit in on the next call together.', insight: "Removes today's uncertainty — the goal is understanding, not confiscation." },
+    { key: 'askGuide', action: 'Ask what they know about this person and how the friendship started.', insight: "Builds the judgment they'll need for the times you're not in the room." },
+    { key: 'stepBack', action: 'Say nothing for now and see if they mention it themselves.', insight: "Most online friendships are harmless, but this is exactly the kind of moment worth not letting slide." }]
+
+  },
+  {
+    pillarId: 'leadership',
+    prompt: "Your child says they'd rather do a group project entirely alone than deal with classmates.",
+    approaches: [
+    { key: 'stepIn', action: 'Call the teacher and ask for them to be reassigned individually.', insight: "Solves this project — but skips the harder, more useful conversation underneath." },
+    { key: 'askGuide', action: 'Ask what about working with these classmates feels unreliable.', insight: "Usually surfaces a trust or delegation issue that's worth knowing about either way." },
+    { key: 'stepBack', action: 'Let them handle it their way and see how the project goes.', insight: "A reasonable stretch of independence — just worth a real debrief once it's done." }]
+
+  },
+  {
+    pillarId: 'self-identity',
+    prompt: 'Your child keeps comparing themselves to a friend who "has it all figured out," and it’s starting to sound less like a phase.',
+    approaches: [
+    { key: 'stepIn', action: 'Tell them directly what you see in them that this friend does not have.', insight: "Comes from love, but a strength they discover tends to land deeper than one they're handed." },
+    { key: 'askGuide', action: 'Ask what specifically about this friend feels like "figured out" to them.', insight: "Often the real issue is one specific thing, not a wholesale gap between them." },
+    { key: 'stepBack', action: 'Let the comment go this time without addressing it directly.', insight: "Fine as a one-off — if it becomes a pattern, it's worth naming rather than tracking silently." }]
+
+  }],
+
+  Schools: [
+  {
+    pillarId: 'digital-wisdom',
+    prompt: "Several teachers separately flag a rise in AI-written homework this term, and your school doesn't have a shared stance on it yet.",
+    approaches: [
+    { key: 'stepIn', action: 'Draft a clear school-wide AI use policy and roll it out this term.', insight: "Solves the ambiguity fast — just be sure teachers and students both understand the reasoning, not just the rule." },
+    { key: 'askGuide', action: 'Bring teachers together first to compare what they are actually seeing.', insight: "A shared policy built from real classroom patterns tends to hold up better than one written in the abstract." },
+    { key: 'stepBack', action: 'Let individual teachers keep handling it case by case for now.', insight: "Reasonable short-term, but the inconsistency itself becomes the problem the longer it continues." }]
+
+  },
+  {
+    pillarId: 'inner-strength',
+    prompt: "A teacher notices a normally engaged student has gone quiet in class for two weeks straight, and isn't sure whether it's worth involving the counselor yet.",
+    approaches: [
+    { key: 'stepIn', action: 'Loop the counselor in now, before it becomes a bigger concern.', insight: "Costs little and catches things early — the downside risk here is genuinely small." },
+    { key: 'askGuide', action: 'Have the teacher check in directly with the student first.', insight: "Often surfaces enough context to know whether escalation is actually needed." },
+    { key: 'stepBack', action: 'Keep watching for now and revisit if the pattern continues.', insight: "Fine briefly — just set an actual date to revisit, not an open-ended 'keep an eye on it.'" }]
+
+  },
+  {
+    pillarId: 'personal-safety',
+    prompt: "A parent calls, concerned their child has been contacted by a stranger online, and asks what your school's actual policy is.",
+    approaches: [
+    { key: 'stepIn', action: 'Walk the parent through your existing policy and safeguards directly.', insight: "Reassures this parent today — just make sure the policy you're describing is actually solid, not improvised." },
+    { key: 'askGuide', action: 'Ask the parent what specifically happened before responding with policy.', insight: "The details often change what the right response actually is." },
+    { key: 'stepBack', action: 'Point them to the general handbook section and move on.', insight: "Feels efficient, but a concerned parent usually needs a real conversation, not a document link." }]
+
+  },
+  {
+    pillarId: 'leadership',
+    prompt: 'Group projects across a grade keep splitting into "the kid who does everything" and the kids who coast, and a teacher raises it at a staff meeting.',
+    approaches: [
+    { key: 'stepIn', action: 'Set a school-wide rubric that grades individual contribution, not just group output.', insight: "Addresses it structurally — just make sure teachers have the support to actually implement it." },
+    { key: 'askGuide', action: 'Ask a few teachers what is actually driving the pattern in their classrooms.', insight: "The cause is often different by classroom — worth knowing before applying one fix everywhere." },
+    { key: 'stepBack', action: "Leave it to individual teachers' discretion for now.", insight: "Fine if it's genuinely rare — worth revisiting once it's clearly a pattern, not an exception." }]
+
+  },
+  {
+    pillarId: 'self-identity',
+    prompt: "Exam results week reliably brings a spike in counselor visits, and you're deciding whether that's worth getting ahead of structurally.",
+    approaches: [
+    { key: 'stepIn', action: 'Add extra counselor availability during exam weeks going forward.', insight: "Directly addresses the spike — just make sure it's paired with why the spike happens, not only the symptom." },
+    { key: 'askGuide', action: 'Ask the counseling team what students actually raise most during that week.', insight: "Tells you whether this is about the exams themselves or something exam week just surfaces." },
+    { key: 'stepBack', action: 'Treat it as a normal seasonal pattern and leave it as-is.', insight: "Understandable if resources are tight — but a predictable spike is usually worth planning for on purpose." }]
+
+  }],
+
+  Counselors: [
+  {
+    pillarId: 'digital-wisdom',
+    prompt: 'A student mentions using an AI chatbot "to vent" most nights — more than they talk to any person about how they are feeling.',
+    approaches: [
+    { key: 'stepIn', action: 'Ask directly what they get from the chatbot that they do not from people.', insight: "Gets at the real gap without making the chatbot itself the enemy." },
+    { key: 'askGuide', action: 'Ask what it would take for a person to feel as safe to talk to as the chatbot does.', insight: "Turns the observation into something they can actually work toward." },
+    { key: 'stepBack', action: 'Note it for now and see if it comes up again in future sessions.', insight: "Worth returning to soon — this kind of substitution rarely resolves on its own." }]
+
+  },
+  {
+    pillarId: 'inner-strength',
+    prompt: 'A student waves off a genuinely difficult situation at home with "it’s fine, it’s not a big deal," in a tone that doesn’t quite match the words.',
+    approaches: [
+    { key: 'stepIn', action: 'Gently name the mismatch between their words and their tone.', insight: "Direct, but said with care — this is often exactly the door someone's waiting for." },
+    { key: 'askGuide', action: "Ask what 'fine' actually means to them in this situation.", insight: "Gives them a way to say more without having to abandon 'fine' outright." },
+    { key: 'stepBack', action: 'Let it stand for now and leave the door open for later.', insight: "Reasonable once — just make sure they know the door is genuinely still open." }]
+
+  },
+  {
+    pillarId: 'personal-safety',
+    prompt: "A student discloses an online relationship with someone they've never met, and asks you not to tell their parents.",
+    approaches: [
+    { key: 'stepIn', action: 'Explain clearly, now, what you can and cannot keep confidential here.', insight: "Uncomfortable in the moment, but trust holds up better when the limits are honest upfront." },
+    { key: 'askGuide', action: 'Ask what they are most afraid will happen if their parents find out.', insight: "Often reveals the real issue is the fear, not necessarily the relationship itself." },
+    { key: 'stepBack', action: 'Agree to hold it for now while you learn more about the situation.', insight: "Risky as a standing position — this is usually a case where the limits need to be named, not deferred." }]
+
+  },
+  {
+    pillarId: 'leadership',
+    prompt: 'A student says they have stopped raising their hand in group settings entirely, "so no one expects anything from me."',
+    approaches: [
+    { key: 'stepIn', action: "Ask them directly what 'nothing expected of me' feels like right now.", insight: "Names the real fear underneath the behavior instead of just the behavior itself." },
+    { key: 'askGuide', action: 'Ask when they last felt like expectations were fair rather than too much.', insight: "Helps locate whether this is about fear of failure or fear of being seen at all." },
+    { key: 'stepBack', action: 'Let them stay quiet in groups for now without pushing it.', insight: "Fine short-term — but withdrawal like this tends to deepen the longer it goes unaddressed." }]
+
+  },
+  {
+    pillarId: 'self-identity',
+    prompt: 'A student describes themselves almost entirely in terms of grades and rank, with nothing else volunteered when you ask what else matters to them.',
+    approaches: [
+    { key: 'stepIn', action: 'Ask them directly to describe themselves without mentioning school at all.', insight: "Puts the gap right in front of them — some students find this genuinely hard to do." },
+    { key: 'askGuide', action: 'Ask what they think their friends would say about them, unprompted.', insight: "Borrowing someone else's view of them can be an easier way in than asking directly." },
+    { key: 'stepBack', action: 'Let the answer stand for now and revisit the question another time.', insight: "Fine as a single data point — worth returning to if it's still the only answer next time." }]
+
   }]
 
-},
-{
-  pillarId: 'inner-strength',
-  promptFor: (subject, isSelf) =>
-  isSelf ?
-  `${subject} get a poor grade on a test you studied hard for, and don't feel like talking about it.` :
-  `${subject} comes home with a poor grade on a test they studied hard for, and won't talk about it.`,
-  approaches: [
-  {
-    key: 'stepIn',
-    action: 'Sit down and go through the test together.',
-    insight: "Useful eventually — but rushing here can skip past feeling the disappointment first.",
-    selfAction: 'Go through the test and find exactly what went wrong.',
-    selfInsight: "Useful eventually — just notice if you're skipping past the disappointment to get there."
-  },
-  {
-    key: 'askGuide',
-    action: "Ask how they're feeling before asking about the test.",
-    insight: "Naming the feeling first is what actually builds resilience, not toughing it out.",
-    selfAction: 'Name how you actually feel before you try to fix anything.',
-    selfInsight: "Sitting with disappointment on purpose is a real skill, not a delay tactic."
-  },
-  {
-    key: 'stepBack',
-    action: 'Give space today, check in again tomorrow.',
-    insight: "Right for some — just make sure tomorrow's check-in actually happens.",
-    selfAction: 'Take today off from thinking about it, on purpose.',
-    selfInsight: "Fine once — as long as you actually come back to it instead of just avoiding it."
-  }]
+};
 
-},
-{
-  pillarId: 'personal-safety',
-  promptFor: (subject, isSelf) =>
-  isSelf ?
-  `${subject} mention an online friend you've never met who wants to video call.` :
-  `${subject} mentions an online friend they've never met who wants to video call.`,
-  approaches: [
-  {
-    key: 'stepIn',
-    action: 'Sit in on the call together, at least once.',
-    insight: "Removes today's guesswork — just don't let it become the only safety plan long-term.",
-    selfAction: 'Loop someone else in before the first call.',
-    selfInsight: "Costs you nothing, and it's exactly what genuinely careful people do."
-  },
-  {
-    key: 'askGuide',
-    action: "Ask what they know about this person, and what'd make them pause.",
-    insight: "Builds the judgment they'll need for the moment you're not there to check.",
-    selfAction: 'Ask yourself what you actually know about this person.',
-    selfInsight: "If you can't answer that clearly, that's usually the answer."
-  },
-  {
-    key: 'stepBack',
-    action: 'Trust their judgment, let the call happen.',
-    insight: "Most online friendships are harmless — this is still the moment guidance helps most.",
-    selfAction: 'Trust your gut and just go for it.',
-    selfInsight: "Your gut is a good start — a second opinion is still worth thirty seconds."
-  }]
-
-},
-{
-  pillarId: 'leadership',
-  promptFor: (subject, isSelf) =>
-  isSelf ?
-  `During a group project, you'd rather do the whole thing alone than work with classmates.` :
-  `${subject}, during a group project, says they'd rather do the whole thing alone than work with classmates.`,
-  approaches: [
-  {
-    key: 'stepIn',
-    action: 'Assign them a specific, structured role in the group.',
-    insight: "Makes collaborating feel safer — though they'll still need to navigate friction eventually.",
-    selfAction: 'Ask for one specific, defined role in the group.',
-    selfInsight: "Makes it feel manageable — a good first step, not a permanent workaround."
-  },
-  {
-    key: 'askGuide',
-    action: 'Ask what about working with others feels unreliable.',
-    insight: "Usually surfaces the real issue — trust or delegation, not the group work itself.",
-    selfAction: 'Ask yourself what about teamwork actually feels unreliable.',
-    selfInsight: "Usually it's not the group — it's trust, or not knowing how to delegate yet."
-  },
-  {
-    key: 'stepBack',
-    action: 'Let them go solo this time, revisit it next project.',
-    insight: "Fine once — risky if 'this time' quietly becomes 'always.'",
-    selfAction: 'Go solo this once, but plan to try again next time.',
-    selfInsight: "One project alone is fine — just don't let it become the permanent plan."
-  }]
-
-},
-{
-  pillarId: 'self-identity',
-  promptFor: (subject, isSelf) =>
-  isSelf ?
-  `${subject} feel like you don't know what you're "good at," compared to your friends.` :
-  `${subject} says they don't know what they're "good at," compared to their friends.`,
-  approaches: [
-  {
-    key: 'stepIn',
-    action: 'Tell them the strengths you already see in them.',
-    insight: "Generous and true — but a strength they discover lands differently than one they're handed.",
-    selfAction: 'Ask someone close to you what they see in you.',
-    selfInsight: "A good start — the goal is eventually seeing it yourself too."
-  },
-  {
-    key: 'askGuide',
-    action: "Ask what they enjoy, even if they're not 'good' at it yet.",
-    insight: "Enjoyment usually shows up before skill does — that's the real starting point.",
-    selfAction: 'Ask yourself what you enjoy, skill aside.',
-    selfInsight: "Enjoyment tends to come before skill — that's actually where to start."
-  },
-  {
-    key: 'stepBack',
-    action: 'Let the comparison pass without addressing it.',
-    insight: "Fine once — repeated, it quietly hardens into a belief about themselves.",
-    selfAction: 'Let the comparison go, just this once.',
-    selfInsight: "Fine once — if it keeps coming back, it's worth actually sitting with."
-  }]
-
-}];
-
-
-export function PillarDiscoveryGame({ variant = 'modal' }: {variant?: 'modal' | 'inline';}) {
-  const [open, setOpen] = useState(variant === 'inline');
-  const [roleId, setRoleId] = useState<string | null>(null);
-  const [roundIndex, setRoundIndex] = useState(0);
-  const [flipped, setFlipped] = useState<boolean[][]>(() => GAME_SCENARIOS.map(() => [false, false, false]));
-  const [revealed, setRevealed] = useState<boolean[]>(() => GAME_SCENARIOS.map(() => false));
-  const [favorite, setFavorite] = useState<(0 | 1 | 2 | null)[]>(() => GAME_SCENARIOS.map(() => null));
-
-  useEffect(() => {
-    if (variant !== 'modal') return;
-    try {
-      const seen = window.localStorage.getItem('lg_seen_pillar_game');
-      if (!seen) {
-        const t = setTimeout(() => {
-          setOpen(true);
-          window.localStorage.setItem('lg_seen_pillar_game', '1');
-        }, 1600);
-        return () => clearTimeout(t);
-      }
-    } catch {
-
-      // localStorage unavailable — skip auto-open, the launcher button still works.
-    }}, [variant]);
+export function PillarDiscoveryGame() {
+  const [open, setOpen] = useState(false);
+  const [roleId, setRoleId] = useState<GameRoleId>('Students');
+  const [indexByRole, setIndexByRole] = useState<Record<GameRoleId, number>>({
+    Students: 0,
+    Mentors: 0,
+    Parents: 0,
+    Schools: 0,
+    Counselors: 0
+  });
+  const [exploredByRole, setExploredByRole] = useState<Record<GameRoleId, boolean[]>>({
+    Students: [false, false, false, false, false],
+    Mentors: [false, false, false, false, false],
+    Parents: [false, false, false, false, false],
+    Schools: [false, false, false, false, false],
+    Counselors: [false, false, false, false, false]
+  });
+  const [tappedKeys, setTappedKeys] = useState<ApproachKey[]>([]);
+  const touchStartX = useRef<number | null>(null);
 
   const middleBand = gradeBands.find((b) => b.id === 'middle');
-  const role = roleId ? GAME_ROLES.find((r) => r.id === roleId) ?? null : null;
-  const isComplete = roleId !== null && roundIndex >= GAME_SCENARIOS.length;
-  const scenario = !isComplete ? GAME_SCENARIOS[roundIndex] : undefined;
-  const scenarioFlipped = !isComplete ? flipped[roundIndex] : undefined;
-  const scenarioRevealed = !isComplete ? revealed[roundIndex] : false;
-  const scenarioFavorite = !isComplete ? favorite[roundIndex] : null;
-  const pillar = scenario ? middleBand?.pillars.find((p) => p.id === scenario.pillarId) : undefined;
-  const anyFlipped = scenarioFlipped ? scenarioFlipped.some(Boolean) : false;
+  const pillarLabel = (pillarId: string) => middleBand?.pillars.find((p) => p.id === pillarId)?.name ?? pillarId;
 
-  const flipCard = (cardIdx: 0 | 1 | 2) => {
-    setFlipped((prev) => {
-      const next = prev.map((row) => [...row]);
-      next[roundIndex] = [...next[roundIndex]];
-      next[roundIndex][cardIdx] = !next[roundIndex][cardIdx];
-      return next;
-    });
+  const scenarios = ROLE_SCENARIOS[roleId];
+  const index = indexByRole[roleId];
+  const scenario = scenarios[index];
+  const isExplored = exploredByRole[roleId][index];
+  const pillar = middleBand?.pillars.find((p) => p.id === scenario.pillarId);
+
+  const goTo = (newIndex: number) => {
+    const len = scenarios.length;
+    const wrapped = (newIndex % len + len) % len;
+    setIndexByRole((prev) => ({ ...prev, [roleId]: wrapped }));
+    setTappedKeys([]);
     playChime('flip');
   };
 
-  const pickFavorite = (cardIdx: 0 | 1 | 2) => {
-    setFavorite((prev) => {
-      const next = [...prev];
-      next[roundIndex] = cardIdx;
-      return next;
-    });
+  const selectRole = (id: GameRoleId) => {
+    setRoleId(id);
+    setTappedKeys([]);
     playChime('click');
+  };
+
+  const jumpToPillar = (i: number) => {
+    setIndexByRole((prev) => ({ ...prev, [roleId]: i }));
+    setTappedKeys([]);
+    playChime('click');
+  };
+
+  const toggleTap = (key: ApproachKey) => {
+    setTappedKeys((prev) => prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]);
+    playChime('flip');
   };
 
   const reveal = () => {
-    setRevealed((prev) => {
-      const next = [...prev];
-      next[roundIndex] = true;
+    setExploredByRole((prev) => {
+      const next = { ...prev, [roleId]: [...prev[roleId]] };
+      next[roleId][index] = true;
       return next;
     });
-    playChime('click');
-  };
-
-  const goNext = () => {
-    if (roundIndex === GAME_SCENARIOS.length - 1) {
-      playChime('success');
-    } else {
-      playChime('click');
-    }
-    setRoundIndex((i) => i + 1);
-  };
-
-  const goBack = () => {
-    playChime('click');
-    setRoundIndex((i) => Math.max(0, i - 1));
-  };
-
-  const selectRole = (id: string) => {
-    playChime('click');
-    setRoleId(id);
+    playChime('success');
   };
 
   const handleOpen = () => {
-    playChime('click');
     setOpen(true);
+    playChime('click');
   };
 
   const handleClose = () => {
-    playChime('click');
     setOpen(false);
-  };
-
-  const restart = () => {
     playChime('click');
-    setRoleId(null);
-    setRoundIndex(0);
-    setFlipped(GAME_SCENARIOS.map(() => [false, false, false]));
-    setRevealed(GAME_SCENARIOS.map(() => false));
-    setFavorite(GAME_SCENARIOS.map(() => null));
   };
 
-  const archetypeCounts: Partial<Record<ApproachKey, number>> = {};
-  favorite.forEach((favIdx, i) => {
-    if (favIdx === null) return;
-    const key = GAME_SCENARIOS[i].approaches[favIdx].key;
-    archetypeCounts[key] = (archetypeCounts[key] ?? 0) + 1;
-  });
-  const dominantEntry = (Object.entries(archetypeCounts) as [ApproachKey, number][]).sort((a, b) => b[1] - a[1])[0];
-  const dominantKey = dominantEntry ? dominantEntry[0] : null;
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
 
-  const gameBody =
-  <div className="flex flex-col gap-5">
-      {!roleId &&
-    <div className="flex flex-col gap-4">
-          <div>
-            <p className="text-xs font-700 uppercase tracking-wide mb-2" style={{ fontWeight: 700, color: 'var(--primary)' }}>
-              Who's playing?
-            </p>
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              Pick a role — including your own, if you're the student — and the five moments will speak to what you actually see. There's no scoring here, just real approaches to explore.
-            </p>
-          </div>
-          <div className="grid grid-cols-2 gap-2.5">
-            {GAME_ROLES.map((r) =>
-        <button
-          key={r.id}
-          type="button"
-          onClick={() => selectRole(r.id)}
-          className="flex flex-col items-center gap-2 bg-card border border-border rounded-2xl px-4 py-5 text-center transition-colors hover:border-primary">
-          
-                <span
-            className="w-10 h-10 rounded-full flex items-center justify-center text-xs font-700 flex-shrink-0"
-            style={{ backgroundColor: 'var(--muted)', color: 'var(--primary)', fontWeight: 700 }}>
-            
-                  {r.badge}
-                </span>
-                <span className="text-sm font-600 text-foreground" style={{ fontWeight: 600 }}>
-                  {r.label}
-                </span>
-              </button>
-        )}
-          </div>
-        </div>
-    }
-
-      {roleId && !isComplete && scenario && role && scenarioFlipped &&
-    <>
-          <div className="flex items-center justify-between">
-            <button
-          type="button"
-          onClick={() => roundIndex === 0 ? restart() : goBack()}
-          className="text-xs font-600 transition-colors"
-          style={{ fontWeight: 600, color: 'var(--muted-foreground)' }}>
-          
-              {roundIndex === 0 ? '← Change role' : '← Back'}
-            </button>
-            <div className="flex items-center gap-3">
-              <span className="text-[11px] text-muted-foreground">
-                Scenario {roundIndex + 1} of {GAME_SCENARIOS.length}
-              </span>
-              {roundIndex > 0 &&
-          <button
-            type="button"
-            onClick={restart}
-            className="text-[11px] font-600 hover:underline"
-            style={{ fontWeight: 600, color: 'var(--primary)' }}>
-            
-                  Switch role
-                </button>
-          }
-            </div>
-          </div>
-
-          <div className="flex items-center gap-1.5">
-            {GAME_SCENARIOS.map((s, i) =>
-        <div key={s.pillarId} className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--border)' }}>
-                <div
-            className="h-full rounded-full transition-all duration-500"
-            style={{
-              width: revealed[i] ? '100%' : i === roundIndex ? '35%' : '0%',
-              backgroundColor: 'var(--accent)'
-            }} />
-          
-              </div>
-        )}
-          </div>
-
-          <div key={roundIndex} className="rounded-2xl p-5 animate-fade-scale" style={{ backgroundColor: 'var(--muted)' }}>
-            <div className="flex items-center gap-3 mb-3">
-              <span
-            className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
-            style={{ backgroundColor: 'var(--card)', color: 'var(--primary)' }}>
-            
-                <ScenarioIcon pillarId={scenario.pillarId} />
-              </span>
-              <p className="text-xs font-700 uppercase tracking-wide" style={{ fontWeight: 700, color: 'var(--primary)' }}>
-                A moment worth pausing on
-              </p>
-            </div>
-            <p className="text-sm leading-relaxed text-foreground">{scenario.promptFor(role.subject, role.isSelf)}</p>
-          </div>
-
-          <div className="flex flex-col gap-2.5">
-            <p className="text-xs font-600 text-muted-foreground" style={{ fontWeight: 600 }}>
-              Three real ways people respond — tap each to see what it tends to build. None of them is "the wrong one."
-            </p>
-            <div className="grid grid-cols-1 gap-2.5">
-              {scenario.approaches.map((appr, i) => {
-            const isFlipped = scenarioFlipped[i];
-            const isFavorite = scenarioFavorite === i;
-            const actionText = role.isSelf ? appr.selfAction : appr.action;
-            const insightText = role.isSelf ? appr.selfInsight : appr.insight;
-            return (
-              <div
-                key={appr.key}
-                className="min-h-[104px] [perspective:1000px] cursor-pointer"
-                onClick={() => flipCard(i as 0 | 1 | 2)}>
-                
-                    <div
-                  className={`relative w-full h-full transition-transform duration-500 [transform-style:preserve-3d] ${
-                  isFlipped ? '[transform:rotateY(180deg)]' : ''}`
-                  }>
-                  
-                      <div
-                    className="absolute inset-0 [backface-visibility:hidden] flex items-center gap-3 rounded-xl px-4 py-3.5"
-                    style={{
-                      border: `1.5px solid ${isFavorite ? 'var(--accent)' : 'var(--border)'}`,
-                      backgroundColor: 'var(--card)'
-                    }}>
-                    
-                        <span className="flex-shrink-0" style={{ color: 'var(--primary)' }}>
-                          <ArchetypeIcon archetype={appr.key} />
-                        </span>
-                        <div className="flex flex-col gap-0.5 min-w-0">
-                          <p className="text-xs font-700 uppercase tracking-wide" style={{ fontWeight: 700, color: 'var(--primary)' }}>
-                            {ARCHETYPE_LABEL[appr.key]}
-                          </p>
-                          <p className="text-sm leading-snug text-foreground">{actionText}</p>
-                        </div>
-                        <span className="text-[10px] text-muted-foreground flex-shrink-0 ml-auto">Tap</span>
-                      </div>
-                      <div
-                    className="absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)] flex flex-col justify-center gap-2.5 rounded-xl px-4 py-3.5"
-                    style={{ backgroundColor: 'var(--primary)' }}>
-                    
-                        <p className="text-sm leading-snug" style={{ color: 'var(--primary-foreground)' }}>
-                          {insightText}
-                        </p>
-                        <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        pickFavorite(i as 0 | 1 | 2);
-                      }}
-                      className="text-[10px] font-700 uppercase tracking-wide self-start px-2 py-1 rounded-full transition-colors"
-                      style={{
-                        fontWeight: 700,
-                        backgroundColor: isFavorite ? 'var(--accent)' : 'rgba(255,255,255,0.15)',
-                        color: isFavorite ? 'var(--accent-foreground)' : 'var(--primary-foreground)'
-                      }}>
-                      
-                          {isFavorite ? '✓ Feels like me' : 'This feels like me'}
-                        </button>
-                      </div>
-                    </div>
-                  </div>);
-
-          })}
-            </div>
-          </div>
-
-          {!scenarioRevealed &&
-      <button
-        type="button"
-        onClick={reveal}
-        className="btn-secondary justify-center text-center"
-        disabled={!anyFlipped}
-        style={!anyFlipped ? { opacity: 0.5, cursor: 'default' } : undefined}>
-        
-              {anyFlipped ? 'Show what tends to help most here →' : 'Tap a card first to unlock this'}
-            </button>
-      }
-
-          {scenarioRevealed && pillar &&
-      <div className="flex flex-col gap-3 animate-fade-up">
-              <div className="rounded-2xl p-5" style={{ backgroundColor: 'var(--primary)' }}>
-                <div className="flex items-center gap-2.5 mb-2.5">
-                <span style={{ color: 'var(--primary-foreground)' }}>
-                      <ScenarioIcon pillarId={pillar.id} size={20} />
-                    </span>
-                  <p className="text-sm font-700" style={{ fontWeight: 700, color: 'var(--primary-foreground)' }}>
-                    The sweet spot: {pillar.name}
-                  </p>
-                </div>
-                <p className="text-sm leading-relaxed" style={{ color: 'var(--primary-foreground)', opacity: 0.95 }}>
-                  In practice, it's rarely just one of the three — it's knowing which to lean on and when. {pillar.whyItMatters}
-                </p>
-              </div>
-              <button type="button" onClick={goNext} className="btn-primary justify-center text-center">
-                {roundIndex === GAME_SCENARIOS.length - 1 ? 'See my results' : 'Next scenario →'}
-              </button>
-            </div>
-      }
-        </>
-    }
-
-      {isComplete &&
-    <div className="flex flex-col items-center text-center gap-4 py-2">
-          <CheckBadgeIcon />
-          <p className="text-lg font-700 text-foreground" style={{ fontWeight: 700 }}>
-            You've explored all {GAME_SCENARIOS.length} Class 6–8 pillars!
-          </p>
-          <p className="text-sm leading-relaxed text-muted-foreground max-w-sm">
-            This is exactly what LuminarGuide works on with students every day — the everyday moments a report card never shows.
-          </p>
-          {dominantKey &&
-      <div className="rounded-2xl p-5 max-w-sm w-full" style={{ backgroundColor: 'var(--muted)' }}>
-              <div className="flex items-center justify-center gap-2 mb-2" style={{ color: 'var(--primary)' }}>
-                <ArchetypeIcon archetype={dominantKey} />
-                <p className="text-xs font-700 uppercase tracking-wide" style={{ fontWeight: 700 }}>
-                  Your natural style: {ARCHETYPE_LABEL[dominantKey]}
-                </p>
-              </div>
-              <p className="text-sm leading-relaxed text-foreground">{ARCHETYPE_RECAP[dominantKey]}</p>
-            </div>
-      }
-          <div className="flex flex-wrap gap-3 justify-center mt-1">
-            <Link href="/about" className="btn-secondary">See the full pillar guide</Link>
-            <Link href="/get-started" className="btn-primary">Ask Us Anything</Link>
-          </div>
-          <div className="flex items-center gap-4 mt-1">
-            <button type="button" onClick={goBack} className="text-xs font-600 text-muted-foreground hover:text-primary transition-colors" style={{ fontWeight: 600 }}>
-              ← Review my answers
-            </button>
-            <button type="button" onClick={restart} className="text-xs font-600 text-muted-foreground hover:text-primary transition-colors" style={{ fontWeight: 600 }}>
-              ↺ Play again / switch role
-            </button>
-          </div>
-        </div>
-    }
-    </div>;
-
-
-  if (variant === 'inline') {
-    return <div className="bg-card border border-border rounded-2xl p-7 max-w-xl mx-auto">{gameBody}</div>;
-  }
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const delta = e.changedTouches[0].clientX - touchStartX.current;
+    touchStartX.current = null;
+    if (Math.abs(delta) < 40) return;
+    if (delta < 0) goTo(index + 1);else
+    goTo(index - 1);
+  };
 
   return (
     <>
@@ -1238,36 +1068,220 @@ export function PillarDiscoveryGame({ variant = 'modal' }: {variant?: 'modal' | 
 
       {open &&
       <div
-        className="fixed left-1/2 top-1/2 z-50 w-[min(94vw,460px)] max-h-[88vh] overflow-y-auto bg-card border border-border rounded-2xl shadow-2xl flex flex-col"
-        style={{ transform: 'translate(-50%, -50%)' }}
+        className="fixed inset-0 z-50 bg-card flex flex-col sm:inset-auto sm:left-1/2 sm:top-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:w-[min(92vw,820px)] sm:max-h-[88vh] sm:rounded-3xl sm:shadow-2xl sm:border sm:border-border"
         role="dialog"
         aria-label="Try the Approach — LuminarGuide">
-        
-          <div className="flex items-center justify-between px-5 py-4 flex-shrink-0" style={{ backgroundColor: 'var(--primary)' }}>
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'rgba(255,255,255,0.18)' }}>
-                <span style={{ color: 'white' }}>
-                  <PathIcon size={16} />
-                </span>
-              </div>
-              <div>
-                <p className="text-sm font-700 text-white" style={{ fontWeight: 700 }}>Try the Approach</p>
-                <p className="text-[11px] text-white/70">Explore how different people respond</p>
-              </div>
+
+        <div className="flex items-center justify-between px-5 py-4 border-b border-border flex-shrink-0">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'var(--muted)', color: 'var(--primary)' }}>
+              <PathIcon size={15} />
             </div>
-            <button
+            <div className="min-w-0">
+              <p className="text-sm font-700 text-foreground truncate" style={{ fontWeight: 700, fontFamily: 'var(--font-serif)' }}>
+                Try the Approach
+              </p>
+              <p className="text-[11px] text-muted-foreground truncate">
+                {GAME_ROLES.find((r) => r.id === roleId)?.label} &middot; {pillarLabel(scenario.pillarId)}
+              </p>
+            </div>
+          </div>
+          <button
             type="button"
             onClick={handleClose}
             aria-label="Close"
-            className="w-7 h-7 rounded-full flex items-center justify-center text-white/80 hover:text-white hover:bg-white/10 transition-colors flex-shrink-0">
-            
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M2 2l10 10M12 2L2 12" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-              </svg>
+            className="w-7 h-7 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors flex-shrink-0">
+
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M2 2l10 10M12 2L2 12" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+            </svg>
+          </button>
+        </div>
+
+        <div
+          className="flex gap-1.5 px-5 pt-3 overflow-x-auto flex-shrink-0 sm:justify-center [&::-webkit-scrollbar]:hidden"
+          style={{ scrollbarWidth: 'none' }}>
+
+          {GAME_ROLES.map((r) =>
+          <button
+            key={r.id}
+            type="button"
+            onClick={() => selectRole(r.id)}
+            className="flex-shrink-0 flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-600 whitespace-nowrap transition-colors"
+            style={{
+              fontWeight: 600,
+              backgroundColor: roleId === r.id ? 'var(--primary)' : 'var(--card)',
+              color: roleId === r.id ? 'var(--primary-foreground)' : 'var(--muted-foreground)',
+              border: `1px solid ${roleId === r.id ? 'var(--primary)' : 'var(--border)'}`
+            }}>
+
+              <StakeholderIcon role={r.id} size={13} />
+              {r.label}
+            </button>
+          )}
+        </div>
+
+        <div className="flex-1 overflow-y-auto px-5 pb-6 pt-4">
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => goTo(index - 1)}
+              aria-label="Previous moment"
+              className="hidden sm:flex absolute -left-4 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-card border border-border shadow-lg items-center justify-center text-foreground z-10">
+
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            </button>
+            <button
+              type="button"
+              onClick={() => goTo(index + 1)}
+              aria-label="Next moment"
+              className="hidden sm:flex absolute -right-4 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-card border border-border shadow-lg items-center justify-center text-foreground z-10">
+
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            </button>
+
+            <div
+              key={`${roleId}-${index}`}
+              onTouchStart={onTouchStart}
+              onTouchEnd={onTouchEnd}
+              className="rounded-2xl p-6 sm:p-7 relative overflow-hidden animate-fade-scale"
+              style={{ background: 'linear-gradient(150deg, var(--primary) 0%, #2b3b47 100%)' }}>
+
+              <div className="absolute inset-0" style={{ background: 'radial-gradient(60% 45% at 88% 5%, rgba(230,192,101,0.28) 0%, transparent 65%)' }} />
+              <div className="relative">
+                <p className="text-[11px] font-700 uppercase tracking-widest mb-2.5" style={{ fontWeight: 700, color: 'var(--accent)' }}>
+                  A moment worth pausing on &middot; {index + 1} of {scenarios.length}
+                </p>
+                <p className="text-lg sm:text-xl leading-snug" style={{ fontFamily: 'var(--font-serif)', fontWeight: 600, color: '#fff' }}>
+                  {scenario.prompt}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex sm:hidden items-center justify-center gap-4 pt-4">
+            <button type="button" onClick={() => goTo(index - 1)} aria-label="Previous moment" className="w-8 h-8 rounded-full bg-card border border-border shadow flex items-center justify-center text-foreground flex-shrink-0">
+              <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            </button>
+            <div className="flex gap-1.5">
+              {scenarios.map((s, i) =>
+              <span
+                key={s.pillarId}
+                className="rounded-full transition-all"
+                style={{ width: i === index ? 14 : 5, height: 5, backgroundColor: i === index ? 'var(--accent)' : 'var(--border)' }} />
+
+              )}
+            </div>
+            <button type="button" onClick={() => goTo(index + 1)} aria-label="Next moment" className="w-8 h-8 rounded-full bg-card border border-border shadow flex items-center justify-center text-foreground flex-shrink-0">
+              <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" /></svg>
             </button>
           </div>
-          <div className="p-5">{gameBody}</div>
+
+          <p className="hidden sm:block text-center text-xs text-muted-foreground pt-3">
+            Use the arrows, or swipe the card on your phone
+          </p>
+
+          <div className="flex flex-col gap-2.5 mt-5">
+            {scenario.approaches.map((appr) => {
+              const unlocked = isExplored || tappedKeys.includes(appr.key);
+              return (
+                <button
+                  key={appr.key}
+                  type="button"
+                  onClick={() => toggleTap(appr.key)}
+                  className="text-left rounded-xl px-4 py-3 transition-colors"
+                  style={{
+                    border: `1.5px solid ${unlocked ? 'var(--accent)' : 'var(--border)'}`,
+                    backgroundColor: unlocked ? 'var(--muted)' : 'var(--card)'
+                  }}>
+
+                  <div className="flex items-center gap-2.5">
+                    <span className="flex-shrink-0" style={{ color: 'var(--primary)' }}>
+                      <ArchetypeIcon archetype={appr.key} size={19} />
+                    </span>
+                    <div className="min-w-0">
+                      <p className="text-[10.5px] font-700 uppercase tracking-wide" style={{ fontWeight: 700, color: 'var(--accent)' }}>
+                        {ARCHETYPE_LABEL[appr.key]}
+                      </p>
+                      <p className="text-sm leading-snug text-foreground">{appr.action}</p>
+                    </div>
+                    {!unlocked &&
+                    <span className="ml-auto text-[10px] text-muted-foreground flex-shrink-0">Tap</span>
+                    }
+                  </div>
+                  {unlocked &&
+                  <p className="text-xs leading-relaxed text-muted-foreground mt-2 pl-[29px]">{appr.insight}</p>
+                  }
+                </button>);
+
+            })}
+          </div>
+
+          {!isExplored &&
+          <button
+            type="button"
+            onClick={reveal}
+            disabled={tappedKeys.length === 0}
+            className="btn-secondary justify-center text-center w-full mt-4"
+            style={tappedKeys.length === 0 ? { opacity: 0.5, cursor: 'default' } : undefined}>
+
+            {tappedKeys.length > 0 ? 'Show what tends to help most here →' : 'Tap an option first to unlock this'}
+          </button>
+          }
+
+          {isExplored && pillar &&
+          <div className="rounded-2xl p-5 mt-4 animate-fade-up" style={{ backgroundColor: 'var(--primary)' }}>
+            <div className="flex items-center gap-2.5 mb-2">
+              <span style={{ color: 'var(--primary-foreground)' }}>
+                <ScenarioIcon pillarId={scenario.pillarId} size={19} />
+              </span>
+              <p className="text-sm font-700" style={{ fontWeight: 700, color: 'var(--primary-foreground)' }}>
+                The sweet spot: {pillar.name}
+              </p>
+            </div>
+            <p className="text-sm leading-relaxed" style={{ color: 'var(--primary-foreground)', opacity: 0.95 }}>
+              In practice, it's rarely just one of the three — it's knowing which to lean on and when. {pillar.whyItMatters}
+            </p>
+          </div>
+          }
+
+          <div className="mt-6">
+            <p className="text-[11px] font-700 uppercase tracking-wide text-muted-foreground mb-2.5 text-center" style={{ fontWeight: 700 }}>
+              Jump to a pillar
+            </p>
+            <div
+              className="flex gap-1.5 overflow-x-auto sm:flex-wrap sm:justify-center pb-1 [&::-webkit-scrollbar]:hidden"
+              style={{ scrollbarWidth: 'none' }}>
+
+              {scenarios.map((s, i) =>
+              <button
+                key={s.pillarId}
+                type="button"
+                onClick={() => jumpToPillar(i)}
+                className="flex-shrink-0 flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-600 whitespace-nowrap transition-colors"
+                style={{
+                  fontWeight: 600,
+                  backgroundColor: i === index ? 'var(--primary)' : 'var(--card)',
+                  color: i === index ? 'var(--primary-foreground)' : 'var(--muted-foreground)',
+                  border: `1px solid ${i === index ? 'var(--primary)' : 'var(--border)'}`
+                }}>
+
+                  <ScenarioIcon pillarId={s.pillarId} size={12} />
+                  {pillarLabel(s.pillarId)}
+                  {exploredByRole[roleId][i] && i !== index &&
+                <span className="w-1 h-1 rounded-full flex-shrink-0" style={{ backgroundColor: 'var(--accent)' }} />
+                }
+                </button>
+              )}
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-3 justify-center mt-6 pt-5 border-t border-border">
+            <Link href="/about" className="btn-secondary">See the full pillar guide</Link>
+            <Link href="/get-started" className="btn-primary">Ask Us Anything</Link>
+          </div>
         </div>
+      </div>
       }
 
       {!open &&
@@ -1275,12 +1289,12 @@ export function PillarDiscoveryGame({ variant = 'modal' }: {variant?: 'modal' | 
         type="button"
         onClick={handleOpen}
         aria-label="Open the pillar discovery game"
-        className="fixed bottom-5 left-5 z-50 flex items-center gap-2.5 pl-4 pr-5 py-3.5 rounded-full shadow-2xl transition-transform hover:scale-105"
+        className="fixed bottom-5 left-5 z-50 flex items-center justify-center gap-2 shadow-2xl transition-transform hover:scale-105 w-12 h-12 rounded-full sm:w-auto sm:h-auto sm:pl-4 sm:pr-5 sm:py-3.5"
         style={{ backgroundColor: 'var(--accent)', color: 'var(--accent-foreground)' }}>
-        
-          <PathIcon size={16} />
-          <span className="text-sm font-700" style={{ fontWeight: 700 }}>Try the Approach</span>
-        </button>
+
+        <PathIcon size={16} />
+        <span className="hidden sm:inline text-sm font-700" style={{ fontWeight: 700 }}>Try the Approach</span>
+      </button>
       }
     </>);
 
@@ -1699,9 +1713,9 @@ export function GradeBandDeepDive() {
  * only ever see it through the "Our Stories" nav link, never by typing the
  * URL). The original /gamification content — the "Try the Approach" pillar
  * game — isn't lost: the same game already floats on every page as a
- * dismissible modal launcher (PillarDiscoveryGame variant="modal", bottom
- * left), so nothing here removes that feature, only its dedicated inline
- * showcase page.
+ * dismissible full-screen launcher (PillarDiscoveryGame, bottom left), so
+ * nothing here removes that feature, only its dedicated inline showcase
+ * page.
  *
  * A horizontally-scrolling carousel — testimonial, photo, and video cards
  * side by side, with left/right arrow controls, three cards visible at once
