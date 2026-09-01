@@ -738,25 +738,25 @@ export function HoverHintIcon({ size = 13 }: {size?: number;}) {
 
 /* ------------------------------------------------------------------------
  * TileDemoCursor / useTileDemo
- * A self-playing demonstration: a small cursor icon slides onto a tile,
- * "clicks" it, holds while the tile's flipped face is visible, then slides
- * off — showing a first-time visitor exactly what "hover or tap" means
- * before they've tried it themselves, instead of relying on the static
- * hint icon/caption alone. It loops gently (play, rest a few seconds, play
- * again) rather than showing itself once and vanishing for good — a single
- * quick pass is too easy to miss entirely if the tile isn't on screen yet
- * when it happens to run. It stops for good the moment a real visitor
- * actually interacts with any tile — at that point they've found it
- * themselves and the demo has done its job.
+ * A standing guide, not a one-off animation: a small cursor icon eases
+ * into view near a tile once, stays there — genuinely visible the whole
+ * time, not faded or flickering — and every so often "clicks" the tile to
+ * show what hovering or tapping does, holding long enough to actually read
+ * the result, then settles back to simply standing by until the next
+ * poke. It never fully vanishes and reappears the way the first version
+ * of this did; it just waits, in place, between demonstrations. It only
+ * disappears — fading out once, for good — the moment a real visitor
+ * actually interacts with any tile themselves. At that point it has done
+ * its job and steps aside.
  *
  * One instance demonstrates one tile. A group of near-identical tiles
- * (like the five pillar tiles) only needs the demo on the first one — once
- * a visitor has seen that one flip, the other four obviously behave the
- * same way. A row of tiles that each say something *different* (like the
- * three "How It Runs" cards, where one card flipping doesn't tell you the
- * next one does too) instead gets one demo per tile, offset with a
- * different `initialDelay` so they play in a gentle rolling sequence
- * rather than all moving in lockstep.
+ * (like the five pillar tiles) only needs the guide on the first one —
+ * once a visitor has seen that one flip, the other four obviously behave
+ * the same way. A row of tiles that each say something *different* (like
+ * the "How It Runs" cards, or the role tiles on /solutions, where one
+ * tile flipping doesn't tell you the next one does too) instead gets one
+ * guide per tile, offset with a different `initialDelay` so they don't
+ * all move in lockstep.
  *
  * `useTileDemo(enabled, initialDelay?)` owns the timing; each caller
  * renders the cursor itself (via `tileDemoCursorStyle`) only on the tile
@@ -764,9 +764,9 @@ export function HoverHintIcon({ size = 13 }: {size?: number;}) {
  * 'pressing' or 'holding'.
  * ---------------------------------------------------------------------- */
 
-type TileDemoPhase = 'idle' | 'entering' | 'pressing' | 'holding' | 'leaving' | 'done';
+type TileDemoPhase = 'idle' | 'resting' | 'pressing' | 'holding' | 'done';
 
-export function useTileDemo(enabled: boolean, initialDelay: number = 1100) {
+export function useTileDemo(enabled: boolean, initialDelay: number = 900) {
   const [phase, setPhase] = useState<TileDemoPhase>('idle');
   const stoppedRef = useRef(!enabled);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -781,6 +781,7 @@ export function useTileDemo(enabled: boolean, initialDelay: number = 1100) {
     if (!enabled) return;
     if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
       stoppedRef.current = true;
+      setPhase('done');
       return;
     }
     stoppedRef.current = false;
@@ -798,23 +799,21 @@ export function useTileDemo(enabled: boolean, initialDelay: number = 1100) {
       }, delay);
     };
 
-    const runCycle = () => {
-      step('entering', 550, () =>
-      step('pressing', 550, () =>
-      step('holding', 350, () =>
-      step('leaving', 2800, () =>
-      step('idle', 650, () => {
-        // full rest before playing again — long enough that this reads as
-        // a periodic gentle reminder, not a cursor that never stops moving
-        timerRef.current = setTimeout(() => {
-          if (!stoppedRef.current) runCycle();
-        }, 3200);
-      })))));
-    };
-
-    timerRef.current = setTimeout(() => {
-      if (!stoppedRef.current) runCycle();
-    }, initialDelay);
+    // A slightly slower, deliberate ease-in — this is a guide arriving to
+    // stand watch, not something that snaps into existence. Once resting,
+    // it pokes after `pressBeforeDelay` (the first poke uses `initialDelay`
+    // so different tiles' first demonstrations can be staggered; every
+    // poke after that rests for REST_BETWEEN_POKES, a real stretch of time
+    // spent simply standing there, visible, before demonstrating again).
+    const REST_BETWEEN_POKES = 4500;
+    step('resting', 650, () => {
+      const poke = (pressBeforeDelay: number) => {
+        step('pressing', pressBeforeDelay, () =>
+        step('holding', 450, () =>
+        step('resting', 2800, () => poke(REST_BETWEEN_POKES))));
+      };
+      poke(initialDelay);
+    });
 
     return () => {
       stoppedRef.current = true;
@@ -827,11 +826,10 @@ export function useTileDemo(enabled: boolean, initialDelay: number = 1100) {
 }
 
 export function tileDemoCursorStyle(phase: TileDemoPhase): React.CSSProperties {
-  const base: React.CSSProperties = { transition: 'opacity 480ms ease, transform 480ms cubic-bezier(0.22,0.9,0.32,1)' };
-  if (phase === 'entering' || phase === 'holding') return { ...base, opacity: 1, transform: 'translate(0px,0px) scale(1)' };
-  if (phase === 'pressing') return { ...base, opacity: 1, transform: 'translate(0px,0px) scale(0.8)' };
-  if (phase === 'leaving') return { ...base, opacity: 0, transform: 'translate(16px,12px) scale(0.9)' };
-  return { ...base, opacity: 0, transform: 'translate(34px,28px) scale(0.85)' };
+  const base: React.CSSProperties = { transition: 'opacity 550ms ease, transform 400ms cubic-bezier(0.22,0.9,0.32,1)' };
+  if (phase === 'done' || phase === 'idle') return { ...base, opacity: 0, transform: 'scale(0.85)' };
+  if (phase === 'pressing') return { ...base, opacity: 1, transform: 'scale(0.8)' };
+  return { ...base, opacity: 1, transform: 'scale(1)' };
 }
 
 export function GuideCursorIcon({ size = 30, pressed = false }: {size?: number;pressed?: boolean;}) {
@@ -2218,14 +2216,15 @@ export function RoleSolutionTile({
   points,
   theoryName,
   theoryDescription,
-  showDemo = false
+  showDemo = false,
+  demoDelay = 900
 
 
 
 
-}: {points: string[];theoryName: string;theoryDescription: string;showDemo?: boolean;}) {
+}: {points: string[];theoryName: string;theoryDescription: string;showDemo?: boolean;demoDelay?: number;}) {
   const [flipped, setFlipped] = useState(false);
-  const demo = useTileDemo(showDemo);
+  const demo = useTileDemo(showDemo, demoDelay);
   const isFlipped = flipped || demo.isFlipped;
 
   return (
