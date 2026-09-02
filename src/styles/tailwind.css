@@ -108,16 +108,13 @@
 
 /* The id stays 'teal-dark' (it's an internal string only — saved in
    localStorage and matched in layout.tsx's inline theme script — never
-   shown to a visitor, who just sees the "Dark" label and swatch). The base
-   is a near-black/white palette, and both the everyday accent and the
-   "statement" panels (Hero, the Parents/Schools notes, the pillar game,
-   the headline gradient) use the one same teal — the dark logo's own
-   color, #2DD4BF, the exact shade shown in the Dark swatch next to the
-   theme toggle — rather than a muted variant of it or a color with no
-   connection to this theme's mark. --accent and --panel-accent are the
-   same value; kept as two separate tokens only because they're used in
-   different kinds of places (small everyday touches vs. the few bigger
-   statement panels), not because they're different colors. */
+   shown to a visitor, who just sees the "Dark" label and swatch), even
+   though the palette below is no longer a saturated teal. Both the
+   everyday accent and the "statement" panels now reuse the exact same
+   grayish slate-blue as the light theme's own --accent / --panel-accent
+   (#55738A / #8A97A6) instead of the dark logo's vivid, glowing teal —
+   one consistent, muted color story across both themes, not a brighter
+   dark-mode variant of it. */
 [data-theme='teal-dark'] {
   --background: #141312;
   --foreground: #F3F1EC;
@@ -125,8 +122,8 @@
   --primary-foreground: #1C1014;
   --secondary: #211E1A;
   --secondary-foreground: #F3F1EC;
-  --accent: #2DD4BF;
-  --accent-rgb: 45, 212, 191;
+  --accent: #55738A;
+  --accent-rgb: 85, 115, 138;
   --accent-foreground: #1C1014;
   --muted: #211E1A;
   --muted-foreground: #A8A29B;
@@ -140,19 +137,18 @@
   --font-serif: 'Lora', serif;
   color-scheme: dark;
 
-  /* The full, saturated teal reserved for the statement panels — the same
-     teal this project's dark logo mark has always used. */
-  --panel-accent: #2DD4BF;
-  --panel-accent-rgb: 45, 212, 191;
+  /* Same grayish slate-blue as the light theme's --panel-accent, just
+     reused here instead of the old saturated teal. */
+  --panel-accent: #8A97A6;
+  --panel-accent-rgb: 138, 151, 166;
 
   /* Now that --primary is a neutral (near-white, for readable buttons and
      links), it can't double as the dark end of the statement-panel
      gradients below — a near-white anchor there would wash the panel out
-     and swallow the white text sitting on top of it. This is the same
-     deep teal-black this project's dark theme originally used as its page
-     background, brought back specifically here so the panels stay a
-     moody, unmistakably teal dark, without dragging --primary itself back
-     into color. */
+     and swallow the white text sitting on top of it. This stays a deep
+     near-black rather than switching to the light theme's navy
+     --panel-deep, so the panels still read as darker than the page
+     background around them instead of blending into it. */
   --panel-deep: #0B1817;
 }
 
@@ -207,8 +203,13 @@
 
   /* Class name is legacy (kept so every component using it didn't need
      touching) — this is the one deliberately colorful headline treatment,
-     now navy-to-silver in the light theme and teal in the dark theme (see
-     the override just below) instead of gold in both. */
+     navy-to-silver in the light theme and the same grayish slate-blue in
+     the dark theme (see the override just below) instead of gold in
+     both. Dark mode can't reuse the light theme's literal navy here —
+     navy text would nearly vanish against this theme's near-black
+     background — so it uses the lighter member of the same shared
+     color pair instead, kept legible while still reading as the same
+     muted family rather than a bright, glowing color. */
   .gradient-text-gold {
     background: linear-gradient(135deg, #2C3E50 0%, #8A97A6 50%, #16212C 100%);
     -webkit-background-clip: text;
@@ -217,7 +218,7 @@
   }
 
   [data-theme='teal-dark'] .gradient-text-gold {
-    background: linear-gradient(135deg, #1FBFAC 0%, #2DD4BF 50%, #1FBFAC 100%);
+    background: linear-gradient(135deg, #55738A 0%, #8A97A6 50%, #55738A 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;

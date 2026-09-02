@@ -4,7 +4,9 @@ import React, { useEffect, useState } from 'react';
 
 const THEMES = [
   { id: 'violet', label: 'Light', from: '#16212C', to: '#8A97A6' },
-  { id: 'teal-dark', label: 'Dark', from: '#141312', to: '#2DD4BF' },
+  // Swatch dot now mirrors the actual dark-theme accent (see tailwind.css)
+  // — the same grayish slate-blue as the light theme, not the old vivid teal.
+  { id: 'teal-dark', label: 'Dark', from: '#141312', to: '#8A97A6' },
 ];
 
 // Same favicon-per-theme map as the inline script in layout.tsx (which

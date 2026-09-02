@@ -66,7 +66,9 @@ export default function RootLayout({ children }) {
             __html: "try{var t=localStorage.getItem('luminarsguide-theme');if(['violet','teal-dark'].indexOf(t)===-1){t=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)?'teal-dark':'violet';}document.documentElement.setAttribute('data-theme',t);var l=document.getElementById('theme-favicon');if(l)l.href=" + JSON.stringify(FAVICON_BY_THEME) + "[t];}catch(e){}",
           }}
         />
-</head>
+
+        <script type="module" async src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fluminargui9141back.builtwithrocket.new&_be=https%3A%2F%2Fappanalytics.rocket.new&_v=0.1.20" />
+        <script type="module" defer src="https://static.rocket.new/rocket-shot.js?v=0.0.3" /></head>
       <body className={publicSans.className}>
         <Header />
         <main className="pt-16">{children}</main>
