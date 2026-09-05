@@ -1297,21 +1297,21 @@ const BAND_ROLE_SCENARIOS: Record<GradeBand['id'], Record<GameRoleId, GameScenar
 
     },
     {
-      pillarId: 'digital-self-discovery',
-      prompt: "A student mentions spending hours getting a single photo 'right' before posting it.",
+      pillarId: 'financial-literacy-consumer-psychology',
+      prompt: 'A mentee proudly shows you a new gadget bought with months of saved pocket money, already regretting it a little.',
       approaches: [
-      { key: 'stepIn', action: 'Point out directly how much time that actually adds up to.', insight: "Can land as judgment — worth pairing with genuine curiosity, not just a fact." },
-      { key: 'askGuide', action: 'Ask what they think would happen if they posted something unedited.', insight: "Their answer usually reveals the actual fear driving the habit." },
-      { key: 'stepBack', action: "Let it go — it's a pretty normal habit at this age.", insight: "True to a point — worth a second look if it starts crowding out other things." }]
+      { key: 'stepIn', action: "Tell them directly it wasn't a smart purchase.", insight: "Honest, but landing right after the regret already set in can feel like piling on rather than helping." },
+      { key: 'askGuide', action: 'Ask what made this purchase feel so necessary in the moment.', insight: "Gets at the actual pull — social pressure, an ad, a sale — which is more useful than judging the outcome." },
+      { key: 'stepBack', action: "Say nothing — it's their money and their lesson to learn.", insight: "True to a point — a gentle debrief afterward still turns the regret into something they can use next time." }]
 
     },
     {
-      pillarId: 'generation-gap',
-      prompt: "A student tells you they've basically stopped talking to their parents about anything real.",
+      pillarId: 'ai-critical-thinking',
+      prompt: "A mentee tells you they've started asking an AI chatbot for advice on personal problems instead of talking them through with you.",
       approaches: [
-      { key: 'stepIn', action: "Offer to help them plan out what they'd actually want to say.", insight: "Useful scaffolding — the goal is still them having the conversation, not you having it." },
-      { key: 'askGuide', action: 'Ask what they think would happen if they tried telling their parents the truth.', insight: "Usually surfaces a specific fear worth naming directly, not just a vague sense of distance." },
-      { key: 'stepBack', action: "Leave it alone — it's normal for teenagers to pull back a bit.", insight: "Some distance is normal — total silence on real things is usually worth a gentle nudge." }]
+      { key: 'stepIn', action: "Tell them directly that a chatbot can't replace a real conversation with you.", insight: "True, but landing as a correction can make them defensive rather than curious about the difference." },
+      { key: 'askGuide', action: 'Ask what the chatbot said, and what felt useful or not about it.', insight: "Opens a real comparison between the two, rather than positioning yourself against the tool." },
+      { key: 'stepBack', action: 'Let them keep using it and see how it goes.', insight: "Fine as one input among several — worth revisiting if it starts replacing real conversations entirely." }]
 
     }],
 
@@ -1326,39 +1326,38 @@ const BAND_ROLE_SCENARIOS: Record<GradeBand['id'], Record<GameRoleId, GameScenar
 
     },
     {
-      pillarId: 'stream-discovery',
-      prompt: 'Your child seems to be choosing a stream mainly to match what you and your spouse expect.',
+      pillarId: 'diversity-management',
+      prompt: "Your child mentions a classmate from a different religion or community with a slightly dismissive tone you don't love hearing.",
       approaches: [
-      { key: 'stepIn', action: 'Tell them directly that you want them to choose based on what they want.', insight: "A generous and important thing to say — just watch that it doesn't feel like pressure in the other direction." },
-      { key: 'askGuide', action: "Ask what they'd choose if you had no opinion on it at all.", insight: "Removes your influence from the equation long enough to hear their real answer." },
-      { key: 'stepBack', action: 'Let them go with the expected choice without raising it.', insight: "Risky — a stream choice made purely to please you is a hard thing to quietly reverse later." }]
+      { key: 'stepIn', action: 'Correct it directly, right in the moment.', insight: "Right instinct — just watch that a sharp correction doesn't just teach them to hide the attitude instead of examine it." },
+      { key: 'askGuide', action: 'Ask what they actually know about that classmate as a person.', insight: "Usually reveals the comment came from unfamiliarity, not real conviction — which is a much easier thing to work with." },
+      { key: 'stepBack', action: 'Let the comment pass — kids say all kinds of things.', insight: "Risky to let a pattern go unaddressed — a single offhand comment is fine to skip, a repeated one usually isn't." }]
 
     },
     {
       pillarId: 'peer-navigation',
-      prompt: 'You notice your child has gone quiet about a friend group they used to talk about constantly.',
-      approaches: [
+      prompt: 'You notice your child has gone quiet about a friend group they used to talk about constantly.',      approaches: [
       { key: 'stepIn', action: 'Ask directly what happened with that friend group.', insight: "Direct is fine here — just be ready for a short answer at first, and don't push past it." },
       { key: 'askGuide', action: 'Ask how they are feeling about their friendships generally right now.', insight: "A wider, softer question often gets further than asking about one specific group." },
       { key: 'stepBack', action: 'Wait for them to bring it up on their own.', insight: "Understandable, but this kind of quiet often needs an opening, not just patience." }]
 
     },
     {
-      pillarId: 'digital-self-discovery',
-      prompt: 'You notice your child spends a long time perfecting a photo before posting it, more than seems relaxed or fun.',
+      pillarId: 'financial-literacy-consumer-psychology',
+      prompt: "Your child asks for money for something after seeing an influencer promote it, insisting 'everyone' has one.",
       approaches: [
-      { key: 'stepIn', action: "Bring it up directly and ask what's behind the amount of time it takes.", insight: "Direct and reasonable — just frame it as curiosity, not criticism, so they don't just shut down." },
-      { key: 'askGuide', action: "Ask what they think people are actually judging when they look at their posts.", insight: "Gets at the belief driving the behavior, not just the behavior itself." },
-      { key: 'stepBack', action: "Say nothing — it's a common habit at this age.", insight: "Mostly true — worth revisiting if it starts to visibly affect their mood or time." }]
+      { key: 'stepIn', action: 'Say no and explain why influencer promotions should not drive purchases.', insight: "Reasonable — just make sure it's a conversation, not just a rule, or the lesson won't transfer next time." },
+      { key: 'askGuide', action: 'Ask what they think the influencer actually gets out of promoting it.', insight: "Once they see the incentive behind the recommendation, the pressure to buy it usually drops on its own." },
+      { key: 'stepBack', action: 'Just buy it to avoid the argument.', insight: "Understandable in the moment — but it quietly confirms that pestering works, which shapes the next request too." }]
 
     },
     {
-      pillarId: 'generation-gap',
-      prompt: 'Your child has clearly stopped telling you what is actually going on, and conversations stay surface-level.',
+      pillarId: 'ai-critical-thinking',
+      prompt: 'Your child uses an AI tool to finish an assignment quickly and insists it is basically the same as doing it themselves.',
       approaches: [
-      { key: 'stepIn', action: "Ask them directly why they've stopped sharing more with you.", insight: "Honest, but can land as pressure — be ready for a defensive first answer." },
-      { key: 'askGuide', action: 'Ask what would make it feel worth telling you things again.', insight: "Puts the fix in their hands, which tends to get a more honest answer." },
-      { key: 'stepBack', action: 'Let the distance be normal teenage behavior and not push it.', insight: "Some distance is developmentally normal — total silence on real things is worth gently naming." }]
+      { key: 'stepIn', action: 'Tell them directly that is not the same as their own work.', insight: "Fair point — just be ready to explain what's actually lost, or it can sound like an arbitrary rule." },
+      { key: 'askGuide', action: 'Ask what they think they would lose by skipping the thinking part.', insight: "Gets them to articulate the value themselves, which tends to stick better than being told it." },
+      { key: 'stepBack', action: "Let it go this once — it's just one assignment.", insight: "Fine occasionally — worth a real conversation if it becomes how every assignment gets done." }]
 
     }],
 
@@ -1373,12 +1372,12 @@ const BAND_ROLE_SCENARIOS: Record<GradeBand['id'], Record<GameRoleId, GameScenar
 
     },
     {
-      pillarId: 'stream-discovery',
-      prompt: 'Multiple students report choosing a stream under heavy pressure from family, with little real guidance from school first.',
+      pillarId: 'diversity-management',
+      prompt: 'Teachers notice friend groups at this grade level have started forming almost entirely along religious or cultural lines, with little mixing.',
       approaches: [
-      { key: 'stepIn', action: 'Roll out mandatory stream-counseling sessions before the choice is finalized.', insight: "Directly closes the gap — just make sure it's substantive, not a single rushed session." },
-      { key: 'askGuide', action: 'Ask a sample of students what would have actually helped them decide.', insight: "Their answer often points to something more specific than 'more counseling.'" },
-      { key: 'stepBack', action: 'Leave stream choice entirely to families, as has been done before.', insight: "Reasonable if resources are tight — but this is exactly where foreclosure risk is highest without support." }]
+      { key: 'stepIn', action: 'Restructure group assignments to deliberately mix students across those lines.', insight: "Addresses it directly — just pair it with real facilitation, or forced proximity alone can backfire." },
+      { key: 'askGuide', action: "Ask students themselves, through homeroom discussions, what's driving the separation.", insight: "Often surfaces something fixable — a language barrier, an old incident — that a policy alone wouldn't catch." },
+      { key: 'stepBack', action: 'Let friend groups form naturally, as they always have.', insight: "Understandable, but this is exactly the kind of pattern that's easier to shift early than to undo later." }]
 
     },
     {
@@ -1391,21 +1390,21 @@ const BAND_ROLE_SCENARIOS: Record<GradeBand['id'], Record<GameRoleId, GameScenar
 
     },
     {
-      pillarId: 'digital-self-discovery',
-      prompt: 'A parent raises a concern that students seem increasingly anxious about their social media image, and asks if the school addresses this.',
+      pillarId: 'financial-literacy-consumer-psychology',
+      prompt: 'A teacher mentions students increasingly compare who has the newest phone or gadget, and it is becoming a visible status marker in class.',
       approaches: [
-      { key: 'stepIn', action: 'Add media literacy and digital self-image sessions to the curriculum this term.', insight: "Directly responsive — just make sure it doesn't read as another lecture students tune out." },
-      { key: 'askGuide', action: 'Ask students directly, through the counseling team, what is actually driving that anxiety.', insight: "Their answer shapes what kind of session would actually land, rather than guessing." },
-      { key: 'stepBack', action: "Note the concern but leave it outside the school's current scope.", insight: "Understandable given competing priorities — but this is a pattern likely to keep surfacing." }]
+      { key: 'stepIn', action: 'Address it directly in a class discussion about materialism and comparison.', insight: "Can work well — just frame it as a real conversation, not a lecture aimed at the kids with less." },
+      { key: 'askGuide', action: 'Ask students, through an anonymous survey, how this pressure actually feels to them.', insight: "Often reveals the anxiety is broader than it looks from the outside, and shapes what kind of session would help." },
+      { key: 'stepBack', action: 'Treat it as a normal, harmless part of adolescent status-seeking.', insight: "Partly true — but worth a look once it's visibly affecting how included some students feel." }]
 
     },
     {
-      pillarId: 'generation-gap',
-      prompt: 'Several parents mention, separately, that their teenagers have stopped telling them much of anything real.',
+      pillarId: 'ai-critical-thinking',
+      prompt: 'Teachers notice students increasingly cite AI-generated answers as fact in class discussions and projects, without questioning them.',
       approaches: [
-      { key: 'stepIn', action: 'Offer a parent workshop on communicating with teenagers this term.', insight: "A concrete, useful step — just be sure it's framed as a two-way skill, not a parenting deficiency." },
-      { key: 'askGuide', action: 'Ask the counseling team what students say makes it hard to talk to their parents.', insight: "Gives you the student side of the gap, not just the parent side, before designing anything." },
-      { key: 'stepBack', action: "Treat it as a normal part of adolescence outside the school's role.", insight: "Partly true — but the school is often well placed to open this channel where a family alone can't." }]
+      { key: 'stepIn', action: 'Set a school-wide rule requiring any AI-sourced claim to be checked against a second source.', insight: "A concrete, teachable habit — just make sure it's paired with practice, not just a rule to follow." },
+      { key: 'askGuide', action: 'Ask teachers what specifically makes students trust these answers so readily.', insight: "Often reveals it's less about the tool and more about never being taught what 'verify a claim' actually looks like." },
+      { key: 'stepBack', action: 'Leave it to individual teachers to address as it comes up.', insight: "Reasonable short-term — but this is exactly the kind of skill gap that benefits from being taught deliberately, not caught reactively." }]
 
     }],
 
@@ -1420,12 +1419,12 @@ const BAND_ROLE_SCENARIOS: Record<GradeBand['id'], Record<GameRoleId, GameScenar
 
     },
     {
-      pillarId: 'stream-discovery',
-      prompt: "A student says they're choosing a stream 'because it's what's expected,' with visible resignation.",
+      pillarId: 'diversity-management',
+      prompt: 'A student describes feeling like they have to hide part of their background or identity to fit in with their friend group.',
       approaches: [
-      { key: 'stepIn', action: 'Walk them through the other options directly, right in the session.', insight: "Useful information — just don't let it turn into you deciding for them either." },
-      { key: 'askGuide', action: "Ask what they'd choose if expectations weren't part of the equation.", insight: "Gets underneath the resignation to what they might actually want." },
-      { key: 'stepBack', action: 'Let the decision stand and revisit it after it is finalized.', insight: "Risky — this is close to the last real window before the choice becomes hard to undo." }]
+      { key: 'stepIn', action: 'Help them find or connect with a peer group where they do not have to hide it.', insight: "Genuinely useful — just be sure it's their choice to seek that out, not a project you've assigned them." },
+      { key: 'askGuide', action: 'Ask what they think would actually happen if their friend group saw that part of them.', insight: "Often the imagined reaction is worse than the real one — worth testing that gently, not just assuming it." },
+      { key: 'stepBack', action: 'Let them keep managing it their own way for now.', insight: "Reasonable short-term — but hiding part of yourself for long stretches has a real cost worth checking in on." }]
 
     },
     {
@@ -1438,21 +1437,21 @@ const BAND_ROLE_SCENARIOS: Record<GradeBand['id'], Record<GameRoleId, GameScenar
 
     },
     {
-      pillarId: 'digital-self-discovery',
-      prompt: 'A student describes real anxiety about how they look in photos before posting, more than they show about anything else.',
+      pillarId: 'financial-literacy-consumer-psychology',
+      prompt: "A student describes real anxiety about not having what their friends have, tied closely to how they see their own worth.",
       approaches: [
-      { key: 'stepIn', action: 'Address the anxiety directly as its own topic worth focused attention.', insight: "Reasonable — just make sure it doesn't feel like their concern is being treated as trivial by contrast." },
-      { key: 'askGuide', action: "Ask what they imagine happens if a photo doesn't get the response they hoped for.", insight: "Usually surfaces the belief about worth that's actually driving the anxiety." },
-      { key: 'stepBack', action: 'Note it and see if it comes up again unprompted.', insight: "Worth returning to soon — this kind of image-anxiety rarely resolves quietly on its own." }]
+      { key: 'stepIn', action: 'Reassure them directly that possessions do not determine their worth.', insight: "True and worth saying — just pair it with something more concrete, or it can land as a platitude." },
+      { key: 'askGuide', action: 'Ask them where they think that belief — worth tied to possessions — actually came from.', insight: "Usually traces back to a specific comparison or message worth naming directly, not just a vague feeling." },
+      { key: 'stepBack', action: 'Let the anxiety pass on its own over time.', insight: "Risky — comparison-driven anxiety like this tends to compound rather than fade without being addressed." }]
 
     },
     {
-      pillarId: 'generation-gap',
-      prompt: 'A student says there is no point talking to their parents because they would not understand anyway.',
+      pillarId: 'ai-critical-thinking',
+      prompt: 'A student mentions turning to an AI chatbot for reassurance whenever they feel anxious or unsure, more and more often.',
       approaches: [
-      { key: 'stepIn', action: 'Help them plan one specific thing to try telling their parents this week.', insight: "Concrete and useful — just keep it their plan, not a script you hand them." },
-      { key: 'askGuide', action: "Ask what makes them so sure their parents wouldn't understand.", insight: "Often reveals an assumption worth testing, not necessarily a settled fact." },
-      { key: 'stepBack', action: "Leave the family relationship outside the session's focus for now.", insight: "Fine short-term — but this gap is often exactly where the most protective support lives." }]
+      { key: 'stepIn', action: 'Address it directly as something worth cutting back on.', insight: "Well-intentioned, but framing it purely as a problem can make them defensive about something that's genuinely helping some of the time." },
+      { key: 'askGuide', action: 'Ask what they get from the chatbot that feels different from talking to a person.', insight: "Usually reveals whether it's convenience, availability, or something they're avoiding by not talking to someone real." },
+      { key: 'stepBack', action: 'Let it be — plenty of people use these tools now.', insight: "True, but worth watching if it's replacing rather than supplementing real support systems." }]
 
     }]
 
