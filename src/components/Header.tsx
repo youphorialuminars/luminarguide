@@ -2064,8 +2064,8 @@ export function PillarDiscoveryGame() {
 
 /* ------------------------------------------------------------------------
  * CollaboratorInterestForm
- * The form used on /contact for mentors, counselors, and schools to share
- * their interest and portfolio. For now (no backend wired up yet) it
+ * The form used on /get-started (the "Work With Us" tab) for mentors,
+ * counselors, and schools to share * their interest and portfolio. For now (no backend wired up yet) it
  * collects everything in real form fields, then opens the visitor's email
  * client with all of it filled in — a real upgrade over a plain mailto
  * button, and a straightforward swap-in point for Supabase later.

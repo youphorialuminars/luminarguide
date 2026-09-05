@@ -1,8 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
 /**
- * Central place for site-wide facts AND all program content: brand name,
- * Central place for site-wide facts AND all program content: brand name,
+ * Centlace for site-wide facts AND all program content: brand name,
  * contact details, and — because this project can't add new files — the
  * entire pillar/program data model that used to live in a separate
  * `program.ts`. Everything below is imported by the home page sections and

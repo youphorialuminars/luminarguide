@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "LuminarGuide — Development Beyond the Textbook",
     description: "Mentor-guided personal development for students in grades 6–12, starting with self-awareness and inner strength.",
-    images: [{ url: '/assets/images/app_logo.png', width: 1200, height: 630 }],
+    images: [{ url: 'https://ldkwhimqenxkloibhwzt.supabase.co/storage/v1/object/public/Branding/combined_logo%20(2).png', width: 1200, height: 630 }],
   },
 };
 

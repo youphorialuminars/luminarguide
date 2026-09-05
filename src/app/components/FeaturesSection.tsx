@@ -219,7 +219,7 @@ export default function FeaturesSection() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div className="max-w-xl">
             <p className="text-xs font-600 text-primary uppercase tracking-widest mb-3" style={{ fontWeight: 600 }}>
-              The Program
+              The Pillars
             </p>
             <h2 className="text-section-heading text-foreground mb-4">
               Five pillars. Three stages. One student, followed the whole way.

@@ -426,6 +426,7 @@
     }
   }
 
+  .delay-100 { animation-delay: 100ms; }
   .delay-200 { animation-delay: 200ms; }
   .delay-300 { animation-delay: 300ms; }
   .delay-400 { animation-delay: 400ms; }
@@ -474,7 +475,3 @@
     margin-top: 0.25rem;
   }
 }
-.logo-light { display: block; }
-.logo-dark { display: none; }
-[data-theme='teal-dark'] .logo-light { display: none; }
-[data-theme='teal-dark'] .logo-dark { display: block; }
