@@ -13,7 +13,7 @@ import { createClient } from '@supabase/supabase-js';
  *
  * ---------------------------------------------------------------------
  * THE PROGRAM
- * LuminarGuide develops students outside the textbook, in three stages:
+ * Luminar'sGuide develops students outside the textbook, in three stages:
  *   1. Intrinsic Development     — how a student sees and understands themselves
  *   2. Interpersonal Development — how a student relates to and communicates with others
  *   3. Social Development        — how a student shows up as a responsible member of society
@@ -49,7 +49,7 @@ import { createClient } from '@supabase/supabase-js';
 
 export const siteConfig = {
   brandName: "Luminar's Guide",
-  brandNameShort: 'LuminarGuide',
+  brandNameShort: 'LuminarsGuide',
   tagline: 'Development Beyond the Textbook — Grades 6–12',
 
   contact: {
@@ -124,7 +124,7 @@ export const programStages = [
     name: 'Intrinsic Development',
     tagline: 'How a student sees themselves',
     description:
-      "The foundation stage — helping a student build self-awareness, emotional resilience, and a clear sense of identity, separate from grades or comparison. This is the stage LuminarGuide is piloting with schools right now.",
+      "The foundation stage — helping a student build self-awareness, emotional resilience, and a clear sense of identity, separate from grades or comparison. This is the stage Luminar'sGuide is piloting with schools right now.",
     status: 'live' as ProgramStatus,
     statusLabel: 'Piloting Now',
   },
@@ -446,7 +446,7 @@ export const pricingPlans: PricingPlan[] = [
       "Priority counselor sessions, arranged whenever the mentor recommends it",
       "Personalized tasks and sessions built around your child",
       "A Mentor's Letter — a personal, written reflection from their mentor",
-      'Regional and national LuminarGuide meets, not just their own city',
+      'Regional and national LuminarsGuide meets, not just their own city',
       'A Growth & Wellbeing Report — plain-language updates on what\'s going well, patterns worth watching, and specific next steps',
       'A Pillar Showcase Workshop after completing each pillar',
     ],

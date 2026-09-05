@@ -34,12 +34,12 @@ const features: FeatureCard[] = [
   {
     title: 'Beyond the Screen',
     description:
-      "Group tasks, mentor calls, offline classes and activities, and learning that stays fun and interactive — not a student alone with an app. Regional and national LuminarGuide meets let students see their growth shared and complemented by peers from far beyond their own city, too.",
+      "Group tasks, mentor calls, offline classes and activities, and learning that stays fun and interactive — not a student alone with an app. Regional and national Luminar'sGuide meets let students see their growth shared and complemented by peers from far beyond their own city, too.",
     accentColor: 'rgba(59,130,246,0.08)',
     iconColor: '#3B82F6',
     detail: 'Group work, mentor calls, regional meets',
     deepDive:
-      "A pillar isn't learned by reading about it — it's practiced. That's why sessions include group tasks worked through with classmates, live mentor calls, and offline activities, not just screen time. Regional and national LuminarGuide meets carry the same growth out into a much wider community, so a student's progress is something they see reflected in peers across cities, not something that happens to them alone.",
+      "A pillar isn't learned by reading about it — it's practiced. That's why sessions include group tasks worked through with classmates, live mentor calls, and offline activities, not just screen time. Regional and national Luminar'sGuide meets carry the same growth out into a much wider community, so a student's progress is something they see reflected in peers across cities, not something that happens to them alone.",
     icon: (
       <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
         <circle cx="7" cy="7" r="3" stroke="currentColor" strokeWidth="1.5" />

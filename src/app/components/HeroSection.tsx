@@ -62,7 +62,7 @@ export default function HeroSection() {
             <p className="text-base leading-relaxed text-muted-foreground max-w-xl animate-fade-up delay-200 font-700" style={{ fontSize: '1.0625rem', fontWeight: 700 }}>
               The child who goes quiet in class and won't say why. The teenager who measures their whole life
               against someone else's social feed. The senior heading off to college with no real practice at
-              being on their own. LuminarGuide is a mentor-led development program that meets each of them
+              being on their own. LuminarsGuide is a mentor-led development program that meets each of them
               exactly where they are — with trained mentors, parents, schools, and counselors all working from
               the same picture.
             </p>

@@ -132,7 +132,7 @@ let chatTurnCounter = 0;
 const nextChatId = () => `t${chatTurnCounter++}`;
 
 const CHAT_GREETING =
-"Hi, I'm the LuminarGuide Pillar Guide. Tell me which class your child is in, and I'll walk you through what we focus on and why it matters at that age — or ask me about First Aid & Emergency, which is available separately for any grade.";
+"Hi, I'm the Luminar'sGuide Pillar Guide. Tell me which class your child is in, and I'll walk you through what we focus on and why it matters at that age — or ask me about First Aid & Emergency, which is available separately for any grade.";
 
 function PillarGuideChat() {
   const [open, setOpen] = useState(false);
@@ -211,7 +211,7 @@ function PillarGuideChat() {
       <div
         className="w-[min(92vw,380px)] h-[min(70vh,560px)] bg-card border border-border rounded-2xl shadow-2xl flex flex-col overflow-hidden"
         role="dialog"
-        aria-label="LuminarGuide pillar chatbot">
+        aria-label="Luminar'sGuide pillar chatbot">
         
           {/* Header */}
           <div
@@ -1801,7 +1801,7 @@ export function PillarDiscoveryGame() {
       <div
         className="fixed inset-0 z-50 bg-card flex flex-col sm:inset-auto sm:left-1/2 sm:top-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:w-[min(92vw,820px)] sm:max-h-[88vh] sm:rounded-3xl sm:shadow-2xl sm:border sm:border-border"
         role="dialog"
-        aria-label="Try the Approach — LuminarGuide">
+        aria-label="Try the Approach — Luminar'sGuide">
 
         <div className="flex items-center justify-between px-5 py-4 border-b border-border flex-shrink-0">
           <div className="flex items-center gap-2.5 min-w-0">
@@ -2562,7 +2562,7 @@ export function OurStoriesGallery() {
   };
 
   const mailtoHref = `mailto:${siteConfig.contact.email}?subject=${encodeURIComponent(
-    `Story from a ${form.role} — LuminarGuide`
+    `Story from a ${form.role} — Luminar'sGuide`
   )}&body=${encodeURIComponent(
     `Name: ${form.name}\nRole: ${form.role}\n${photoName ? `\nDon't forget to attach: ${photoName}\n` : ''}\nStory:\n${form.story}`
   )}`;

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { programStages, stakeholderDetails, exclusivePillar } from '@/lib/siteConfig';
 import { GradeBandDeepDive, StakeholderIcon, ScenarioIcon } from '@/components/Header';
 
-export const metadata: Metadata = { title: 'About — LuminarGuide' };
+export const metadata: Metadata = { title: 'About — LuminarsGuide' };
 
 function RoleCard({ role }: { role: 'Mentors' | 'Parents' | 'Schools' | 'Counselors' }) {
   const detail = stakeholderDetails.find((s) => s.role === role);
@@ -51,7 +51,7 @@ export default function AboutPage() {
             A student who can solve any equation on the board but freezes when asked what they actually want. A group
             chat that goes silent for two days after a disagreement no one knows how to have out loud. A college
             application asking "what are your goals?" to someone who's never once been asked that by an adult.
-            LuminarGuide exists for exactly this — the growth a report card never measures — guided by trained
+            LuminarsGuide exists for exactly this — the growth a report card never measures — guided by trained
             mentors and experienced counselors who know each student as a person, not just a set of grades.
           </p>
         </div>
@@ -68,7 +68,7 @@ export default function AboutPage() {
               only see a fragment of the picture.
             </p>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              LuminarGuide is currently piloting <strong className="text-foreground">Stage 1: Intrinsic Development</strong> in
+              LuminarsGuide is currently piloting <strong className="text-foreground">Stage 1: Intrinsic Development</strong> in
               schools. Stages 2 and 3 build directly on top of it and are actively in development.
             </p>
           </div>

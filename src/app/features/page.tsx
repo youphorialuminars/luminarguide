@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { exclusivePillar } from '@/lib/siteConfig';
 import { ScenarioIcon } from '@/components/Header';
 
-export const metadata: Metadata = { title: 'Features — LuminarGuide' };
+export const metadata: Metadata = { title: 'Features — LuminarsGuide' };
 
 // What actually sets this apart — deliberately not a pillar list (that's
 // covered on /about) and not a repeat of the home page's cards. "People
@@ -20,7 +20,7 @@ const features = [
   {
     title: 'Beyond the Screen',
     description:
-      "Group tasks, mentor calls, offline classes and activities, and learning that stays fun and interactive — not a student alone with an app. Regional and national LuminarGuide meets let students see their growth shared and complemented by peers from far beyond their own city, too.",
+      "Group tasks, mentor calls, offline classes and activities, and learning that stays fun and interactive — not a student alone with an app. Regional and national Luminar'sGuide meets let students see their growth shared and complemented by peers from far beyond their own city, too.",
     detail: 'Group work, mentor calls, regional meets',
   },
   {

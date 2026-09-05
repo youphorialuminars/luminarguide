@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 
-export const metadata: Metadata = { title: 'FAQ — LuminarGuide' };
+export const metadata: Metadata = { title: 'FAQ — LuminarsGuide' };
 
 interface FaqItem {
   question: string;
@@ -20,7 +20,7 @@ const faqGroups: FaqGroup[] = [
     label: 'The Program',
     items: [
       {
-        question: 'What is LuminarGuide?',
+        question: 'What is LuminarsGuide?',
         answer:
           "A mentor-led development program for students in grades 6–12, focused on the growth that happens outside the textbook — self-awareness, resilience, and the real-world skills that grades don't measure. Every session is run by a trained mentor, with counselors, parents, and schools all working from the same picture.",
       },
@@ -32,7 +32,7 @@ const faqGroups: FaqGroup[] = [
       {
         question: "What's actually available right now, versus still being built?",
         answer:
-          "LuminarGuide develops students in three stages: Intrinsic Development (understanding yourself), Interpersonal Development (relating to others), and Social Development (contributing to society). Right now, we're piloting Stage 1 for Classes 6–8 and 9–10. Classes 11–12 pillars are designed but marked Coming Soon — not yet part of the live pilot. Stages 2 and 3 are further out on the roadmap and always presented as in development, never as available today.",
+          "Luminar'sGuide develops students in three stages: Intrinsic Development (understanding yourself), Interpersonal Development (relating to others), and Social Development (contributing to society). Right now, we're piloting Stage 1 for Classes 6–8 and 9–10. Classes 11–12 pillars are designed but marked Coming Soon — not yet part of the live pilot. Stages 2 and 3 are further out on the roadmap and always presented as in development, never as available today.",
       },
       {
         question: 'How is the program different for a Class 7 student versus a Class 9 student?',
@@ -75,7 +75,7 @@ const faqGroups: FaqGroup[] = [
     label: 'For Mentors, Counselors & Schools',
     items: [
       {
-        question: 'How do I apply to work with LuminarGuide as a mentor, counselor, or school?',
+        question: 'How do I apply to work with LuminarsGuide as a mentor, counselor, or school?',
         answer: (
           <>
             Visit <Link href="/get-started" className="text-primary hover:underline">Get Started</Link> and switch to "Work With Us." Mentors and counselors can tell us about their background directly; schools can reach
@@ -99,7 +99,7 @@ const faqGroups: FaqGroup[] = [
     label: 'Practical Questions',
     items: [
       {
-        question: 'How much does LuminarGuide cost?',
+        question: 'How much does LuminarsGuide cost?',
         answer: (
           <>
             We're finalizing pricing tiers. In the meantime, reach out through{' '}
