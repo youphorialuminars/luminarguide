@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { gradeBands, type GradeBand } from '@/lib/siteConfig';
+import { gradeBands, exclusivePillar, type GradeBand } from '@/lib/siteConfig';
 import { ScenarioIcon, HoverHintIcon, useTileDemo, tileDemoCursorStyle, GuideCursorIcon } from '@/components/Header';
 
 interface FeatureCard {
@@ -312,6 +312,28 @@ export default function FeaturesSection() {
             <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: 'var(--accent)' }} />
             <span className="text-xs text-muted-foreground">Move beyond grades — real challenges, addressed by age.</span>
           </div>
+        </div>
+
+        {/* First Aid & Emergency — the one pillar that isn't grade-banded,
+            called out on its own so it doesn't get lost inside the age
+            picker above. Available on request, for any grade. */}
+        <div className="bento-card flex flex-col sm:flex-row sm:items-center gap-4 mb-8">
+          <div className="icon-wrapper flex-shrink-0" style={{ backgroundColor: 'rgba(var(--accent-rgb), 0.12)', color: 'var(--accent)' }}>
+            <ScenarioIcon pillarId={exclusivePillar.id} size={22} />
+          </div>
+          <div className="flex-1">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h3 className="text-card-heading text-foreground">{exclusivePillar.name}</h3>
+              <span
+                className="text-[10px] font-600 uppercase tracking-wide px-2 py-0.5 rounded-full flex-shrink-0"
+                style={{ fontWeight: 600, backgroundColor: 'var(--muted)', color: 'var(--muted-foreground)' }}
+              >
+                Any grade, on request
+              </span>
+            </div>
+            <p className="text-sm leading-relaxed text-muted-foreground mt-1">{exclusivePillar.whyItMatters}</p>
+          </div>
+          <a href="/get-started" className="btn-secondary flex-shrink-0 whitespace-nowrap">Ask about it</a>
         </div>
 
         {/* Supporting cards: how the program actually runs day to day */}

@@ -166,7 +166,7 @@ export default function HeroSection() {
                       </svg>
                     </div>
                     <div>
-                      <p className="text-white text-xs font-600" style={{ fontWeight: 600 }}>Stage 1 · Classes 6–12</p>
+                      <p className="text-white text-xs font-600" style={{ fontWeight: 600 }}>Stage 1 · Classes 6–10</p>
                       <p className="text-white/60 text-xs">A glimpse of what we help students build</p>
                     </div>
                   </div>
@@ -206,7 +206,7 @@ export default function HeroSection() {
                   </div>
                   <div className="text-right">
                     <p className="text-white text-xs font-600" style={{ fontWeight: 600 }}>Piloting Now</p>
-                    <p className="text-white/60 text-xs">Classes 6–12 live</p>
+                    <p className="text-white/60 text-xs">Classes 6–10 live · 11–12 coming soon</p>
                   </div>
                 </div>
               </div>
