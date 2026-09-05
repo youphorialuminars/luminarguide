@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import ThemeSwitcher from '@/components/ThemeSwitcher';
-import { siteConfig, supabase, gradeBands, getGradeBand, type GradeBand, type Pillar } from '@/lib/siteConfig';
+import { siteConfig, supabase, gradeBands, getGradeBand, exclusivePillar, type GradeBand, type Pillar } from '@/lib/siteConfig';
 
 const navLinks = [
 { label: 'Home', href: '/' },
@@ -124,13 +124,15 @@ type ChatTurnData =
 {id: string;kind: 'band-choices';} |
 {id: string;kind: 'pillar-choices';bandId: GradeBand['id'];} |
 {id: string;kind: 'pillar-answer';bandId: GradeBand['id'];pillarId: string;} |
-{id: string;kind: 'next-steps';bandId: GradeBand['id'];};
+{id: string;kind: 'next-steps';bandId: GradeBand['id'];} |
+{id: string;kind: 'exclusive-answer';} |
+{id: string;kind: 'exclusive-next-steps';};
 
 let chatTurnCounter = 0;
 const nextChatId = () => `t${chatTurnCounter++}`;
 
 const CHAT_GREETING =
-"Hi, I'm the LuminarGuide Pillar Guide. Tell me which class your child is in, and I'll walk you through what we focus on and why it matters at that age.";
+"Hi, I'm the LuminarGuide Pillar Guide. Tell me which class your child is in, and I'll walk you through what we focus on and why it matters at that age — or ask me about First Aid & Emergency, which is available separately for any grade.";
 
 function PillarGuideChat() {
   const [open, setOpen] = useState(false);
@@ -195,6 +197,14 @@ function PillarGuideChat() {
     );
   };
 
+  const handleExclusiveSelect = () => {
+    push(
+      { id: nextChatId(), kind: 'user', text: exclusivePillar.name },
+      { id: nextChatId(), kind: 'exclusive-answer' },
+      { id: nextChatId(), kind: 'exclusive-next-steps' }
+    );
+  };
+
   return (
     <div className="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-3">
       {open &&
@@ -239,7 +249,7 @@ function PillarGuideChat() {
           {/* Transcript */}
           <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-3" style={{ backgroundColor: 'var(--muted)' }}>
             {turns.map((turn) =>
-          <ChatTurn key={turn.id} turn={turn} onSelectBand={handleBandSelect} onSelectPillar={handlePillarSelect} onMorePillars={handleMorePillars} onRestart={handleRestart} />
+          <ChatTurn key={turn.id} turn={turn} onSelectBand={handleBandSelect} onSelectPillar={handlePillarSelect} onMorePillars={handleMorePillars} onRestart={handleRestart} onSelectExclusive={handleExclusiveSelect} />
           )}
           </div>
 
@@ -286,14 +296,14 @@ function ChatTurn({
   onSelectBand,
   onSelectPillar,
   onMorePillars,
-  onRestart
+  onRestart,
+  onSelectExclusive
 
 
 
 
 
-
-}: {turn: ChatTurnData;onSelectBand: (bandId: GradeBand['id']) => void;onSelectPillar: (bandId: GradeBand['id'], pillarId: string) => void;onMorePillars: (bandId: GradeBand['id']) => void;onRestart: () => void;}) {
+}: {turn: ChatTurnData;onSelectBand: (bandId: GradeBand['id']) => void;onSelectPillar: (bandId: GradeBand['id'], pillarId: string) => void;onMorePillars: (bandId: GradeBand['id']) => void;onRestart: () => void;onSelectExclusive: () => void;}) {
   if (turn.kind === 'bot-text') {
     return (
       <div className="max-w-[88%] bg-card border border-border rounded-2xl rounded-tl-sm px-3.5 py-2.5 text-xs leading-relaxed text-foreground shadow-sm">
@@ -322,10 +332,17 @@ function ChatTurn({
           type="button"
           onClick={() => onSelectBand(band.id)}
           className="growth-pill cursor-pointer bg-card">
-          
+
             {band.gradesLabel}
           </button>
         )}
+        <button
+          type="button"
+          onClick={onSelectExclusive}
+          className="growth-pill cursor-pointer bg-card">
+
+          {exclusivePillar.name}
+        </button>
       </div>);
 
   }
@@ -400,13 +417,67 @@ function ChatTurn({
         <button type="button" onClick={onRestart} className="growth-pill cursor-pointer bg-card">
           Choose a different class
         </button>
+        <button type="button" onClick={onSelectExclusive} className="growth-pill cursor-pointer bg-card">
+          Ask about {exclusivePillar.name}
+        </button>
+      </div>);
+
+  }
+
+  if (turn.kind === 'exclusive-answer') {
+    return (
+      <div className="max-w-[92%] bg-card border border-border rounded-2xl rounded-tl-sm p-4 shadow-sm flex flex-col gap-2.5">
+        <div className="flex items-center gap-2">
+          <span
+            className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+            style={{ backgroundColor: 'rgba(22,33,44,0.08)', color: 'var(--primary)' }}>
+
+            <ScenarioIcon pillarId={exclusivePillar.id} size={16} />
+          </span>
+          <p className="text-sm font-700 text-foreground" style={{ fontWeight: 700 }}>
+            {exclusivePillar.name}
+          </p>
+          <span className="text-[10px] font-600 uppercase tracking-wide px-2 py-0.5 rounded-full" style={{ backgroundColor: 'var(--muted)', color: 'var(--muted-foreground)', fontWeight: 600 }}>
+            Any grade
+          </span>
+        </div>
+        <p className="text-xs leading-relaxed text-muted-foreground">
+          <span className="font-600 text-foreground" style={{ fontWeight: 600 }}>
+            The real challenge:{' '}
+          </span>
+          {exclusivePillar.challenge}
+        </p>
+        <p className="text-xs leading-relaxed text-muted-foreground">
+          <span className="font-600 text-foreground" style={{ fontWeight: 600 }}>
+            Why it matters:{' '}
+          </span>
+          {exclusivePillar.whyItMatters}
+        </p>
+        <p className="text-xs leading-relaxed text-muted-foreground">
+          <span className="font-600 text-foreground" style={{ fontWeight: 600 }}>
+            How to get it:{' '}
+          </span>
+          {exclusivePillar.availability}
+        </p>
+      </div>);
+
+  }
+
+  if (turn.kind === 'exclusive-next-steps') {
+    return (
+      <div className="flex flex-wrap gap-2">
+        <Link href="/get-started" className="growth-pill cursor-pointer bg-card">
+          Request it now →
+        </Link>
+        <button type="button" onClick={onRestart} className="growth-pill cursor-pointer bg-card">
+          Choose a class instead
+        </button>
       </div>);
 
   }
 
   return null;
 }
-
 /* ------------------------------------------------------------------------
  * PillarDiscoveryGame
  * An exploratory "Try the Approach" game covering all three live grade
@@ -567,12 +638,6 @@ export function ScenarioIcon({ pillarId, size = 22 }: {pillarId: string;size?: n
         <path d="M8.3 16.8l2 2 5-6" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
       </>,
 
-    'stream-discovery':
-    <>
-        <circle cx="12" cy="12" r="8.3" stroke="currentColor" strokeWidth="1.5" />
-        <path d="M15.2 8.8l-2 4.7-4.7 2 2-4.7 4.7-2z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
-      </>,
-
     'peer-navigation':
     <>
         <circle cx="7" cy="8.5" r="2.3" stroke="currentColor" strokeWidth="1.5" />
@@ -581,17 +646,33 @@ export function ScenarioIcon({ pillarId, size = 22 }: {pillarId: string;size?: n
         <path d="M8.7 10.1l2.4 4.3M15.3 10.1l-2.4 4.3M9.3 8.5h5.4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
       </>,
 
-    'digital-self-discovery':
+    'diversity-management':
     <>
-        <path d="M8.3 11.3a4 4 0 118 0c0 2.6-1.8 3.6-1.8 5.7H10c0-2.1-1.7-3.1-1.7-5.7z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
-        <path d="M9.8 19.5h4.4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-        <path d="M4 6.5l1.6 1.3M20 6.5l-1.6 1.3M12 3v2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+        <circle cx="12" cy="12" r="8.3" stroke="currentColor" strokeWidth="1.5" />
+        <path d="M12 3.7A8.3 8.3 0 0112 20.3M3.7 12h16.6" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+        <path d="M6.4 6.4c1.4 1.4 3.5 1.4 4.9 0M12.7 17.6c1.4-1.4 3.5-1.4 4.9 0" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
       </>,
 
-    'generation-gap':
+    'financial-literacy-consumer-psychology':
     <>
-        <path d="M3 6.3A1.4 1.4 0 014.4 4.9h6.4a1.4 1.4 0 011.4 1.4v4.6a1.4 1.4 0 01-1.4 1.4H7.6L5 14.5v-2.2H4.4A1.4 1.4 0 013 10.9V6.3z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
-        <path d="M12.2 9.9h6.4A1.4 1.4 0 0120 11.3v4.6a1.4 1.4 0 01-1.4 1.4h-.6v2.2l-2.6-2.2h-3.2a1.4 1.4 0 01-1.4-1.4V13" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
+        <rect x="3.5" y="6.5" width="17" height="12" rx="2" stroke="currentColor" strokeWidth="1.5" />
+        <path d="M3.5 10.2h17" stroke="currentColor" strokeWidth="1.5" />
+        <circle cx="15.5" cy="14.3" r="1.7" stroke="currentColor" strokeWidth="1.3" />
+      </>,
+
+    'ai-critical-thinking':
+    <>
+        <path d="M9 4.3a3 3 0 00-2.9 3.7A2.8 2.8 0 004.5 10.5a2.9 2.9 0 001.4 5.4c.1 1.7 1.5 3 3.2 3s3.1-1.3 3.2-3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M9 4.3c.5-.8 1.3-1.3 2.2-1.3 1.5 0 2.7 1.2 2.7 2.7v10.6c0 1.5-1.2 2.7-2.7 2.7-1 0-1.8-.5-2.3-1.3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+        <circle cx="17.5" cy="8" r="1" fill="currentColor" />
+        <circle cx="17.5" cy="14.5" r="1" fill="currentColor" />
+        <path d="M13.9 8h3.6M13.9 14.5h3.6" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" />
+      </>,
+
+    'first-aid-emergency':
+    <>
+        <path d="M12 3.2l6.5 2.8v4.8c0 4.1-2.8 7.5-6.5 8.6-3.7-1.1-6.5-4.5-6.5-8.6V6l6.5-2.8z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+        <path d="M12 9v6M9 12h6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
       </>,
 
     'performance-pressure':
@@ -1151,12 +1232,12 @@ const BAND_ROLE_SCENARIOS: Record<GradeBand['id'], Record<GameRoleId, GameScenar
 
     },
     {
-      pillarId: 'stream-discovery',
-      prompt: "You're picking a stream mostly because your best friend is picking it too.",
+      pillarId: 'diversity-management',
+      prompt: "A new classmate who dresses, prays, or speaks differently from most of your friend group has been sitting alone at lunch, and nobody's really talked to them yet.",
       approaches: [
-      { key: 'stepIn', action: 'List what you are actually good at and enjoy, separate from anyone else.', insight: "A solid first pass — the harder part is trusting the list once it's in front of you." },
-      { key: 'askGuide', action: "Ask yourself what you'd choose if no one else's choice existed at all.", insight: "Removing the comparison is usually the fastest way to hear your own answer." },
-      { key: 'stepBack', action: 'Go with the friend-group choice for now and see how it feels.', insight: "Risky here — a stream choice is one of the harder ones to casually reverse later." }]
+      { key: 'stepIn', action: 'Go sit with them today, without waiting for anyone else to.', insight: "A real, generous move — just don't make it a one-time performance; the second day matters more than the first." },
+      { key: 'askGuide', action: "Ask yourself what's actually making you hesitate to go over.", insight: "Naming the hesitation — awkwardness, not knowing what to say — is usually more useful than pushing past it blind." },
+      { key: 'stepBack', action: 'Assume someone else will make the first move.', insight: "Everyone assuming that at once is exactly how a new student ends up eating alone for a month." }]
 
     },
     {
@@ -1169,21 +1250,21 @@ const BAND_ROLE_SCENARIOS: Record<GradeBand['id'], Record<GameRoleId, GameScenar
 
     },
     {
-      pillarId: 'digital-self-discovery',
-      prompt: 'You catch yourself editing a photo for the fifth time before posting it, and it starts to feel less like fun and more like pressure.',
+      pillarId: 'financial-literacy-consumer-psychology',
+      prompt: "An online store's countdown timer says a discount ends in 10 minutes, and you find yourself about to buy something you hadn't planned on.",
       approaches: [
-      { key: 'stepIn', action: 'Post the unedited version instead, just to see how it feels.', insight: "A small, real experiment — worth noticing what actually happens versus what you feared." },
-      { key: 'askGuide', action: "Ask yourself who you're actually trying to look good for right now.", insight: "Usually reveals whether this is about you or about someone specific watching." },
-      { key: 'stepBack', action: "Keep editing as usual — it's not hurting anyone.", insight: "True in the short term — worth revisiting if the time spent keeps creeping up." }]
+      { key: 'stepIn', action: 'Buy it now before the timer runs out, like it says to.', insight: "That timer is designed to make you feel exactly this urgency — worth knowing that before you act on it." },
+      { key: 'askGuide', action: "Ask yourself if you'd still want this if there were no timer at all.", insight: "That question alone cuts through most manufactured urgency — it's designed to stop you from asking it." },
+      { key: 'stepBack', action: 'Close the tab and decide again tomorrow instead.', insight: "Usually the safest move — real deals tend to still be there, or close to it, the next day." }]
 
     },
     {
-      pillarId: 'generation-gap',
-      prompt: "You've stopped telling your parents what's actually going on at school because it feels pointless to explain.",
+      pillarId: 'ai-critical-thinking',
+      prompt: 'An AI tool gives you a confident, detailed answer to a factual question, but something about it feels slightly off.',
       approaches: [
-      { key: 'stepIn', action: 'Sit down and try to explain one real thing to them this week.', insight: "Braver than it sounds — the first attempt is usually the hardest one." },
-      { key: 'askGuide', action: 'Ask yourself what specifically makes it feel pointless to tell them.', insight: "Often it's not that they wouldn't care — it's that you doubt they'd understand, which is a different problem." },
-      { key: 'stepBack', action: 'Keep things surface-level with them for now.', insight: "Understandable short-term — just know the distance tends to grow the longer it's the default." }]
+      { key: 'stepIn', action: 'Use the answer as-is — it sounded thorough and confident.', insight: "Confidence isn't the same as accuracy — AI tools can sound certain while being completely wrong." },
+      { key: 'askGuide', action: 'Ask yourself how you would actually check whether this answer is true.', insight: "That instinct to verify is the whole skill this pillar is built around — practice it here." },
+      { key: 'stepBack', action: 'Ignore the feeling and move on to something else.', insight: "Worth trusting that instinct — it's often catching something real that's easy to override too quickly." }]
 
     }],
 
@@ -1198,12 +1279,12 @@ const BAND_ROLE_SCENARIOS: Record<GradeBand['id'], Record<GameRoleId, GameScenar
 
     },
     {
-      pillarId: 'stream-discovery',
-      prompt: "A student tells you they're choosing a stream mainly because their parents expect it, not because they want it.",
+      pillarId: 'diversity-management',
+      prompt: "A mentee tells you, a little defensively, that they don't really 'get' a classmate from a very different background and mostly just avoid them.",
       approaches: [
-      { key: 'stepIn', action: "Help them build a case for what they'd choose instead, to bring to their parents.", insight: "Useful groundwork — just make sure it's genuinely their case, not one you've built for them." },
-      { key: 'askGuide', action: "Ask what they'd choose if their parents' opinion didn't exist at all.", insight: "Gets at their real answer before the family conversation even happens." },
-      { key: 'stepBack', action: 'Let them make the family-pleasing choice and revisit it later.', insight: "Sometimes the reality — just make sure 'later' is a real conversation, not just a hope." }]
+      { key: 'stepIn', action: 'Push them directly to spend real time with that classmate this week.', insight: "Can work — just make sure it doesn't feel like an assignment they're resentful about completing." },
+      { key: 'askGuide', action: 'Ask what specifically feels unfamiliar or uncomfortable about that classmate.', insight: "Getting the real, specific discomfort named is what actually lets you work with it — vague avoidance doesn't move on its own." },
+      { key: 'stepBack', action: "Let it go — plenty of people just don't click.", insight: "Sometimes true, but worth a second look when 'don't click' seems to track a group, not a person." }]
 
     },
     {
@@ -1734,6 +1815,7 @@ export function PillarDiscoveryGame() {
               </p>
               <p className="text-[11px] text-muted-foreground truncate">
                 {band?.gradesLabel} &middot; {GAME_ROLES.find((r) => r.id === roleId)?.label} &middot; {pillarLabel(scenario.pillarId)}
+                {band?.status !== 'live' && <> &middot; {band?.statusLabel}</>}
               </p>
             </div>
           </div>
@@ -1758,7 +1840,7 @@ export function PillarDiscoveryGame() {
             key={b.id}
             type="button"
             onClick={() => selectBand(b.id)}
-            className="flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-600 whitespace-nowrap transition-colors"
+            className="flex-shrink-0 flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-600 whitespace-nowrap transition-colors"
             style={{
               fontWeight: 600,
               backgroundColor: bandId === b.id ? 'var(--accent)' : 'var(--card)',
@@ -1767,6 +1849,14 @@ export function PillarDiscoveryGame() {
             }}>
 
               {b.gradesLabel}
+              {b.status !== 'live' &&
+              <span
+                className="text-[9px] font-700 uppercase tracking-wide px-1.5 py-0.5 rounded-full"
+                style={{ fontWeight: 700, backgroundColor: 'rgba(0,0,0,0.12)' }}>
+
+                Soon
+              </span>
+              }
             </button>
           )}
         </div>

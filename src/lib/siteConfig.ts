@@ -28,12 +28,21 @@ import { createClient } from '@supabase/supabase-js';
  *   - Classes 6–8  (~11–13 yrs): identity formation begins, social anxiety,
  *     fear of speaking up / being judged, first real technology & friendship
  *     responsibilities. Live in the pilot.
- *   - Classes 9–10 (~14–16 yrs): board-exam pressure intensifies, stream/subject
- *     decisions loom, peer comparison peaks, identity exploration is in full
- *     swing (Erikson's identity-vs-role-confusion). Live in the pilot.
+ *   - Classes 9–10 (~14–16 yrs): board-exam pressure intensifies, peer
+ *     comparison peaks, and — new for this age band — real diversity, real
+ *     money decisions, and everyday AI tools all arrive at once, none of them
+ *     with any explicit guidance. Live in the pilot.
  *   - Classes 11–12 (~16–18 yrs): high-stakes qualifying exams, the transition
  *     to college/career and a much bigger world, independence, and the first
- *     real experience of public rejection or failure. Live in the pilot.
+ *     real experience of public rejection or failure. NOT in the pilot yet —
+ *     present this band everywhere as "Coming Soon," never as live.
+ *
+ * ONE PILLAR SITS OUTSIDE this grade-band structure entirely: First Aid &
+ * Emergency (see `exclusivePillar` below). It isn't age-banded because basic
+ * emergency-response judgment doesn't have the same kind of age cutoff a
+ * stream choice or a first relationship does — a parent or a student can ask
+ * for it directly, for any grade, rather than it being bundled into one
+ * band's five pillars.
  *
  * Edit the content below to update copy everywhere it's used.
  * ---------------------------------------------------------------------
@@ -217,33 +226,15 @@ export const gradeBands: GradeBand[] = [
     status: 'live',
     statusLabel: 'Live in Pilot',
     ageContext:
-      "Board exams and stream choices arrive right as identity exploration is peaking (Erikson's identity-vs-role-confusion stage). Academic pressure and self-worth start to fuse for the first time — this band's pillars are being built to pull them apart.",
+      "Board-exam pressure intensifies right as identity exploration peaks (Erikson's identity-vs-role-confusion stage) — and, often for the first time, students are also navigating real diversity, real money decisions, and AI tools that answer before they've had to think something through themselves. Five pillars meet them exactly here.",
     challenges: [
       'Mounting board-exam pressure and fear of not measuring up',
       'Comparing themselves to classmates over grades, looks, and popularity',
-      'Communication issues — struggling to express disagreement or ask for help',
-      "Choosing a stream or subjects under pressure from family or peers, before they've had time to know themselves",
-      'Intensifying mood swings and stress that go unspoken',
+      'Navigating real differences in background, belief, and identity with little explicit guidance on how',
+      'Making real spending decisions for the first time, with no training in money or in how marketing targets them',
+      'Leaning on AI tools for homework and decisions without the judgment to know what to trust',
     ],
     pillars: [
-      {
-        id: 'exam-resilience',
-        name: 'Exam Resilience',
-        icon: '📝',
-        short: 'Facing board-exam pressure without letting one test define self-worth.',
-        challenge: 'As academic stakes rise sharply, a single test result starts to feel like a verdict on who a student is, not just how they performed.',
-        whyItMatters:
-          "As academic stakes rise sharply in Classes 9 and 10, students who haven't been taught to separate their effort from a single result are far more prone to test anxiety, burnout, and a fragile sense of self-worth tied entirely to marks. This pillar teaches structured coping — reframing a bad result as feedback, managing pre-exam anxiety, and protecting identity from being reduced to a percentage.",
-      },
-      {
-        id: 'stream-discovery',
-        name: 'Stream & Self-Discovery',
-        icon: '🧭',
-        short: 'Choosing subjects and streams from genuine self-knowledge, not panic or comparison.',
-        challenge: "Stream selection is often the first decision that feels permanent — made under pressure, without real time to reflect.",
-        whyItMatters:
-          "Psychologically, forcing a life-shaping choice before genuine identity exploration often produces what developmental psychologists call foreclosure — picking a stream to please parents or match a friend group rather than out of self-knowledge. This pillar slows the decision down long enough for a student to reflect honestly on their own interests and strengths first.",
-      },
       {
         id: 'peer-navigation',
         name: 'Peer Navigation',
@@ -254,22 +245,40 @@ export const gradeBands: GradeBand[] = [
           "Teaching boundary-setting and healthy comparison habits now prevents patterns of people-pleasing, unhealthy competitiveness, or peer-pressure-driven risk-taking later. It also gives students language for the communication issues that come with disagreeing with a friend, saying no, or asking for help without feeling weak.",
       },
       {
-        id: 'digital-self-discovery',
-        name: 'Digital & Self-Discovery',
-        icon: '🎭',
-        short: 'Understanding the gap between real life and "reel" life — and taking responsibility for a healthy digital identity.',
-        challenge: 'Social media rewards a curated, highlight-reel version of a life that rarely matches how a student actually feels day to day — and at 14 to 16, the line between the two starts to blur into their sense of self.',
+        id: 'exam-resilience',
+        name: 'Exam Resilience',
+        icon: '📝',
+        short: 'Facing board-exam pressure without letting one test define self-worth.',
+        challenge: 'As academic stakes rise sharply, a single test result starts to feel like a verdict on who a student is, not just how they performed.',
         whyItMatters:
-          "Festinger's social comparison theory explains why constant exposure to curated \"highlight reels\" quietly erodes self-esteem — students compare their own unfiltered inner life to everyone else's edited best moments and consistently come out feeling short-changed. This pillar builds the media literacy and self-awareness to recognize that gap for what it is, take real responsibility for how they show up online, and keep their sense of self anchored in more than a feed.",
+          "As academic stakes rise sharply in Classes 9 and 10, students who haven't been taught to separate their effort from a single result are far more prone to test anxiety, burnout, and a fragile sense of self-worth tied entirely to marks. This pillar teaches structured coping — reframing a bad result as feedback, managing pre-exam anxiety, and protecting identity from being reduced to a percentage.",
       },
       {
-        id: 'generation-gap',
-        name: 'Bridging the Generation Gap',
-        icon: '🌉',
-        short: 'Learning to communicate with parents honestly, even across a real generational divide.',
-        challenge: "A student's instinct at this age is to stop telling parents what's actually going on — not out of secrecy, but because the gap in lived experience makes it feel pointless to even try.",
+        id: 'diversity-management',
+        name: 'Diversity Management',
+        icon: '🌍',
+        short: 'Navigating differences in background, belief, and identity with real respect, not just tolerance.',
+        challenge: 'Classrooms, friend groups, and online spaces at this age are more genuinely diverse than any a student has been part of before — and no one has explicitly taught them how to navigate real difference, only how to coexist alongside it.',
         whyItMatters:
-          "Research on adolescent-parent communication consistently shows that teens don't stop confiding in parents because they stop caring what parents think — they stop because they doubt they'll be understood. This pillar builds the specific skill of translating a real problem across a generational and experiential gap: naming what's actually wrong, choosing the right moment, and staying in the conversation instead of shutting down. Keeping that channel open, even imperfectly, remains one of the strongest protective factors through the teenage years.",
+          "Contact theory in social psychology shows that proximity to difference doesn't automatically build understanding — it takes structured reflection to turn exposure into genuine respect instead of quiet discomfort or unspoken stereotype. This pillar gives Class 9–10 students real practice engaging across differences in background, belief, and identity, so diversity becomes a strength they know how to work with, not just a fact of the room they're in.",
+      },
+      {
+        id: 'financial-literacy-consumer-psychology',
+        name: 'Financial Literacy and Consumer Psychology',
+        icon: '💳',
+        short: 'Understanding money, spending, and the psychological tactics designed to influence both.',
+        challenge: "Students at this age are making real spending decisions — pocket money, online purchases, subscriptions — for the first time, with no training in how money works or in how marketing is built to target exactly this age group's impulses.",
+        whyItMatters:
+          "Behavioral economics research (Kahneman and Tversky's work on decision-making under influence) shows most poor financial choices aren't about intelligence — they're about never having been taught to notice the psychological levers being pulled: urgency, social proof, sunk cost. This pillar builds practical financial literacy — budgeting, saving, understanding debt — alongside the consumer psychology to recognize manipulation in advertising and pricing before it hardens into a lifelong habit.",
+      },
+      {
+        id: 'ai-critical-thinking',
+        name: 'AI and Critical Thinking',
+        icon: '🧠',
+        short: 'Using AI tools with real judgment — knowing what to trust, question, and never outsource.',
+        challenge: "AI tools now answer a student's question before they've finished forming it — homework help, advice, even emotional support — often before a student has the judgment to know what's actually reliable.",
+        whyItMatters:
+          "As AI becomes a default first stop for information and even decisions, the students who thrive won't be the ones who avoid it or the ones who defer to it blindly — they'll be the ones who've built genuine critical thinking: verifying claims, recognizing AI's confident mistakes, and knowing which judgments should stay entirely their own. This pillar builds that judgment deliberately, at exactly the age these tools are becoming a permanent part of how they learn and decide.",
       },
     ],
   },
@@ -279,8 +288,8 @@ export const gradeBands: GradeBand[] = [
     gradesShort: '11–12',
     bandLabel: 'Launch Years',
     ageRange: 'Roughly 16–18 years old',
-    status: 'live',
-    statusLabel: 'Live in Pilot',
+    status: 'in-development',
+    statusLabel: 'Coming Soon',
     ageContext:
       "The highest-stakes exams of a student's school life collide with the first real decisions about an independent future — college, career, and a much bigger world. This band's pillars are being built to carry students through that launch.",
     challenges: [
@@ -339,6 +348,32 @@ export const gradeBands: GradeBand[] = [
     ],
   },
 ];
+
+/**
+ * EXCLUSIVE PILLAR: FIRST AID & EMERGENCY
+ * Deliberately outside the Classes 6–8 / 9–10 / 11–12 structure above. Every
+ * other pillar is scoped to a grade band because the underlying challenge
+ * itself changes with age (a stream choice, a first relationship); basic
+ * emergency-response judgment doesn't work that way — recognizing an
+ * emergency, calling for help correctly, and basic first aid until trained
+ * help arrives matter just as much at 11 as at 18. So instead of folding a
+ * thinner version of it into every band's five pillars, it's offered as one
+ * standalone track that a parent OR the student themselves can request
+ * directly (via /get-started or /contact), independent of grade or band
+ * status — including for Classes 11–12 households, even while that band's
+ * own five pillars are still "Coming Soon."
+ */
+export const exclusivePillar: Pillar & { availability: string } = {
+  id: 'first-aid-emergency',
+  name: 'First Aid & Emergency',
+  icon: '🚑',
+  short: 'Practical first-aid and emergency-response skills, requested separately for any grade.',
+  challenge:
+    "Most students go through school without ever practicing what to actually do in the first minute of a real emergency — a bad fall, a burn, someone choking, a friend fainting — because it isn't anyone's assigned subject.",
+  whyItMatters:
+    "Emergency-response research consistently shows the biggest factor in a good outcome is simply whether the nearest person knew what to do in the first sixty seconds — not whether professional help was minutes away. This pillar builds exactly that: recognizing a real emergency, calling for help correctly, and practical first aid until trained help arrives. It's offered as a standalone track, on request, rather than folded into one grade band, because that judgment matters the same way at every age.",
+  availability: 'Available on request, for any grade — ask us directly on the Get Started page.',
+};
 
 /**
  * PRICING
