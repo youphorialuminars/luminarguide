@@ -1,8 +1,8 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { programStages, stakeholderDetails } from '@/lib/siteConfig';
-import { GradeBandDeepDive, StakeholderIcon } from '@/components/Header';
+import { programStages, stakeholderDetails, exclusivePillar } from '@/lib/siteConfig';
+import { GradeBandDeepDive, StakeholderIcon, ScenarioIcon } from '@/components/Header';
 
 export const metadata: Metadata = { title: 'About — LuminarGuide' };
 
@@ -126,6 +126,32 @@ export default function AboutPage() {
       {/* Grade band deep dives — one tabbed section instead of three
           stacked ones, see GradeBandDeepDive in Header.tsx for why. */}
       <GradeBandDeepDive />
+
+      {/* First Aid & Emergency — deliberately shown right after the
+          grade-band breakdown, not inside it, since this is the one pillar
+          that isn't tied to a band at all. */}
+      <section className="py-16 bg-background">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="bg-card border border-border rounded-2xl p-7 flex flex-col sm:flex-row sm:items-center gap-4">
+            <span className="flex-shrink-0" style={{ color: 'var(--primary)' }}>
+              <ScenarioIcon pillarId={exclusivePillar.id} size={28} />
+            </span>
+            <div className="flex-1">
+              <div className="flex items-center gap-2 flex-wrap mb-1">
+                <p className="text-sm font-700 text-foreground" style={{ fontWeight: 700 }}>{exclusivePillar.name}</p>
+                <span
+                  className="text-[10px] font-600 uppercase tracking-wide px-2 py-0.5 rounded-full"
+                  style={{ fontWeight: 600, backgroundColor: 'var(--muted)', color: 'var(--muted-foreground)' }}
+                >
+                  Outside the grade bands — any age
+                </span>
+              </div>
+              <p className="text-sm leading-relaxed text-muted-foreground">{exclusivePillar.whyItMatters}</p>
+            </div>
+            <Link href="/get-started" className="btn-secondary flex-shrink-0 whitespace-nowrap">Ask about it</Link>
+          </div>
+        </div>
+      </section>
 
       <section className="py-16 bg-muted">
         <div className="max-w-6xl mx-auto px-6">

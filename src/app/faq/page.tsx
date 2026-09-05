@@ -32,12 +32,17 @@ const faqGroups: FaqGroup[] = [
       {
         question: "What's actually available right now, versus still being built?",
         answer:
-          "LuminarGuide develops students in three stages: Intrinsic Development (understanding yourself), Interpersonal Development (relating to others), and Social Development (contributing to society). Right now, we're piloting Stage 1 only, across all three grade bands — Classes 6–8, 9–10, and 11–12. Stages 2 and 3 are on the roadmap and always presented as in development, never as available today.",
+          "LuminarGuide develops students in three stages: Intrinsic Development (understanding yourself), Interpersonal Development (relating to others), and Social Development (contributing to society). Right now, we're piloting Stage 1 for Classes 6–8 and 9–10. Classes 11–12 pillars are designed but marked Coming Soon — not yet part of the live pilot. Stages 2 and 3 are further out on the roadmap and always presented as in development, never as available today.",
       },
       {
-        question: 'How is the program different for a Class 7 student versus a Class 12 student?',
+        question: 'How is the program different for a Class 7 student versus a Class 9 student?',
         answer:
-          "Each grade band works through a different set of pillars, chosen for what students in that age range are actually facing — things like speaking up in class and digital habits in Classes 6–8, board-exam pressure and stream selection in Classes 9–10, and college transitions and independence in Classes 11–12. You can see the full breakdown for any grade on the About page.",
+          "Each grade band works through a different set of pillars, chosen for what students in that age range are actually facing — things like speaking up in class and digital habits in Classes 6–8, and board-exam pressure, peer navigation, diversity, financial literacy, and AI literacy in Classes 9–10. Classes 11–12 pillars — covering college transitions and independence — are designed but marked Coming Soon. You can see the full breakdown for any grade on the About page.",
+      },
+      {
+        question: 'Is First Aid & Emergency part of a specific grade band?',
+        answer:
+          "No — it's the one pillar that sits outside the Classes 6–8 / 9–10 / 11–12 structure. Basic emergency-response judgment matters the same way at every age, so it's offered as a standalone track that a parent or the student themselves can request directly through Get Started, for any grade, rather than being bundled into one band's five pillars.",
       },
     ],
   },

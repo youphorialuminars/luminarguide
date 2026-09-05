@@ -50,7 +50,7 @@ const FAVICON_BY_THEME = {
   'teal-dark': 'https://ldkwhimqenxkloibhwzt.supabase.co/storage/v1/object/public/Branding/favicondark.png',
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" data-theme="violet" className={`${publicSans.variable} ${lora.variable}`} suppressHydrationWarning>
       <head>

@@ -38,7 +38,7 @@ export default function ThemeSwitcher() {
     setActive(theme);
   }, []);
 
-  const applyTheme = (id) => {
+  const applyTheme = (id: string) => {
     document.documentElement.setAttribute('data-theme', id);
     localStorage.setItem('luminarsguide-theme', id);
     const link = document.getElementById('theme-favicon');
