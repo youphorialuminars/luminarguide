@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { siteConfig } from '@/lib/siteConfig';
 
-export const metadata: Metadata = { title: 'Contact — LuminarGuide' };
+export const metadata: Metadata = { title: 'Contact — LuminarsGuide' };
 
 export default function ContactPage() {
   return (

@@ -22,7 +22,7 @@ export default function AboutSection() {
           <p className="text-base leading-relaxed text-muted-foreground">
             A birthday card that says "so proud of you" with no real conversation behind it about how they're
             actually doing. A parent-teacher meeting that covers grades and behavior but never once asks who this
-            student is becoming. LuminarGuide exists for the part of growing up that happens in between.
+            student is becoming. LuminarsGuide exists for the part of growing up that happens in between.
           </p>
         </div>
 

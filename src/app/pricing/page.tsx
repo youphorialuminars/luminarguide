@@ -2,7 +2,7 @@ import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-export const metadata: Metadata = { title: 'Pricing — LuminarGuide' };
+export const metadata: Metadata = { title: 'Pricing — LuminarsGuide' };
 
 // Pricing is deliberately off the public site for now (nav + footer links
 // removed) while we're pitching schools and residential communities and

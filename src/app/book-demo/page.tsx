@@ -2,7 +2,7 @@ import React from 'react';
 import type { Metadata } from 'next';
 import { siteConfig } from '@/lib/siteConfig';
 
-export const metadata: Metadata = { title: 'Book a Demo — LuminarGuide' };
+export const metadata: Metadata = { title: 'Book a Demo — LuminarsGuide' };
 
 export default function BookDemoPage() {
   return (

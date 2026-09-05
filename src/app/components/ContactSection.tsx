@@ -117,7 +117,7 @@ export default function ContactSection() {
                   id="message"
                   name="message"
                   rows={5}
-                  placeholder="Tell us about your school, the number of students, and what you're hoping to achieve with LuminarGuide..."
+                  placeholder="Tell us about your school, the number of students, and what you're hoping to achieve with Luminar'sGuide..."
                   value={formData.message}
                   onChange={handleChange}
                   className="contact-input"
