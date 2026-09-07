@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { gradeBands, type GradeBand } from '@/lib/siteConfig';
+import { gradeBands, exclusivePillar, type GradeBand } from '@/lib/siteConfig';
+import { ScenarioIcon, HoverHintIcon, useTileDemo, tileDemoCursorStyle, GuideCursorIcon } from '@/components/Header';
 
 interface FeatureCard {
   title: string;
@@ -33,12 +34,12 @@ const features: FeatureCard[] = [
   {
     title: 'Beyond the Screen',
     description:
-      "Group tasks, mentor calls, offline classes and activities, and learning that stays fun and interactive — not a student alone with an app. Intra-school and inter-school events let students see their growth shared and complemented by others, too.",
+      "Group tasks, mentor calls, offline classes and activities, and learning that stays fun and interactive — not a student alone with an app. Regional and national Luminar'sGuide meets let students see their growth shared and complemented by peers from far beyond their own city, too.",
     accentColor: 'rgba(59,130,246,0.08)',
     iconColor: '#3B82F6',
-    detail: 'Group work, mentor calls, school events',
+    detail: 'Group work, mentor calls, regional meets',
     deepDive:
-      "A pillar isn't learned by reading about it — it's practiced. That's why sessions include group tasks worked through with classmates, live mentor calls, and offline activities, not just screen time. Intra-school and inter-school events carry the same growth out into the wider community, so a student's progress is something they see reflected in others, not something that happens to them alone.",
+      "A pillar isn't learned by reading about it — it's practiced. That's why sessions include group tasks worked through with classmates, live mentor calls, and offline activities, not just screen time. Regional and national Luminar'sGuide meets carry the same growth out into a much wider community, so a student's progress is something they see reflected in peers across cities, not something that happens to them alone.",
     icon: (
       <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
         <circle cx="7" cy="7" r="3" stroke="currentColor" strokeWidth="1.5" />
@@ -51,7 +52,7 @@ const features: FeatureCard[] = [
     title: 'Longitudinal Progress Tracking',
     description:
       "Track each student's growth over weeks, months, and years. Spot trends early, celebrate milestones, and build a rich developmental record that travels with the student from Class 6 to Class 12.",
-    accentColor: 'rgba(166,126,51,0.1)',
+    accentColor: 'rgba(var(--accent-rgb), 0.1)',
     iconColor: 'var(--accent)',
     detail: 'Full history from Class 6 onward',
     deepDive:
@@ -65,47 +66,50 @@ const features: FeatureCard[] = [
   },
 ];
 
-// A small static cursor/pointer icon used anywhere the page hints "hover or
-// tap this" — replaces an animated 👆 emoji that read as childish and, at a
-// glance, was easy to mistake for something else entirely.
-function HoverHintIcon() {
-  return (
-    <span className="relative inline-flex items-center justify-center w-4 h-4 flex-shrink-0">
-      <span
-        className="absolute w-2 h-2 rounded-full animate-tap-ripple"
-        style={{ backgroundColor: 'var(--accent)', bottom: -1, left: 0 }}
-      />
-      <svg
-        width="14"
-        height="14"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="relative z-10 animate-tap-hand"
-      >
-        <rect x="9.3" y="2.5" width="3.2" height="10" rx="1.6" />
-        <rect x="12.3" y="5" width="3" height="7.8" rx="1.5" />
-        <rect x="15.2" y="6.6" width="2.8" height="6.4" rx="1.4" />
-        <rect x="4.9" y="12.6" width="4.4" height="2.8" rx="1.4" transform="rotate(-28 4.9 12.6)" />
-        <path d="M7.3 14.2v1.5c0 3.1 2.5 5.7 5.7 5.7h.5c3 0 5.1-2.2 5.1-5.4v-3.4" />
-      </svg>
-    </span>
-  );
-}
+// HoverHintIcon (the small "there's more here" affordance icon) now lives in
+// Header.tsx and is imported above — see the comment there for why this used
+// to be a locally-duplicated hand icon and isn't anymore.
 
 export default function FeaturesSection() {
   const [activeTile, setActiveTile] = useState<string | null>(null);
   const [activeBand, setActiveBand] = useState<GradeBand['id']>('middle');
 
+  // Plays on a loop, automatically, on the very first pillar tile — a small
+  // cursor slides on, "clicks" the tile, holds so the flipped-over
+  // explanation is actually readable, then leaves and rests before playing
+  // again. Teaches a first-time visitor what "hover or tap" means by
+  // showing it, rather than relying on the static hint text alone. The
+  // five pillar tiles are near-identical, so one demo on the first is
+  // enough to show the whole set behaves the same way.
+  const pillarDemo = useTileDemo(true);
+
+  // The three "How It Runs" cards each say something different, so seeing
+  // one flip doesn't tell a visitor the others do too — each gets its own
+  // demo instead of just the first. Staggered start times (1.1s / 2.4s /
+  // 3.7s) so they play as a gentle rolling sequence rather than three
+  // cursors moving in lockstep.
+  const cardDemo0 = useTileDemo(true, 1100);
+  const cardDemo1 = useTileDemo(true, 2400);
+  const cardDemo2 = useTileDemo(true, 3700);
+  const cardDemos = [cardDemo0, cardDemo1, cardDemo2];
+
+  // Once a visitor has actually flipped anything themselves, they've
+  // learned the pattern — stop every demo still running, not just the one
+  // they touched.
+  const cancelAllDemos = () => {
+    pillarDemo.cancel();
+    cardDemo0.cancel();
+    cardDemo1.cancel();
+    cardDemo2.cancel();
+  };
+
   const toggleTile = (id: string) => {
+    cancelAllDemos();
     setActiveTile((prev) => (prev === id ? null : id));
   };
 
-  const flipTransform = (id: string) =>
-    activeTile === id ? '[transform:rotateY(180deg)]' : 'group-hover:[transform:rotateY(180deg)]';
+  const flipTransform = (id: string, forceFlipped?: boolean) =>
+    activeTile === id || forceFlipped ? '[transform:rotateY(180deg)]' : 'group-hover:[transform:rotateY(180deg)]';
 
   const band = gradeBands.find((b) => b.id === activeBand) ?? gradeBands[0];
 
@@ -117,22 +121,35 @@ export default function FeaturesSection() {
   // to hold it instead of truncating.
   const renderPillarTile = (pillar: (typeof band.pillars)[number]) => {
     const id = `pillar-${band.id}-${pillar.id}`;
+    const isDemoTile = pillar.id === band.pillars[0]?.id;
+    const isFlipped = activeTile === id || (isDemoTile && pillarDemo.isFlipped);
     return (
       <div
         key={id}
-        className="group/tile [perspective:1000px] cursor-pointer"
+        className="group/tile [perspective:1000px] cursor-pointer relative"
         onClick={(e) => {
           e.stopPropagation();
           toggleTile(id);
         }}
+        onMouseEnter={cancelAllDemos}
       >
+        {isDemoTile && pillarDemo.phase !== 'done' && (
+          <div
+            className="pointer-events-none absolute z-20"
+            style={{ right: '8%', bottom: '10%', ...tileDemoCursorStyle(pillarDemo.phase) }}
+          >
+            <GuideCursorIcon pressed={pillarDemo.phase === 'pressing'} />
+          </div>
+        )}
         <div
           className={`relative w-full grid transition-transform duration-500 [transform-style:preserve-3d] ${
-            activeTile === id ? '[transform:rotateY(180deg)]' : 'group-hover/tile:[transform:rotateY(180deg)]'
+            isFlipped ? '[transform:rotateY(180deg)]' : 'group-hover/tile:[transform:rotateY(180deg)]'
           }`}
         >
           <div className="[grid-area:1/1] [backface-visibility:hidden] flex flex-col items-center justify-center gap-2 text-center p-4 rounded-xl border border-border bg-card min-h-[160px]">
-            <span className="text-2xl">{pillar.icon}</span>
+            <span style={{ color: 'var(--primary)' }}>
+              <ScenarioIcon pillarId={pillar.id} size={26} />
+            </span>
             <span className="text-sm font-600 text-foreground leading-tight" style={{ fontWeight: 600 }}>
               {pillar.name}
             </span>
@@ -151,9 +168,23 @@ export default function FeaturesSection() {
     );
   };
 
-  const renderFeatureCard = (feature: FeatureCard, id: string) => (
-    <div className="group min-h-[280px] [perspective:1200px] cursor-pointer" onClick={() => toggleTile(id)}>
-      <div className={`relative w-full h-full transition-transform duration-500 [transform-style:preserve-3d] ${flipTransform(id)}`}>
+  const renderFeatureCard = (feature: FeatureCard, id: string, demoIndex: number) => {
+    const demo = cardDemos[demoIndex];
+    return (
+    <div
+      className="group min-h-[280px] [perspective:1200px] cursor-pointer relative"
+      onClick={() => toggleTile(id)}
+      onMouseEnter={cancelAllDemos}
+    >
+      {demo.phase !== 'done' && (
+        <div
+          className="pointer-events-none absolute z-20"
+          style={{ right: '6%', bottom: '10%', ...tileDemoCursorStyle(demo.phase) }}
+        >
+          <GuideCursorIcon pressed={demo.phase === 'pressing'} />
+        </div>
+      )}
+      <div className={`relative w-full h-full transition-transform duration-500 [transform-style:preserve-3d] ${flipTransform(id, demo.isFlipped)}`}>
         <div className="absolute inset-0 [backface-visibility:hidden] bento-card flex flex-col gap-5 min-h-[280px]">
           <div className="icon-wrapper" style={{ backgroundColor: feature.accentColor, color: feature.iconColor }}>
             {feature.icon}
@@ -178,7 +209,8 @@ export default function FeaturesSection() {
         </div>
       </div>
     </div>
-  );
+    );
+  };
 
   return (
     <section id="features" className="py-20 bg-muted scroll-mt-16">
@@ -187,13 +219,16 @@ export default function FeaturesSection() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div className="max-w-xl">
             <p className="text-xs font-600 text-primary uppercase tracking-widest mb-3" style={{ fontWeight: 600 }}>
-              The Program
+              The Pillars
             </p>
             <h2 className="text-section-heading text-foreground mb-4">
               Five pillars. Three stages. One student, followed the whole way.
             </h2>
             <p className="text-base leading-relaxed text-muted-foreground">
-              What a student is working on changes with age — so the program does too. Pick a grade band below to see its five pillars, backed by trained mentors, experienced counselors, and peer group work at every stage.
+              A Tuesday session that's just a mentor and a student talking, no textbook involved. A Thursday task
+              worked through with four classmates over video call. A parent and a counselor comparing notes by the
+              weekend. None of it looks like homework — all of it is the program. Pick a grade band below to see
+              which five pillars a session like this is actually built around.
             </p>
           </div>
           <a href="#contact" className="flex items-center gap-2 text-sm font-600 text-primary hover:text-secondary-foreground transition-colors group whitespace-nowrap" style={{ fontWeight: 600 }}>
@@ -279,14 +314,36 @@ export default function FeaturesSection() {
           </div>
         </div>
 
+        {/* First Aid & Emergency — the one pillar that isn't grade-banded,
+            called out on its own so it doesn't get lost inside the age
+            picker above. Available on request, for any grade. */}
+        <div className="bento-card flex flex-col sm:flex-row sm:items-center gap-4 mb-8">
+          <div className="icon-wrapper flex-shrink-0" style={{ backgroundColor: 'rgba(var(--accent-rgb), 0.12)', color: 'var(--accent)' }}>
+            <ScenarioIcon pillarId={exclusivePillar.id} size={22} />
+          </div>
+          <div className="flex-1">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h3 className="text-card-heading text-foreground">{exclusivePillar.name}</h3>
+              <span
+                className="text-[10px] font-600 uppercase tracking-wide px-2 py-0.5 rounded-full flex-shrink-0"
+                style={{ fontWeight: 600, backgroundColor: 'var(--muted)', color: 'var(--muted-foreground)' }}
+              >
+                Any grade, on request
+              </span>
+            </div>
+            <p className="text-sm leading-relaxed text-muted-foreground mt-1">{exclusivePillar.whyItMatters}</p>
+          </div>
+          <a href="/get-started" className="btn-secondary flex-shrink-0 whitespace-nowrap">Ask about it</a>
+        </div>
+
         {/* Supporting cards: how the program actually runs day to day */}
         <p className="text-xs font-600 text-primary uppercase tracking-widest mb-4" style={{ fontWeight: 600 }}>
           How It Runs
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {renderFeatureCard(features[0], 'card-0')}
-          {renderFeatureCard(features[1], 'card-1')}
-          {renderFeatureCard(features[2], 'card-2')}
+          {renderFeatureCard(features[0], 'card-0', 0)}
+          {renderFeatureCard(features[1], 'card-1', 1)}
+          {renderFeatureCard(features[2], 'card-2', 2)}
         </div>
 
       </div>

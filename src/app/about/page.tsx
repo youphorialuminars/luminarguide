@@ -1,17 +1,19 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { programStages, gradeBands, stakeholders, stakeholderDetails } from '@/lib/siteConfig';
+import { programStages, stakeholderDetails, exclusivePillar } from '@/lib/siteConfig';
+import { GradeBandDeepDive, StakeholderIcon, ScenarioIcon } from '@/components/Header';
 
-export const metadata: Metadata = { title: 'About — LuminarGuide' };
+export const metadata: Metadata = { title: 'About — LuminarsGuide' };
 
 function RoleCard({ role }: { role: 'Mentors' | 'Parents' | 'Schools' | 'Counselors' }) {
-  const icon = stakeholders.find((s) => s.label === role)?.icon ?? '';
   const detail = stakeholderDetails.find((s) => s.role === role);
   return (
     <div className="bg-card border border-border rounded-2xl p-5 flex flex-col gap-2 h-full">
       <div className="flex items-center gap-2">
-        <span className="text-lg">{icon}</span>
+        <span style={{ color: 'var(--primary)' }}>
+          <StakeholderIcon role={role} size={18} />
+        </span>
         <p className="text-sm font-700 text-foreground" style={{ fontWeight: 700 }}>{role}</p>
       </div>
       <p className="text-xs leading-relaxed text-muted-foreground">{detail?.description}</p>
@@ -25,7 +27,9 @@ function StudentHub() {
       className="rounded-2xl p-7 text-center flex flex-col items-center justify-center gap-2 h-full"
       style={{ backgroundColor: 'var(--primary)' }}
     >
-      <span className="text-3xl">🎒</span>
+      <span style={{ color: 'var(--primary-foreground)' }}>
+        <StakeholderIcon role="Students" size={30} />
+      </span>
       <p className="text-sm font-700 uppercase tracking-wide" style={{ fontWeight: 700, color: 'var(--primary-foreground)' }}>
         The Student
       </p>
@@ -47,7 +51,7 @@ export default function AboutPage() {
             A student who can solve any equation on the board but freezes when asked what they actually want. A group
             chat that goes silent for two days after a disagreement no one knows how to have out loud. A college
             application asking "what are your goals?" to someone who's never once been asked that by an adult.
-            LuminarGuide exists for exactly this — the growth a report card never measures — guided by trained
+            LuminarsGuide exists for exactly this — the growth a report card never measures — guided by trained
             mentors and experienced counselors who know each student as a person, not just a set of grades.
           </p>
         </div>
@@ -64,7 +68,7 @@ export default function AboutPage() {
               only see a fragment of the picture.
             </p>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              LuminarGuide is currently piloting <strong className="text-foreground">Stage 1: Intrinsic Development</strong> in
+              LuminarsGuide is currently piloting <strong className="text-foreground">Stage 1: Intrinsic Development</strong> in
               schools. Stages 2 and 3 build directly on top of it and are actively in development.
             </p>
           </div>
@@ -119,45 +123,35 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Grade band deep dives */}
-      {gradeBands.map((band, bandIndex) => (
-        <section key={band.id} className={`py-20 ${bandIndex % 2 === 0 ? 'bg-muted' : 'bg-background'}`}>
-          <div className="max-w-6xl mx-auto px-6">
-            <div className="flex flex-wrap items-center gap-3 mb-3">
-              <p className="text-xs font-600 text-primary uppercase tracking-widest">{band.gradesLabel} · {band.bandLabel}</p>
-              <span
-                className="text-[10px] font-600 uppercase tracking-wide px-2 py-0.5 rounded-full"
-                style={{
-                  backgroundColor: band.status === 'live' ? 'var(--primary)' : 'var(--card)',
-                  color: band.status === 'live' ? 'var(--primary-foreground)' : 'var(--muted-foreground)',
-                  border: band.status === 'live' ? 'none' : '1px solid var(--border)',
-                }}
-              >
-                {band.statusLabel}
-              </span>
-            </div>
-            <h2
-              className="font-700 text-foreground mb-5 max-w-3xl leading-snug"
-              style={{ fontWeight: 700, fontSize: 'clamp(1.375rem, 2.2vw, 1.75rem)', letterSpacing: '-0.015em' }}
-            >
-              {band.ageContext}
-            </h2>
+      {/* Grade band deep dives — one tabbed section instead of three
+          stacked ones, see GradeBandDeepDive in Header.tsx for why. */}
+      <GradeBandDeepDive />
 
-            <div className="flex flex-wrap gap-3">
-              {band.challenges.map((c) => (
-                <div
-                  key={c}
-                  className="flex items-center gap-2.5 bg-card border-2 border-border rounded-full px-4 py-2.5 text-base font-800 shadow-sm"
-                  style={{ fontWeight: 800, color: 'var(--foreground)' }}
+      {/* First Aid & Emergency — deliberately shown right after the
+          grade-band breakdown, not inside it, since this is the one pillar
+          that isn't tied to a band at all. */}
+      <section className="py-16 bg-background">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="bg-card border border-border rounded-2xl p-7 flex flex-col sm:flex-row sm:items-center gap-4">
+            <span className="flex-shrink-0" style={{ color: 'var(--primary)' }}>
+              <ScenarioIcon pillarId={exclusivePillar.id} size={28} />
+            </span>
+            <div className="flex-1">
+              <div className="flex items-center gap-2 flex-wrap mb-1">
+                <p className="text-sm font-700 text-foreground" style={{ fontWeight: 700 }}>{exclusivePillar.name}</p>
+                <span
+                  className="text-[10px] font-600 uppercase tracking-wide px-2 py-0.5 rounded-full"
+                  style={{ fontWeight: 600, backgroundColor: 'var(--muted)', color: 'var(--muted-foreground)' }}
                 >
-                  <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: 'var(--accent)' }} />
-                  {c}
-                </div>
-              ))}
+                  Outside the grade bands — any age
+                </span>
+              </div>
+              <p className="text-sm leading-relaxed text-muted-foreground">{exclusivePillar.whyItMatters}</p>
             </div>
+            <Link href="/get-started" className="btn-secondary flex-shrink-0 whitespace-nowrap">Ask about it</Link>
           </div>
-        </section>
-      ))}
+        </div>
+      </section>
 
       <section className="py-16 bg-muted">
         <div className="max-w-6xl mx-auto px-6">
@@ -189,7 +183,7 @@ export default function AboutPage() {
       </section>
 
       <section className="py-16 bg-background text-center">
-        <Link href="/get-started" className="btn-primary">Get Started</Link>
+              <Link href="/get-started" className="btn-primary">Ask Us Anything</Link>
       </section>
     </>
   );

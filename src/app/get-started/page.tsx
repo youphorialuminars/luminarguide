@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { siteConfig, supabase } from '@/lib/siteConfig';
-import { CollaboratorInterestForm } from '@/components/Header';
+import { CollaboratorInterestForm, StakeholderIcon } from '@/components/Header';
 
 type Mode = 'parent' | 'collaborate';
 type SubmitStatus = 'idle' | 'submitting' | 'success' | 'error';
@@ -12,20 +12,17 @@ const MODES: { id: Mode; label: string }[] = [
   { id: 'collaborate', label: 'Work With Us' },
 ];
 
-const collaboratorRoles = [
+const collaboratorRoles: { role: 'Mentors' | 'Counselors' | 'Schools'; blurb: string }[] = [
   {
     role: 'Mentors',
-    icon: '🧑‍🏫',
     blurb: 'Guide students one-on-one or in small groups through the Stage 1 pillars, backed by real session insight instead of guesswork.',
   },
   {
     role: 'Counselors',
-    icon: '💬',
     blurb: 'Bring your clinical and developmental expertise into a shared, longitudinal view of student well-being.',
   },
   {
     role: 'Schools',
-    icon: '🏫',
     blurb: 'Bring the Stage 1 pilot to your students, with an administrator-level view across your cohort and support for hosting intra- and inter-school events.',
   },
 ];
@@ -77,7 +74,7 @@ export default function GetStartedPage() {
           </h1>
           <p className="text-base leading-relaxed text-muted-foreground mb-8">
             {mode === 'parent'
-              ? "Tell us a bit about your family — we read every message ourselves and follow up within one business day. Sharing this doesn't commit you to anything."
+            ? "Tell us a bit about your family — we read every message ourselves and follow up personally. Sharing this doesn't commit you to anything."
               : "We're always looking to work with mentors, counselors, and schools who want to help students grow beyond the textbook."}
           </p>
 
@@ -134,7 +131,7 @@ export default function GetStartedPage() {
             </button>
             {parentStatus === 'success' && (
               <p className="text-xs text-center" style={{ color: 'var(--primary)' }}>
-                Thanks — we&apos;ve got it and will follow up within one business day.
+              Thanks — we&apos;ve got it and will follow up personally.
               </p>
             )}
             {parentStatus === 'error' && (
@@ -154,7 +151,9 @@ export default function GetStartedPage() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {collaboratorRoles.map((c) => (
                 <div key={c.role} className="bento-card flex flex-col gap-2.5 p-5">
-                  <span className="text-2xl">{c.icon}</span>
+                  <span style={{ color: 'var(--primary)' }}>
+                    <StakeholderIcon role={c.role} size={24} />
+                  </span>
                   <h3 className="text-card-heading text-foreground">{c.role}</h3>
                   <p className="text-sm leading-relaxed text-muted-foreground">{c.blurb}</p>
                 </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import AppImage from '@/components/ui/AppImage';
+import { purpose } from '@/lib/siteConfig';
 
 export default function HeroSection() {
   return (
@@ -47,19 +47,30 @@ export default function HeroSection() {
               <span className="gradient-text-gold">where growing up gets heavy.</span>
             </h1>
 
+            {/* Parent-facing positioning line — short on purpose, this is the
+                one line every visitor sees without scrolling. The fuller
+                version of this same message lives in the Purpose section
+                just below the hero, for anyone who wants the full case. */}
+            <p
+              className="text-base font-600 animate-fade-up delay-150"
+              style={{ fontWeight: 600, color: 'var(--accent)' }}>
+
+              {purpose.messageToParents.heading}
+            </p>
+
             {/* Subheading */}
             <p className="text-base leading-relaxed text-muted-foreground max-w-xl animate-fade-up delay-200 font-700" style={{ fontSize: '1.0625rem', fontWeight: 700 }}>
               The child who goes quiet in class and won't say why. The teenager who measures their whole life
               against someone else's social feed. The senior heading off to college with no real practice at
-              being on their own. LuminarGuide is a mentor-led development program that meets each of them
+              being on their own. LuminarsGuide is a mentor-led development program that meets each of them
               exactly where they are — with trained mentors, parents, schools, and counselors all working from
               the same picture.
             </p>
 
             {/* CTA Buttons */}
             <div className="flex flex-wrap gap-3 animate-fade-up delay-300">
-              <a href="#contact" className="btn-primary">
-                Get Started
+              <a href="/get-started" className="btn-primary">
+                Ask Us Anything
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                   <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
@@ -99,30 +110,32 @@ export default function HeroSection() {
               className="relative rounded-3xl overflow-hidden shadow-2xl"
               style={{ minHeight: '480px' }}>
               
-              {/* Background image with gradient overlay */}
-              <AppImage
-                src="https://img.rocket.new/generatedImages/rocket_gen_img_19f7a5d0b-1776428699759.png"
-                alt="Students collaborating in a bright modern classroom, teacher guiding small group discussion"
-                fill
-                sizes="(max-width: 1024px) 100vw, 42vw"
-                className="object-cover"
-                priority />
-              
-
-              {/* Scrim overlay — two layers: a theme-tinted color layer (so it isn't
-                  stuck on violet when the teal / teal-dark themes are selected) plus a
-                  dark wash underneath the white text, so contrast stays safe even with
-                  the brighter teal-dark theme's colors */}
+              {/* Solid brand-gradient panel — replaces the old placeholder photo.
+                  Three flat layers, no image request, no loading state:
+                  1) the base gradient, running the deep --panel-deep anchor
+                     into --panel-accent's gold — --panel-deep/--panel-accent
+                     rather than --primary/--accent specifically because
+                     this is one of the site's few deliberate gold
+                     "statement" moments, kept separate from the general
+                     (now neutral, black-and-white) --primary/--accent pair
+                     used everywhere else (see tailwind.css)
+                  2) a soft top-right glow for a little depth
+                  3) a dark wash so the white text/cards on top stay legible
+                     against either theme's gold */}
               <div
                 className="absolute inset-0"
                 style={{
-                  background: 'linear-gradient(160deg, var(--primary) 0%, var(--accent) 100%)',
-                  opacity: 0.55,
+                  background: 'linear-gradient(160deg, var(--panel-deep) 0%, var(--panel-accent) 100%)',
                 }} />
               <div
                 className="absolute inset-0"
                 style={{
-                  background: 'linear-gradient(175deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.62) 100%)',
+                  background: 'radial-gradient(60% 50% at 78% 12%, rgba(255,255,255,0.16) 0%, transparent 60%)',
+                }} />
+              <div
+                className="absolute inset-0"
+                style={{
+                  background: 'linear-gradient(175deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.48) 100%)',
                 }} />
 
 
@@ -153,8 +166,8 @@ export default function HeroSection() {
                       </svg>
                     </div>
                     <div>
-                      <p className="text-white text-xs font-600" style={{ fontWeight: 600 }}>Stage 1 · Classes 6–8</p>
-                      <p className="text-white/60 text-xs">What students work on</p>
+                      <p className="text-white text-xs font-600" style={{ fontWeight: 600 }}>Stage 1 · Classes 6–10</p>
+                      <p className="text-white/60 text-xs">A glimpse of what we help students build</p>
                     </div>
                   </div>
 
@@ -193,7 +206,7 @@ export default function HeroSection() {
                   </div>
                   <div className="text-right">
                     <p className="text-white text-xs font-600" style={{ fontWeight: 600 }}>Piloting Now</p>
-                    <p className="text-white/60 text-xs">Classes 6–8 live</p>
+                    <p className="text-white/60 text-xs">Classes 6–10 live · 11–12 coming soon</p>
                   </div>
                 </div>
               </div>

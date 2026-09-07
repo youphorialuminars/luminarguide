@@ -1,8 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
 /**
- * Central place for site-wide facts AND all program content: brand name,
- * Central place for site-wide facts AND all program content: brand name,
+ * Centlace for site-wide facts AND all program content: brand name,
  * contact details, and — because this project can't add new files — the
  * entire pillar/program data model that used to live in a separate
  * `program.ts`. Everything below is imported by the home page sections and
@@ -14,7 +13,7 @@ import { createClient } from '@supabase/supabase-js';
  *
  * ---------------------------------------------------------------------
  * THE PROGRAM
- * LuminarGuide develops students outside the textbook, in three stages:
+ * Luminar'sGuide develops students outside the textbook, in three stages:
  *   1. Intrinsic Development     — how a student sees and understands themselves
  *   2. Interpersonal Development — how a student relates to and communicates with others
  *   3. Social Development        — how a student shows up as a responsible member of society
@@ -28,12 +27,21 @@ import { createClient } from '@supabase/supabase-js';
  *   - Classes 6–8  (~11–13 yrs): identity formation begins, social anxiety,
  *     fear of speaking up / being judged, first real technology & friendship
  *     responsibilities. Live in the pilot.
- *   - Classes 9–10 (~14–16 yrs): board-exam pressure intensifies, stream/subject
- *     decisions loom, peer comparison peaks, identity exploration is in full
- *     swing (Erikson's identity-vs-role-confusion). Live in the pilot.
+ *   - Classes 9–10 (~14–16 yrs): board-exam pressure intensifies, peer
+ *     comparison peaks, and — new for this age band — real diversity, real
+ *     money decisions, and everyday AI tools all arrive at once, none of them
+ *     with any explicit guidance. Live in the pilot.
  *   - Classes 11–12 (~16–18 yrs): high-stakes qualifying exams, the transition
  *     to college/career and a much bigger world, independence, and the first
- *     real experience of public rejection or failure. Live in the pilot.
+ *     real experience of public rejection or failure. NOT in the pilot yet —
+ *     present this band everywhere as "Coming Soon," never as live.
+ *
+ * ONE PILLAR SITS OUTSIDE this grade-band structure entirely: First Aid &
+ * Emergency (see `exclusivePillar` below). It isn't age-banded because basic
+ * emergency-response judgment doesn't have the same kind of age cutoff a
+ * stream choice or a first relationship does — a parent or a student can ask
+ * for it directly, for any grade, rather than it being bundled into one
+ * band's five pillars.
  *
  * Edit the content below to update copy everywhere it's used.
  * ---------------------------------------------------------------------
@@ -41,18 +49,13 @@ import { createClient } from '@supabase/supabase-js';
 
 export const siteConfig = {
   brandName: "Luminar's Guide",
-  brandNameShort: 'LuminarGuide',
+  brandNameShort: 'LuminarsGuide',
   tagline: 'Development Beyond the Textbook — Grades 6–12',
 
   contact: {
     email: 'contact@luminarsguide.app',
-    // TODO: replace with the real phone number, e.g. '+91 98765 43210'
-    phone: '',
-    // TODO: replace with the real LinkedIn page URL
-    linkedinUrl: '',
-    // TODO: replace with the real Instagram page URL
-    instagramUrl: '',
-    responseTime: 'Within 1 business day',
+    phone: '+91 9696402289',
+    linkedinUrl: 'https://www.linkedin.com/company/luminarsguide',
   },
 
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:4028',
@@ -121,7 +124,7 @@ export const programStages = [
     name: 'Intrinsic Development',
     tagline: 'How a student sees themselves',
     description:
-      "The foundation stage — helping a student build self-awareness, emotional resilience, and a clear sense of identity, separate from grades or comparison. This is the stage LuminarGuide is piloting with schools right now.",
+      "The foundation stage — helping a student build self-awareness, emotional resilience, and a clear sense of identity, separate from grades or comparison. This is the stage Luminar'sGuide is piloting with schools right now.",
     status: 'live' as ProgramStatus,
     statusLabel: 'Piloting Now',
   },
@@ -222,33 +225,15 @@ export const gradeBands: GradeBand[] = [
     status: 'live',
     statusLabel: 'Live in Pilot',
     ageContext:
-      "Board exams and stream choices arrive right as identity exploration is peaking (Erikson's identity-vs-role-confusion stage). Academic pressure and self-worth start to fuse for the first time — this band's pillars are being built to pull them apart.",
+      "Board-exam pressure intensifies right as identity exploration peaks (Erikson's identity-vs-role-confusion stage) — and, often for the first time, students are also navigating real diversity, real money decisions, and AI tools that answer before they've had to think something through themselves. Five pillars meet them exactly here.",
     challenges: [
       'Mounting board-exam pressure and fear of not measuring up',
       'Comparing themselves to classmates over grades, looks, and popularity',
-      'Communication issues — struggling to express disagreement or ask for help',
-      "Choosing a stream or subjects under pressure from family or peers, before they've had time to know themselves",
-      'Intensifying mood swings and stress that go unspoken',
+      'Navigating real differences in background, belief, and identity with little explicit guidance on how',
+      'Making real spending decisions for the first time, with no training in money or in how marketing targets them',
+      'Leaning on AI tools for homework and decisions without the judgment to know what to trust',
     ],
     pillars: [
-      {
-        id: 'exam-resilience',
-        name: 'Exam Resilience',
-        icon: '📝',
-        short: 'Facing board-exam pressure without letting one test define self-worth.',
-        challenge: 'As academic stakes rise sharply, a single test result starts to feel like a verdict on who a student is, not just how they performed.',
-        whyItMatters:
-          "As academic stakes rise sharply in Classes 9 and 10, students who haven't been taught to separate their effort from a single result are far more prone to test anxiety, burnout, and a fragile sense of self-worth tied entirely to marks. This pillar teaches structured coping — reframing a bad result as feedback, managing pre-exam anxiety, and protecting identity from being reduced to a percentage.",
-      },
-      {
-        id: 'stream-discovery',
-        name: 'Stream & Self-Discovery',
-        icon: '🧭',
-        short: 'Choosing subjects and streams from genuine self-knowledge, not panic or comparison.',
-        challenge: "Stream selection is often the first decision that feels permanent — made under pressure, without real time to reflect.",
-        whyItMatters:
-          "Psychologically, forcing a life-shaping choice before genuine identity exploration often produces what developmental psychologists call foreclosure — picking a stream to please parents or match a friend group rather than out of self-knowledge. This pillar slows the decision down long enough for a student to reflect honestly on their own interests and strengths first.",
-      },
       {
         id: 'peer-navigation',
         name: 'Peer Navigation',
@@ -259,22 +244,40 @@ export const gradeBands: GradeBand[] = [
           "Teaching boundary-setting and healthy comparison habits now prevents patterns of people-pleasing, unhealthy competitiveness, or peer-pressure-driven risk-taking later. It also gives students language for the communication issues that come with disagreeing with a friend, saying no, or asking for help without feeling weak.",
       },
       {
-        id: 'digital-self-discovery',
-        name: 'Digital & Self-Discovery',
-        icon: '🎭',
-        short: 'Understanding the gap between real life and "reel" life — and taking responsibility for a healthy digital identity.',
-        challenge: 'Social media rewards a curated, highlight-reel version of a life that rarely matches how a student actually feels day to day — and at 14 to 16, the line between the two starts to blur into their sense of self.',
+        id: 'exam-resilience',
+        name: 'Exam Resilience',
+        icon: '📝',
+        short: 'Facing board-exam pressure without letting one test define self-worth.',
+        challenge: 'As academic stakes rise sharply, a single test result starts to feel like a verdict on who a student is, not just how they performed.',
         whyItMatters:
-          "Festinger's social comparison theory explains why constant exposure to curated \"highlight reels\" quietly erodes self-esteem — students compare their own unfiltered inner life to everyone else's edited best moments and consistently come out feeling short-changed. This pillar builds the media literacy and self-awareness to recognize that gap for what it is, take real responsibility for how they show up online, and keep their sense of self anchored in more than a feed.",
+          "As academic stakes rise sharply in Classes 9 and 10, students who haven't been taught to separate their effort from a single result are far more prone to test anxiety, burnout, and a fragile sense of self-worth tied entirely to marks. This pillar teaches structured coping — reframing a bad result as feedback, managing pre-exam anxiety, and protecting identity from being reduced to a percentage.",
       },
       {
-        id: 'generation-gap',
-        name: 'Bridging the Generation Gap',
-        icon: '🌉',
-        short: 'Learning to communicate with parents honestly, even across a real generational divide.',
-        challenge: "A student's instinct at this age is to stop telling parents what's actually going on — not out of secrecy, but because the gap in lived experience makes it feel pointless to even try.",
+        id: 'diversity-management',
+        name: 'Diversity Management',
+        icon: '🌍',
+        short: 'Navigating differences in background, belief, and identity with real respect, not just tolerance.',
+        challenge: 'Classrooms, friend groups, and online spaces at this age are more genuinely diverse than any a student has been part of before — and no one has explicitly taught them how to navigate real difference, only how to coexist alongside it.',
         whyItMatters:
-          "Research on adolescent-parent communication consistently shows that teens don't stop confiding in parents because they stop caring what parents think — they stop because they doubt they'll be understood. This pillar builds the specific skill of translating a real problem across a generational and experiential gap: naming what's actually wrong, choosing the right moment, and staying in the conversation instead of shutting down. Keeping that channel open, even imperfectly, remains one of the strongest protective factors through the teenage years.",
+          "Contact theory in social psychology shows that proximity to difference doesn't automatically build understanding — it takes structured reflection to turn exposure into genuine respect instead of quiet discomfort or unspoken stereotype. This pillar gives Class 9–10 students real practice engaging across differences in background, belief, and identity, so diversity becomes a strength they know how to work with, not just a fact of the room they're in.",
+      },
+      {
+        id: 'financial-literacy-consumer-psychology',
+        name: 'Financial Literacy and Consumer Psychology',
+        icon: '💳',
+        short: 'Understanding money, spending, and the psychological tactics designed to influence both.',
+        challenge: "Students at this age are making real spending decisions — pocket money, online purchases, subscriptions — for the first time, with no training in how money works or in how marketing is built to target exactly this age group's impulses.",
+        whyItMatters:
+          "Behavioral economics research (Kahneman and Tversky's work on decision-making under influence) shows most poor financial choices aren't about intelligence — they're about never having been taught to notice the psychological levers being pulled: urgency, social proof, sunk cost. This pillar builds practical financial literacy — budgeting, saving, understanding debt — alongside the consumer psychology to recognize manipulation in advertising and pricing before it hardens into a lifelong habit.",
+      },
+      {
+        id: 'ai-critical-thinking',
+        name: 'AI and Critical Thinking',
+        icon: '🧠',
+        short: 'Using AI tools with real judgment — knowing what to trust, question, and never outsource.',
+        challenge: "AI tools now answer a student's question before they've finished forming it — homework help, advice, even emotional support — often before a student has the judgment to know what's actually reliable.",
+        whyItMatters:
+          "As AI becomes a default first stop for information and even decisions, the students who thrive won't be the ones who avoid it or the ones who defer to it blindly — they'll be the ones who've built genuine critical thinking: verifying claims, recognizing AI's confident mistakes, and knowing which judgments should stay entirely their own. This pillar builds that judgment deliberately, at exactly the age these tools are becoming a permanent part of how they learn and decide.",
       },
     ],
   },
@@ -284,8 +287,8 @@ export const gradeBands: GradeBand[] = [
     gradesShort: '11–12',
     bandLabel: 'Launch Years',
     ageRange: 'Roughly 16–18 years old',
-    status: 'live',
-    statusLabel: 'Live in Pilot',
+    status: 'in-development',
+    statusLabel: 'Coming Soon',
     ageContext:
       "The highest-stakes exams of a student's school life collide with the first real decisions about an independent future — college, career, and a much bigger world. This band's pillars are being built to carry students through that launch.",
     challenges: [
@@ -344,6 +347,191 @@ export const gradeBands: GradeBand[] = [
     ],
   },
 ];
+
+/**
+ * EXCLUSIVE PILLAR: FIRST AID & EMERGENCY
+ * Deliberately outside the Classes 6–8 / 9–10 / 11–12 structure above. Every
+ * other pillar is scoped to a grade band because the underlying challenge
+ * itself changes with age (a stream choice, a first relationship); basic
+ * emergency-response judgment doesn't work that way — recognizing an
+ * emergency, calling for help correctly, and basic first aid until trained
+ * help arrives matter just as much at 11 as at 18. So instead of folding a
+ * thinner version of it into every band's five pillars, it's offered as one
+ * standalone track that a parent OR the student themselves can request
+ * directly (via /get-started or /contact), independent of grade or band
+ * status — including for Classes 11–12 households, even while that band's
+ * own five pillars are still "Coming Soon."
+ */
+export const exclusivePillar: Pillar & { availability: string } = {
+  id: 'first-aid-emergency',
+  name: 'First Aid & Emergency',
+  icon: '🚑',
+  short: 'Practical first-aid and emergency-response skills, requested separately for any grade.',
+  challenge:
+    "Most students go through school without ever practicing what to actually do in the first minute of a real emergency — a bad fall, a burn, someone choking, a friend fainting — because it isn't anyone's assigned subject.",
+  whyItMatters:
+    "Emergency-response research consistently shows the biggest factor in a good outcome is simply whether the nearest person knew what to do in the first sixty seconds — not whether professional help was minutes away. This pillar builds exactly that: recognizing a real emergency, calling for help correctly, and practical first aid until trained help arrives. It's offered as a standalone track, on request, rather than folded into one grade band, because that judgment matters the same way at every age.",
+  availability: 'Available on request, for any grade — ask us directly on the Get Started page.',
+};
+
+/**
+ * PRICING
+ * Three nationwide tiers, each available at three billing cadences —
+ * monthly, quarterly, annual. All three numbers below are per-month
+ * figures; the actual amount charged at signup is:
+ *   monthly:   price.monthly charged every month
+ *   quarterly: price.quarterly * 3 charged every 3 months
+ *   annual:    price.annual * 12 charged once a year
+ *
+ * The spread between them is deliberate, not arbitrary: quarterly is ~8%
+ * cheaper than monthly (standard "step up your commitment" reward),
+ * annual is ~17% cheaper than monthly — which works out to almost exactly
+ * "2 months free" (annual * 12 ≈ monthly * 10) across all three plans, a
+ * clean, sayable number rather than an odd percentage. Keep that ~2-month
+ * relationship if these numbers ever change — it's what makes the annual
+ * discount easy to explain to a parent in one sentence.
+ *
+ * Location-based pricing (e.g. a different rate per city) is planned but
+ * NOT live yet — these are single nationwide prices. When city pricing is
+ * ready, add a separate `cityOverrides`-style structure rather than
+ * duplicating these plans, and gate it behind a "where are you located?"
+ * picker on the pricing page — never a public city-by-city comparison
+ * table, which is what makes differential pricing feel unjust to visitors.
+ *
+ * `features` below is a first-draft placeholder (session counts, cadence,
+ * etc. aren't finalized) — replace with the real inclusions before launch.
+ */
+export type BillingCycle = 'monthly' | 'quarterly' | 'annual';
+
+export interface PricingPlan {
+  id: string;
+  name: string;
+  tagline: string;
+  /** INR, per month, at each billing cadence. See note above for how the
+   * actual charged amount is derived from each of these. */
+  price: {
+    monthly: number;
+    quarterly: number;
+    annual: number;
+  };
+  /** Shows a "Most Popular" badge — put this on the plan you want most
+   * visitors to pick (the classic three-tier pricing pattern). */
+  highlight?: boolean;
+  features: string[];
+}
+
+export const pricingPlans: PricingPlan[] = [
+  {
+    id: 'foundation',
+    name: 'Foundation',
+    tagline: 'Start building the fundamentals',
+    price: { monthly: 1800, quarterly: 1650, annual: 1500 },
+    features: [
+      "Full curriculum access for your child's grade band",
+      'Weekly group classes, both offline and online',
+      'A Certificate of Growth on completing each stage',
+      'Regular parent progress summaries',
+      'Email support',
+    ],
+  },
+  {
+    id: 'ascend',
+    name: 'Ascend',
+    tagline: 'The most popular starting point',
+    price: { monthly: 4799, quarterly: 4399, annual: 3999 },
+    highlight: true,
+    features: [
+      'Everything in Foundation',
+      'Every-two-weeks 1:1 mentor review calls',
+      "Priority counselor sessions, arranged whenever the mentor recommends it",
+      "Personalized tasks and sessions built around your child",
+      "A Mentor's Letter — a personal, written reflection from their mentor",
+      'Regional and national LuminarsGuide meets, not just their own city',
+      'A Growth & Wellbeing Report — plain-language updates on what\'s going well, patterns worth watching, and specific next steps',
+      'A Pillar Showcase Workshop after completing each pillar',
+    ],
+  },
+  {
+    id: 'immersive',
+    name: 'Immersive',
+    tagline: 'The deepest level of support',
+    price: { monthly: 7199, quarterly: 6599, annual: 5999 },
+    features: [
+      'Everything in Ascend',
+      'Weekly 1:1 mentor reviews and coaching',
+      'Dedicated counselor support, with regular monthly check-ins',
+      "Parallel sessions for parents, alongside your child's own",
+      'About 2–2.5 months of dedicated depth on each pillar',
+    ],
+  },
+];
+
+/**
+ * SINGLE PILLAR TRACK
+ * A standalone add-on, not part of the Foundation/Ascend/Immersive ladder
+ * above — a bounded, one-time enrollment rather than a subscription, so it
+ * gets a flat price instead of a monthly/quarterly/annual cadence. Pitched
+ * at a family that wants focused help on one specific pillar (a rough
+ * patch with confidence, a specific social skill) without a year-round
+ * commitment — summer break is the obvious moment for this.
+ *
+ * Deliberately priced at Ascend-level depth (1:1 mentor + counselor access),
+ * just narrowed to one pillar instead of five: 2 months of full Ascend is
+ * ₹9,598, so this sits at roughly half that — about ₹2,500 per pillar per
+ * month, well above Ascend's own ~₹960-per-pillar rate. That's the point:
+ * it should always cost MORE per pillar than committing to a full tier, so
+ * it reads as a premium, no-commitment option rather than a cheap way to
+ * get Ascend's attention piecemeal. Keep that relationship if this number
+ * changes. The Mentor's Letter, Growth & Wellbeing Report, regional meets,
+ * and Pillar Showcase Workshop stay exclusive to Ascend/Immersive on
+ * purpose — those are rewards for the longer relationship, not something
+ * a 2-month track should also come with.
+ */
+export const pillarTrackAddOn = {
+  name: 'Single Pillar Track',
+  tagline: 'Ascend-level mentor and counselor access, focused on one pillar for 2 months',
+  /** INR. Flat price for the full 2-month enrollment — not a per-month rate. */
+  price: 4999,
+  billingNote: 'One-time enrollment, 2 months',
+  features: [
+    'Two months of focused 1:1 mentor sessions on one pillar of your choice',
+    'Every-two-weeks mentor review calls',
+    'Priority counselor sessions, arranged whenever the mentor recommends it',
+    'A Certificate of Growth on completion',
+  ],
+};
+
+/**
+ * PURPOSE
+ * Vision, mission, and the parent-facing positioning statement. Each has a
+ * short `heading` (the one-liner — used as a pull-quote / hero line where
+ * space is tight) and a longer `description` (the full paragraph — used
+ * wherever there's room to actually make the case). Kept in one place so
+ * the same wording stays consistent everywhere it's quoted, instead of
+ * drifting into three slightly-different versions across pages.
+ */
+export const purpose = {
+  vision: {
+    heading: 'A generation of students who grow up knowing themselves — not just their scores.',
+    description:
+      "Every child deserves a childhood that isn't measured only in marks. We want a generation of students who leave school knowing who they are as clearly as they know their subjects.",
+  },
+  mission: {
+    heading: "Mentor-led development, one student at a time, so growing up doesn't have to happen alone.",
+    description:
+      'To give every student, from Class 6 through 12, a mentor who walks alongside them through identity, resilience, and real-world readiness — treated with the same seriousness as academics, in partnership with parents, schools, and counselors.',
+  },
+  messageToParents: {
+    heading: 'For parents and schools that view their children as more than mere ranks.',
+    description:
+      "Grades will always matter — we're not asking you to forget that. But most programs stop there. We're built for something harder to measure and just as important: helping your child know who they are before the world tells them who to be. If you've ever wished someone paid as much attention to your child's confidence and character as their marksheet, that's exactly where we start.",
+  },
+    messageToSchools: {
+    heading: 'Every school says they care about the whole child. Not every school can prove it.',
+    description:
+      "Parents have read the same line in every school's prospectus — ‘holistic development,’ ‘nurturing every child,’ ‘beyond academics.’ By the third school on their shortlist, none of it stands out. Luminar's Guide gives you something to point to instead of just say: a structured, mentor-led program with real evidence behind it, an administrator-level view across your student body, and a concrete answer the next time a parent asks what actually makes you different.",
+  },
+} as const;
 
 export const stakeholders = [
   { icon: '🎒', label: 'Students' },

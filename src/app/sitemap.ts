@@ -2,7 +2,7 @@
 
 export default function sitemap() {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-  const paths = ['', '/about', '/features', '/solutions', '/pricing', '/faq', '/contact', '/get-started', '/book-demo', '/gamification'];
+  const paths = ['', '/about', '/features', '/solutions', '/faq', '/contact', '/get-started', '/book-demo'];
   return paths.map((path) => ({
     url: `${baseUrl}${path}`,
     lastModified: new Date(),

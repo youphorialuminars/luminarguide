@@ -2,6 +2,72 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Logo swap: two logo files exist — one tuned for the light theme, one
+   tuned for the dark theme (the light version's dark-navy text is too low
+   contrast on a near-black background). Only one is ever shown, picked by
+   the current data-theme on <html>. See AppLogo usage in Header.tsx. */
+.logo-light { display: block; }
+.logo-dark { display: none; }
+[data-theme='teal-dark'] .logo-light { display: none; }
+[data-theme='teal-dark'] .logo-dark { display: block; }
+/* No CSS filter here — the dark-mode logo asset itself (logofulldark.svg,
+   in Supabase storage) has been replaced with a version whose icon mark
+   uses the theme's off-white (#F3F1EC) instead of the old teal, matching
+   how the light-mode logo has always kept its icon the same solid color
+   as its wordmark. See the delivered logofulldark.svg. */
+
+/* Pricing page — Monthly / Quarterly / Annual billing-cycle toggle.
+   CSS-only, same technique as the logo swap above: three hidden radio
+   inputs + <label htmlFor>, no JavaScript or client component involved.
+   That matters here specifically because the pricing page exports
+   `metadata`, which only works in a Server Component — adding a client
+   component (needed for React state) would break that. See
+   src/app/pricing/page.tsx for the markup this pairs with. */
+.pricing-cards .price-monthly,
+.pricing-cards .price-quarterly,
+.pricing-cards .price-annual {
+  display: none;
+}
+#cycle-monthly:checked ~ .pricing-cards .price-monthly,
+#cycle-quarterly:checked ~ .pricing-cards .price-quarterly,
+#cycle-annual:checked ~ .pricing-cards .price-annual {
+  display: block;
+}
+.cycle-label {
+  cursor: pointer;
+  padding: 0.5rem 1.25rem;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--muted-foreground);
+  transition: background-color 0.2s ease, color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+#cycle-monthly:checked ~ .cycle-toggle label[for='cycle-monthly'],
+#cycle-quarterly:checked ~ .cycle-toggle label[for='cycle-quarterly'],
+#cycle-annual:checked ~ .cycle-toggle label[for='cycle-annual'] {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+.save-badge {
+  font-size: 0.625rem;
+  font-weight: 700;
+  padding: 0.0625rem 0.4rem;
+  border-radius: 9999px;
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+}
+
+/* Both themes' accent color is now drawn from that theme's OWN logo,
+   instead of a single gold shared across both: the light logo is navy, the
+   dark logo is teal, so each theme's "statement" color (--panel-accent, the
+   headline gradient) and everyday accent color (--accent) come from its own
+   mark rather than a color borrowed from neither. --accent-rgb /
+   --panel-accent-rgb are the same colors again as raw "r, g, b" triplets,
+   for the handful of spots (icon-wrapper tints, glow overlays) that need a
+   translucent rgba() and can't take a var() directly inside one. */
 :root, [data-theme='violet'] {
   --background: #EEF0F0;
   --foreground: #16212C;
@@ -9,8 +75,9 @@
   --primary-foreground: #FFFFFF;
   --secondary: #E3E7E8;
   --secondary-foreground: #16212C;
-  --accent: #A67E33;
-  --accent-foreground: #16212C;
+  --accent: #55738A;
+  --accent-rgb: 85, 115, 138;
+  --accent-foreground: #FFFFFF;
   --muted: #E3E7E8;
   --muted-foreground: #5B6670;
   --card: #FFFFFF;
@@ -22,50 +89,67 @@
   --font-sans: 'Public Sans', sans-serif;
   --font-serif: 'Lora', serif;
   color-scheme: light;
+
+  /* Dark anchor for the handful of full-bleed "statement" gradient panels
+     (Hero visual, the Parents/Schools notes on the homepage, the pillar
+     game's scenario card) that always carry solid-white text regardless of
+     theme. In light mode this is just --primary (navy) again — same value,
+     no visual change. See the dark-theme block below for why this needs to
+     be its own token instead of reusing --primary there. */
+  --panel-deep: #16212C;
+
+  /* The lighter end of those same statement panels — a cool silver-gray,
+     the same family as the light logo's own icon color, so the panel reads
+     as navy fading toward silver rather than toward a color that has
+     nothing to do with this theme's mark. */
+  --panel-accent: #8A97A6;
+  --panel-accent-rgb: 138, 151, 166;
 }
 
-[data-theme='teal'] {
-  --background: #F7FAF9;
-  --foreground: #0F1C1A;
-  --primary: #0D9488;
-  --primary-foreground: #FFFFFF;
-  --secondary: #EAF6F4;
-  --secondary-foreground: #0F5C54;
-  --accent: #D4A843;
-  --accent-foreground: #1C1014;
-  --muted: #EAF6F4;
-  --muted-foreground: #4B6B67;
-  --card: #FFFFFF;
-  --card-foreground: #0F1C1A;
-  --border: #DCEEEB;
-  --input: #DCEEEB;
-  --ring: #0D9488;
-  --radius: 1rem;
-  --font-sans: 'Public Sans', sans-serif;
-  --font-serif: 'Lora', serif;
-  color-scheme: light;
-}
-
+/* The id stays 'teal-dark' (it's an internal string only — saved in
+   localStorage and matched in layout.tsx's inline theme script — never
+   shown to a visitor, who just sees the "Dark" label and swatch), even
+   though the palette below is no longer a saturated teal. Both the
+   everyday accent and the "statement" panels now reuse the exact same
+   grayish slate-blue as the light theme's own --accent / --panel-accent
+   (#55738A / #8A97A6) instead of the dark logo's vivid, glowing teal —
+   one consistent, muted color story across both themes, not a brighter
+   dark-mode variant of it. */
 [data-theme='teal-dark'] {
-  --background: #0B1817;
-  --foreground: #EAF3F1;
-  --primary: #2DD4BF;
-  --primary-foreground: #04211E;
-  --secondary: #123430;
-  --secondary-foreground: #7DDBCF;
-  --accent: #E6C065;
+  --background: #141312;
+  --foreground: #F3F1EC;
+  --primary: #F3F1EC;
+  --primary-foreground: #1C1014;
+  --secondary: #211E1A;
+  --secondary-foreground: #F3F1EC;
+  --accent: #55738A;
+  --accent-rgb: 85, 115, 138;
   --accent-foreground: #1C1014;
-  --muted: #123430;
-  --muted-foreground: #8FB0AC;
-  --card: #102826;
-  --card-foreground: #EAF3F1;
-  --border: #1D4340;
-  --input: #1D4340;
-  --ring: #2DD4BF;
+  --muted: #211E1A;
+  --muted-foreground: #A8A29B;
+  --card: #1B1917;
+  --card-foreground: #F3F1EC;
+  --border: #2A2724;
+  --input: #2A2724;
+  --ring: #F3F1EC;
   --radius: 1rem;
   --font-sans: 'Public Sans', sans-serif;
   --font-serif: 'Lora', serif;
   color-scheme: dark;
+
+  /* Same grayish slate-blue as the light theme's --panel-accent, just
+     reused here instead of the old saturated teal. */
+  --panel-accent: #8A97A6;
+  --panel-accent-rgb: 138, 151, 166;
+
+  /* Now that --primary is a neutral (near-white, for readable buttons and
+     links), it can't double as the dark end of the statement-panel
+     gradients below — a near-white anchor there would wash the panel out
+     and swallow the white text sitting on top of it. This stays a deep
+     near-black rather than switching to the light theme's navy
+     --panel-deep, so the panels still read as darker than the page
+     background around them instead of blending into it. */
+  --panel-deep: #0B1817;
 }
 
 @layer base {
@@ -117,8 +201,24 @@
     font-weight: 600;
   }
 
+  /* Class name is legacy (kept so every component using it didn't need
+     touching) — this is the one deliberately colorful headline treatment,
+     navy-to-silver in the light theme and the same grayish slate-blue in
+     the dark theme (see the override just below) instead of gold in
+     both. Dark mode can't reuse the light theme's literal navy here —
+     navy text would nearly vanish against this theme's near-black
+     background — so it uses the lighter member of the same shared
+     color pair instead, kept legible while still reading as the same
+     muted family rather than a bright, glowing color. */
   .gradient-text-gold {
-    background: linear-gradient(135deg, #A67E33 0%, #C9A356 50%, #8A6526 100%);
+    background: linear-gradient(135deg, #2C3E50 0%, #8A97A6 50%, #16212C 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  [data-theme='teal-dark'] .gradient-text-gold {
+    background: linear-gradient(135deg, #55738A 0%, #8A97A6 50%, #55738A 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -326,26 +426,7 @@
     }
   }
 
-  @keyframes tapHand {
-    0%, 18% { transform: translateY(0) scale(1); }
-    30% { transform: translateY(3px) scale(0.94); }
-    42%, 100% { transform: translateY(0) scale(1); }
-  }
-
-  .animate-tap-hand {
-    transform-origin: 70% 20%;
-    animation: tapHand 1.8s ease-in-out infinite;
-  }
-
-  @keyframes tapRipple {
-    0%, 15% { transform: scale(0.4); opacity: 0; }
-    30% { transform: scale(1); opacity: 0.55; }
-    60%, 100% { transform: scale(1.9); opacity: 0; }
-  }
-
-  .animate-tap-ripple {
-    animation: tapRipple 1.8s ease-out infinite;
-  }
+  .delay-100 { animation-delay: 100ms; }
   .delay-200 { animation-delay: 200ms; }
   .delay-300 { animation-delay: 300ms; }
   .delay-400 { animation-delay: 400ms; }

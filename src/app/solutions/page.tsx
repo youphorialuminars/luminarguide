@@ -1,14 +1,18 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { RoleSolutionTile } from '@/components/Header';
+import { RoleSolutionTile, StakeholderIcon } from '@/components/Header';
 
-export const metadata: Metadata = { title: 'Solutions — LuminarGuide' };
+export const metadata: Metadata = { title: 'Solutions — LuminarsGuide' };
 
-const roles = [
+const roles: {
+  role: 'Mentors' | 'Parents' | 'Schools' | 'Counselors';
+  headline: string;
+  points: string[];
+  theory: { name: string; description: string };
+}[] = [
   {
     role: 'Mentors',
-    icon: '🧑‍🏫',
     headline: 'Know exactly where to focus your next conversation.',
     points: [
       'Spend less time reconstructing where a student left off, and more time on the conversation that actually moves them forward',
@@ -19,12 +23,11 @@ const roles = [
     theory: {
       name: "Vygotsky's Zone of Proximal Development",
       description:
-        "A mentor's job isn't to solve a problem for a student, or to leave them to struggle alone — it's to work inside their Zone of Proximal Development, the space between what they can do independently and what they can do with the right support. LuminarGuide's session insights exist to help you find that space quickly, so scaffolding can be precise instead of guessed at, and gradually withdrawn as competence grows.",
+        "A mentor's job isn't to solve a problem for a student, or to leave them to struggle alone — it's to work inside their Zone of Proximal Development, the space between what they can do independently and what they can do with the right support. Luminar'sGuide's session insights exist to help you find that space quickly, so scaffolding can be precise instead of guessed at, and gradually withdrawn as competence grows.",
     },
   },
   {
     role: 'Parents',
-    icon: '👨‍👩‍👧',
     headline: "Stay meaningfully connected to your child's growth.",
     points: [
       "Stay genuinely close to your child's growth without needing to ask, and without hovering",
@@ -36,13 +39,12 @@ const roles = [
     theory: {
       name: 'Authoritative Parenting & Attachment Theory (Baumrind)',
       description:
-        'Decades of developmental research consistently point to authoritative parenting — high warmth paired with high structure — as the style most associated with resilience, self-regulation, and healthy identity formation. LuminarGuide is built around that balance: enough visibility to stay warmly engaged with your child\'s growth, without tipping into the surveillance that undermines the very independence they\'re trying to build.',
+        'Decades of developmental research consistently point to authoritative parenting — high warmth paired with high structure — as the style most associated with resilience, self-regulation, and healthy identity formation. LuminarsGuide is built around that balance: enough visibility to stay warmly engaged with your child\'s growth, without tipping into the surveillance that undermines the very independence they\'re trying to build.',
     },
   },
   {
     role: 'Schools',
-    icon: '🏫',
-    headline: 'A unified, administrator-level view of student well-being.',
+    headline:'A unified, administrator-level view of student well-being.',
     points: [
       'See patterns across your whole student body that no single classroom or counselor could catch alone',
       "A consistent, structured approach to student well-being — not scattered efforts that vary teacher to teacher",
@@ -53,12 +55,11 @@ const roles = [
     theory: {
       name: "Bronfenbrenner's Ecological Systems Theory",
       description:
-        "A student's development doesn't happen in isolation — it's shaped by nested systems (family, peers, classroom, and school culture) that all influence one another. That's why LuminarGuide treats the school as a system-level lever, not just a venue: consistent, structured data at the institutional level strengthens the whole ecosystem around a student, not only the individual interventions inside it.",
+        "A student's development doesn't happen in isolation — it's shaped by nested systems (family, peers, classroom, and school culture) that all influence one another. That's why Luminar'sGuide treats the school as a system-level lever, not just a venue: consistent, structured data at the institutional level strengthens the whole ecosystem around a student, not only the individual interventions inside it.",
     },
   },
   {
     role: 'Counselors',
-    icon: '💬',
     headline: 'Spot students who may need support earlier.',
     points: [
       "Catch a student trending toward difficulty earlier — while there's still room to help before a crisis point",
@@ -69,7 +70,7 @@ const roles = [
     theory: {
       name: 'Person-Centered Counseling & Early Identification (Rogers)',
       description:
-        "Carl Rogers' person-centered approach — built on empathy, unconditional positive regard, and genuineness — remains foundational to effective student counseling, and LuminarGuide is designed to support that relationship, never replace it. Its role is upstream of the conversation: longitudinal context helps a counselor notice a student trending toward difficulty earlier, so the person-centered work can start before a crisis point, not after one.",
+        "Carl Rogers' person-centered approach — built on empathy, unconditional positive regard, and genuineness — remains foundational to effective student counseling, and Luminar'sGuide is designed to support that relationship, never replace it. Its role is upstream of the conversation: longitudinal context helps a counselor notice a student trending toward difficulty earlier, so the person-centered work can start before a crisis point, not after one.",
     },
   },
 ];
@@ -92,11 +93,19 @@ export default function SolutionsPage() {
         <section key={r.role} className={`py-16 ${i % 2 === 0 ? 'bg-muted' : 'bg-background'}`}>
           <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-10">
             <div className="flex flex-col gap-4 self-start">
-              <span className="text-3xl">{r.icon}</span>
+              <span style={{ color: 'var(--primary)' }}>
+                <StakeholderIcon role={r.role} size={30} />
+              </span>
               <h2 className="text-section-heading text-foreground">{r.headline}</h2>
               <p className="text-sm font-600 text-primary uppercase tracking-wide">{r.role}</p>
             </div>
-            <RoleSolutionTile points={r.points} theoryName={r.theory.name} theoryDescription={r.theory.description} />
+            <RoleSolutionTile
+              points={r.points}
+              theoryName={r.theory.name}
+              theoryDescription={r.theory.description}
+              showDemo
+              demoDelay={900 + i * 1300}
+            />
           </div>
         </section>
       ))}

@@ -1,8 +1,10 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { exclusivePillar } from '@/lib/siteConfig';
+import { ScenarioIcon } from '@/components/Header';
 
-export const metadata: Metadata = { title: 'Features — LuminarGuide' };
+export const metadata: Metadata = { title: 'Features — LuminarsGuide' };
 
 // What actually sets this apart — deliberately not a pillar list (that's
 // covered on /about) and not a repeat of the home page's cards. "People
@@ -18,8 +20,8 @@ const features = [
   {
     title: 'Beyond the Screen',
     description:
-      "Group tasks, mentor calls, offline classes and activities, and learning that stays fun and interactive — not a student alone with an app. Intra-school and inter-school events let students see their growth shared and complemented by others, too.",
-    detail: 'Group work, mentor calls, school events',
+      "Group tasks, mentor calls, offline classes and activities, and learning that stays fun and interactive — not a student alone with an app. Regional and national Luminar'sGuide meets let students see their growth shared and complemented by peers from far beyond their own city, too.",
+    detail: 'Group work, mentor calls, regional meets',
   },
   {
     title: 'A Record That Grows With the Student',
@@ -79,6 +81,29 @@ export default function FeaturesPage() {
         </div>
       </section>
 
+      <section className="py-16 bg-background">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="bento-card flex flex-col sm:flex-row sm:items-center gap-4">
+            <div className="icon-wrapper flex-shrink-0" style={{ backgroundColor: 'rgba(var(--accent-rgb), 0.12)', color: 'var(--accent)' }}>
+              <ScenarioIcon pillarId={exclusivePillar.id} size={22} />
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h3 className="text-card-heading text-foreground">{exclusivePillar.name}</h3>
+                <span
+                  className="text-[10px] font-600 uppercase tracking-wide px-2 py-0.5 rounded-full flex-shrink-0"
+                  style={{ fontWeight: 600, backgroundColor: 'var(--muted)', color: 'var(--muted-foreground)' }}
+                >
+                  Any grade, on request
+                </span>
+              </div>
+              <p className="text-sm leading-relaxed text-muted-foreground mt-1">{exclusivePillar.whyItMatters}</p>
+            </div>
+            <Link href="/get-started" className="btn-secondary flex-shrink-0 whitespace-nowrap">Ask about it</Link>
+          </div>
+        </div>
+      </section>
+
       <section className="py-20 bg-muted">
         <div className="max-w-6xl mx-auto px-6">
           <p className="text-xs font-600 text-primary uppercase tracking-widest mb-3">How It Works</p>
@@ -96,7 +121,7 @@ export default function FeaturesPage() {
       </section>
 
       <section className="py-16 bg-background text-center">
-        <Link href="/get-started" className="btn-primary">Get Started</Link>
+                <Link href="/get-started" className="btn-primary">Ask Us Anything</Link>
       </section>
     </>
   );
